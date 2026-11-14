@@ -1,0 +1,2 @@
+python -m pymarkdown --disable-rules MD013,MD060 scan README.md docs/engine-notes.md
+python -c "import textstat; t = open('README.md').read(); print(textstat.flesch_kincaid_grade(t), textstat.flesch_reading_ease(t))"

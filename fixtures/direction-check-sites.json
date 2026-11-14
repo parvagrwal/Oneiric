@@ -1,0 +1,13 @@
+{
+  "note": "Eight points for the Sun and Earth direction check against JPL Horizons. Longitudes are east-positive degrees in the MOON_ME frame. 'test point' entries are chosen only to cover the geometry (equator, mid-latitude); they are not landing sites and are not part of the site library.",
+  "sites": [
+    { "id": "equator-lon-0",        "label": "Equator, 0 degrees E (test point)",   "lat": 0,        "eLon": 0,        "source": "test point" },
+    { "id": "equator-lon-90e",      "label": "Equator, 90 degrees E (test point)",  "lat": 0,        "eLon": 90,       "source": "test point" },
+    { "id": "equator-lon-270e",     "label": "Equator, 270 degrees E (test point)", "lat": 0,        "eLon": 270,      "source": "test point" },
+    { "id": "mid-latitude-north",   "label": "45 N, 120 degrees E (test point)",    "lat": 45,       "eLon": 120,      "source": "test point" },
+    { "id": "mid-latitude-south",   "label": "45 S, 300 degrees E (test point)",    "lat": -45,      "eLon": 300,      "source": "test point" },
+    { "id": "connecting-ridge",     "label": "Connecting Ridge reference point",    "lat": -89.45,   "eLon": 222.69,   "source": "Mazarico et al. 2011, via Glaser et al. 2018 Table 1" },
+    { "id": "im-2-athena",          "label": "IM-2 Athena",                         "lat": -84.7906, "eLon": 29.1957,  "source": "LRO-derived position" },
+    { "id": "chang-e-6",             "label": "Chang'e-6",                           "lat": -41.6384, "eLon": 206.0146, "source": "QuickMap feature link" }
+  ]
+}

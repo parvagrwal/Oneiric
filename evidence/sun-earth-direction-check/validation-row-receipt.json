@@ -1,0 +1,173 @@
+{
+  "generatedBy": "pipeline/validate.ts",
+  "rows": [
+    {
+      "id": "sun-earth-direction",
+      "name": "Sun and Earth direction check against JPL Horizons",
+      "n": 8000,
+      "maxDeg": 0.006056026194337891,
+      "rmsDeg": 0.002843900386350682,
+      "thresholdDeg": 0.02,
+      "pass": true,
+      "fixtureFiles": [
+        "fixtures/horizons/sites/equator-lon-0-sun.txt",
+        "fixtures/horizons/sites/equator-lon-0-earth.txt",
+        "fixtures/horizons/sites/equator-lon-90e-sun.txt",
+        "fixtures/horizons/sites/equator-lon-90e-earth.txt",
+        "fixtures/horizons/sites/equator-lon-270e-sun.txt",
+        "fixtures/horizons/sites/equator-lon-270e-earth.txt",
+        "fixtures/horizons/sites/mid-latitude-north-sun.txt",
+        "fixtures/horizons/sites/mid-latitude-north-earth.txt",
+        "fixtures/horizons/sites/mid-latitude-south-sun.txt",
+        "fixtures/horizons/sites/mid-latitude-south-earth.txt",
+        "fixtures/horizons/sites/connecting-ridge-sun.txt",
+        "fixtures/horizons/sites/connecting-ridge-earth.txt",
+        "fixtures/horizons/sites/im-2-athena-sun.txt",
+        "fixtures/horizons/sites/im-2-athena-earth.txt",
+        "fixtures/horizons/sites/chang-e-6-sun.txt",
+        "fixtures/horizons/sites/chang-e-6-earth.txt",
+        "fixtures/horizons/global/moon-<year>.txt, 2023 to 2040"
+      ],
+      "runAtUtc": "2026-11-14T19:16:04.342Z",
+      "engineCommit": "no-git-repository; engine-sources-sha256:9020ae99fb2dc440",
+      "detail": {
+        "sun": {
+          "n": 4000,
+          "maxDeg": 0.00019385068054045848,
+          "rmsDeg": 0.00018061875904257373
+        },
+        "earth": {
+          "n": 4000,
+          "maxDeg": 0.006056026194337891,
+          "rmsDeg": 0.0040178247446663274
+        },
+        "perSite": [
+          {
+            "site": "equator-lon-0",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019385068054045848,
+            "rmsDeg": 0.0001806162054483905
+          },
+          {
+            "site": "equator-lon-0",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006056026194337891,
+            "rmsDeg": 0.004035044211511148
+          },
+          {
+            "site": "equator-lon-90e",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019345195130043413,
+            "rmsDeg": 0.00018062123294262136
+          },
+          {
+            "site": "equator-lon-90e",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006027533899961419,
+            "rmsDeg": 0.004016965022815775
+          },
+          {
+            "site": "equator-lon-270e",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019257525106746202,
+            "rmsDeg": 0.00018061783980486508
+          },
+          {
+            "site": "equator-lon-270e",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006033227100297759,
+            "rmsDeg": 0.004016779961160766
+          },
+          {
+            "site": "mid-latitude-north",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019302370182489644,
+            "rmsDeg": 0.00018062111563240256
+          },
+          {
+            "site": "mid-latitude-north",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.00601772843856574,
+            "rmsDeg": 0.004010579965256283
+          },
+          {
+            "site": "mid-latitude-south",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019303960374421916,
+            "rmsDeg": 0.0001806166941918945
+          },
+          {
+            "site": "mid-latitude-south",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006043190613923438,
+            "rmsDeg": 0.004023233447263316
+          },
+          {
+            "site": "connecting-ridge",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.0001930018259511046,
+            "rmsDeg": 0.00018061827494162417
+          },
+          {
+            "site": "connecting-ridge",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.0060331103022018455,
+            "rmsDeg": 0.004016785536901212
+          },
+          {
+            "site": "im-2-athena",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.00019309693568461708,
+            "rmsDeg": 0.00018061810844951278
+          },
+          {
+            "site": "im-2-athena",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006035152159411005,
+            "rmsDeg": 0.004018348702197793
+          },
+          {
+            "site": "chang-e-6",
+            "body": "sun",
+            "n": 500,
+            "maxDeg": 0.0001924960842245696,
+            "rmsDeg": 0.00018062060085356006
+          },
+          {
+            "site": "chang-e-6",
+            "body": "earth",
+            "n": 500,
+            "maxDeg": 0.006016233498214607,
+            "rmsDeg": 0.004004792506517665
+          }
+        ],
+        "worst": {
+          "site": "equator-lon-0",
+          "body": "earth",
+          "utc": "2034-01-20T06:26:00.000Z",
+          "deg": 0.006056026194337891
+        },
+        "epochs": "about 500 per site and body, every 18937 minutes from 2023-01-01 00:07 UTC, so most fall between hourly table rows"
+      },
+      "notes": [
+        "Angle is measured between unit vectors in the local frame, not as separate azimuth and elevation differences.",
+        "Measured: the Earth direction carries almost all of the residual (up to about 0.006 degrees); the Sun direction differs by under 0.0003 degrees.",
+        "Likely cause of the Earth residual, not yet verified: Horizons site queries use apparent (airless) positions, which include stellar aberration of up to about 0.006 degrees, and the hourly table does not."
+      ]
+    }
+  ]
+}

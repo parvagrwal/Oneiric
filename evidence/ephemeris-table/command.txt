@@ -1,0 +1,2 @@
+npm run fetch:ephemeris
+npm run build:ephemeris

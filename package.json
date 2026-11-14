@@ -1,0 +1,24 @@
+{
+  "name": "oneiric",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Compare lunar landing sites and dates: sunlight and Earth line of sight against the terrain horizon.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "fetch:ephemeris": "tsx pipeline/fetch-ephemeris.ts",
+    "fetch:fixtures": "tsx pipeline/fetch-fixtures.ts",
+    "build:ephemeris": "tsx pipeline/build-ephemeris.ts",
+    "validate": "tsx pipeline/validate.ts",
+    "mutation-check": "bash scripts/mutation-check.sh"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

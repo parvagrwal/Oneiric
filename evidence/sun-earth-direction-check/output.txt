@@ -1,0 +1,8 @@
+
+> oneiric@0.0.0 validate
+> tsx pipeline/validate.ts
+
+PASS  Sun and Earth direction check against JPL Horizons
+  n = 8000, max = 0.00606 deg, rms = 0.00284 deg, threshold = 0.02 deg
+wrote app/public/data/validation.json
+exit 0

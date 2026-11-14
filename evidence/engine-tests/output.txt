@@ -1,0 +1,81 @@
+
+> oneiric@0.0.0 test
+> vitest run --reporter=verbose
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/home/hatch/workspace/oneiric-build/b1-rewrite/work[39m
+
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22ma site on the far side never sees Earth, over a full year[33m 765[2mms[22m[39m
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22ma near-side centre site always sees Earth, with the Sun lit about half the time[32m 115[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mis 1 with the Sun well above the skyline and 0 well below[32m 3[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mis about one half with the Sun centre on a flat skyline, and between 0 and 1 on either side[32m 3[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mfollows the true angular size of the Sun: the disc is clear once its centre is 0.28 degrees up[32m 1[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mEarth directly in front of the Sun hides it completely and reports full cover; terrain does not matter[32m 1[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mEarth covering part of the disc gives partial cover and the matching reduction in f[32m 1[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22msunlit fraction of the solar disc[2m > [22mthe fast path gives exactly the same answer as sampling the disc, over 3000 random cases[33m 1056[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22mEarth visibility[2m > [22mneeds the centre at or above the skyline plus the margin[32m 1[2mms[22m[39m
+ [32m✓[39m tests/sunlight.test.ts[2m > [22mEarth visibility[2m > [22mon the smooth sphere Earth is visible just below level but not below the dip[32m 1[2mms[22m[39m
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22mthe south pole itself gives finite numbers; the Sun never rises more than about 1.6 degrees[32m 224[2mms[22m[39m
+ [32m✓[39m tests/engine-runtime.test.ts[2m > [22mthe engine is pure[2m > [22mimports nothing from Node or the browser, and touches no DOM, process or file globals[32m 26[2mms[22m[39m
+ [32m✓[39m tests/engine-runtime.test.ts[2m > [22mthe same engine code gives identical numbers in a sandbox with no Node globals[2m > [22mseries and metrics match exactly between Node and a bare JavaScript context (the Worker stand-in)[33m 1282[2mms[22m[39m
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22ma stay that crosses a year boundary works and matches the same stay cut in two[32m 14[2mms[22m[39m
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22m0 m, 2 m and 20 m heights are accepted and a taller mast never sees less of the horizon[33m 313[2mms[22m[39m
+ [32m✓[39m tests/adversarial.test.ts[2m > [22madversarial sites and dates (smooth sphere, so grade D)[2m > [22mthe rules table applies to real metrics without error[32m 6[2mms[22m[39m
+ [32m✓[39m tests/ephemeris.test.ts[2m > [22mephemeris interpolation[2m > [22mreturns the stored row at an hourly node and the midpoint halfway between nodes[32m 14[2mms[22m[39m
+ [32m✓[39m tests/ephemeris.test.ts[2m > [22mephemeris interpolation[2m > [22mrefuses times outside the table instead of extrapolating[32m 75[2mms[22m[39m
+ [32m✓[39m tests/ephemeris.test.ts[2m > [22mephemeris interpolation[2m > [22mis continuous across a year boundary[32m 17[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mGO when every rule is met and the start can slip 3 days or more later; prints its reason, grade and terrain[32m 4[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mNO-GO when one rule fails, even if all the others pass, and names the failed rule[32m 2[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mlists every failed rule and decides on the first in rule order[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22ma failed rule beats a slip that would have said MARGINAL[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mMARGINAL when rules are met but days late is under 3, whatever days early is (decision: late decides)[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mtreats a start that is not viable on the 6-hour grid as MARGINAL with zero days of slip, never GO[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22msays "at least" when the slip run reaches the edge of the evaluated range[32m 0[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mlander thresholds are applied, not the sortie ones[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mthe one-year stay gives no verdict[32m 3[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mverdict[2m > [22mrefuses to give a verdict without a fidelity grade or terrain source[32m 2[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mcounts days late and early within the unbroken run only[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mdoes not extend across a one-step gap[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mdoes not extend across a gap[32m 0[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mmarks a run that reaches the end of the range as censored[32m 0[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mwhen not viable, gives the next window and its length[32m 1[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mslip tolerance[2m > [22mrejects a chosen date outside the evaluated range[32m 0[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mviable windows from a real series[2m > [22ma 6.5-day stay on the synthetic cycle is viable only when the Sun and Earth are both up, and slip is read from that[33m 598[2mms[22m[39m
+ [32m✓[39m tests/verdict.test.ts[2m > [22mviable windows from a real series[2m > [22mrefuses to evaluate a stay that runs past the end of the series, and the one-year preset[32m 74[2mms[22m[39m
+ [32m✓[39m tests/ephemeris.test.ts[2m > [22mephemeris interpolation[2m > [22mreal table files have whole rows and unit vectors[32m 80[2mms[22m[39m
+ [32m✓[39m tests/ephemeris.test.ts[2m > [22mephemeris interpolation[2m > [22mputs the sub-solar point near +90 degrees E at a known first quarter[32m 7[2mms[22m[39m
+ [32m✓[39m tests/direction-check.test.ts[2m > [22mSun and Earth direction against Horizons site queries[2m > [22mevery one of the eight sites stays within 0.02 degrees[33m 514[2mms[22m[39m
+ [32m✓[39m tests/direction-check.test.ts[2m > [22mSun and Earth direction against Horizons site queries[2m > [22msabotage: moving one site by 0.1 degrees of longitude makes the check fail and names that site[32m 191[2mms[22m[39m
+ [32m✓[39m tests/direction-check.test.ts[2m > [22mSun and Earth direction against Horizons site queries[2m > [22msabotage: entering west longitudes as east (360 minus the value) fails at the Connecting Ridge[32m 109[2mms[22m[39m
+ [32m✓[39m tests/direction-check.test.ts[2m > [22mSun and Earth direction against Horizons site queries[2m > [22msabotage: swapping the sign of latitude fails[32m 104[2mms[22m[39m
+ [32m✓[39m tests/direction-check.test.ts[2m > [22mSun and Earth direction against Horizons site queries[2m > [22msabotage: measuring from the Moon centre instead of the site is caught for Earth (about 0.26 degrees)[32m 102[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22msmooth horizon dips match the locked values[32m 4[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22ma smooth skyline is always grade D and says so[32m 1[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22mrefuses smooth-sphere data carrying a terrain grade[32m 3[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22mrefuses a terrain grade with no terrain name, and grade D with a terrain name[32m 2[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22mmissing terrain falls back to grade D, never keeps a terrain grade[32m 1[2mms[22m[39m
+ [32m✓[39m tests/skyline.test.ts[2m > [22mskyline, grades and the smooth sphere[2m > [22mreads a hill east of the site at azimuth 90, interpolates between bins and wraps at 360[32m 5[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22msunlit share is 50 percent and the dark gap is half a cycle minus the disc width, refined to a minute[32m 4[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22mEarth is visible about half the time; the link gap is half a cycle; overlap is a quarter[32m 4[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22menergy matches the analytic integral for the tracking array and the horizontal deck[32m 0[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22mthe best fixed vertical facing is east or west, the metric prints which, and it gets half the tracking energy[32m 1[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22mcarries the grade and terrain of the skyline it used, so a smooth sphere can never look like terrain[32m 0[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22mrejects windows that do not line up with the series steps or lie outside it[32m 1[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22ma gap that runs into the window edge is cut at the edge, not extended[32m 1[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mmetrics on a synthetic cycle with a known answer[2m > [22ma window that starts mid-gap reports only the part of the gap inside the window[32m 3[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mclocks[2m > [22mfinds the next sunset to within a minute or two of the analytic time[32m 9[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mclocks[2m > [22msays already when the Sun is down, and none when nothing happens before the limit[32m 2[2mms[22m[39m
+ [32m✓[39m tests/metrics.test.ts[2m > [22mclocks[2m > [22mfinds the next Earthset[32m 80[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22ma body due east of the site has azimuth 90 and a body due north has azimuth 0[32m 2[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22meast longitude is positive: the +Y direction is overhead at 90 E, underfoot at 270 E, on the horizon at 0[32m 0[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22mdirection is taken from the site, not from the Moon centre (about 0.26 degrees for Earth)[32m 0[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22mthe mean Earth direction is due north-ish or south-ish from a polar site and east from the equator at 270 E[32m 0[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22mrejects a radius given in kilometres and a latitude beyond the pole[32m 1[2mms[22m[39m
+ [32m✓[39m tests/frame.test.ts[2m > [22msite frame and azimuth convention[2m > [22mworks exactly at the poles[32m 0[2mms[22m[39m
+ [32m✓[39m tests/vec.test.ts[2m > [22mvector helpers[2m > [22mnormalises a vector and refuses a zero vector instead of returning NaNs[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m68 passed[39m[22m[90m (68)[39m
+[2m   Start at [22m 01:09:56
+[2m   Duration [22m 4.98s[2m (transform 849ms, setup 0ms, import 2.08s, tests 6.01s, environment 1ms)[22m
+

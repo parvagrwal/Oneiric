@@ -1,0 +1,6 @@
+Site 0 N, 0 E. Horizons header says: Center pole/equ : MEAN_ME (high precision)        {East-longitude positive}
+sunrise 2027-Jan-15 05:30 UTC  Horizons az 90.741 el 0.185   engine az 90.741 el 0.185
+sunset  2027-Jan-30 01:30 UTC  Horizons az 269.729 el -0.250   engine az 269.729 el -0.250
+--- CORS (GET, not HEAD: the plan's HEAD request returns 405) ---
+HTTP/1.1 200 Connection Established
+access-control header lines: 0

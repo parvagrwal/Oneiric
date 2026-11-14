@@ -1,0 +1,24 @@
+
+> oneiric@0.0.0 mutation-check
+> bash scripts/mutation-check.sh
+
+KILLED    east vector sign flipped (Tests  5 failed | 63 passed (68))
+KILLED    azimuth atan2 arguments swapped (Tests  3 failed | 65 passed (68))
+KILLED    direction from Moon centre instead of site (Tests  5 failed | 63 passed (68))
+KILLED    no interpolation between hourly rows (Tests  8 failed | 60 passed (68))
+KILLED    silent extrapolation outside table (Tests  1 failed | 67 passed (68))
+KILLED    dark threshold 0.01 -> 0.02 (dark counts 1 sample) (Tests  1 failed | 67 passed (68))
+KILLED    Earth disc radius ignored (point Earth) (Tests  2 failed | 66 passed (68))
+KILLED    sky elevation test uses > H + 1 degree (Tests  7 failed | 61 passed (68))
+KILLED    skyline lookup does not wrap at 360 (Tests  1 failed | 67 passed (68))
+KILLED    MARGINAL limit 3 -> 2 days (Tests  1 failed | 67 passed (68))
+KILLED    failed rule no longer beats MARGINAL (slip checked first) (Tests  1 failed | 67 passed (68))
+KILLED    slip run crosses a gap (Tests  1 failed | 67 passed (68))
+KILLED    smooth data allowed to carry terrain grade (Tests  1 failed | 67 passed (68))
+KILLED    verdict without grade allowed (Tests  1 failed | 67 passed (68))
+KILLED    gap not clipped to window (Tests  2 failed | 66 passed (68))
+KILLED    solar disc radius 10x (Tests  5 failed | 63 passed (68))
+KILLED    fixed array stuck on north (no best-of-8) (Tests  1 failed | 67 passed (68))
+KILLED    verdict uses early slip instead of late (Tests  2 failed | 66 passed (68))
+KILLED    Earth visibility ignores its margin (Tests  1 failed | 67 passed (68))
+all mutants killed

@@ -1,0 +1,23 @@
+
+> oneiric@0.0.0 build:ephemeris
+> tsx pipeline/build-ephemeris.ts
+
+2023: 8761 rows, 280352 bytes
+2024: 8785 rows, 281120 bytes
+2025: 8761 rows, 280352 bytes
+2026: 8761 rows, 280352 bytes
+2027: 8761 rows, 280352 bytes
+2028: 8785 rows, 281120 bytes
+2029: 8761 rows, 280352 bytes
+2030: 8761 rows, 280352 bytes
+2031: 8761 rows, 280352 bytes
+2032: 8785 rows, 281120 bytes
+2033: 8761 rows, 280352 bytes
+2034: 8761 rows, 280352 bytes
+2035: 8761 rows, 280352 bytes
+2036: 8785 rows, 281120 bytes
+2037: 8761 rows, 280352 bytes
+2038: 8761 rows, 280352 bytes
+2039: 8761 rows, 280352 bytes
+2040: 8785 rows, 281120 bytes
+total 5050176 bytes

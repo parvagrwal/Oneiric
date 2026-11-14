@@ -1,0 +1,12 @@
+export const R_MOON_KM = 1737.4;
+export const SUN_RADIUS_KM = 695700;
+export const EARTH_RADIUS_KM = 6371.0;
+export const AU_KM = 149597870.7;
+export const SOLAR_CONSTANT_W_M2 = 1361;
+export const SKY_BINS = 1440;
+export const SKY_BIN_DEG = 360 / SKY_BINS;
+export const DISC_SAMPLES = 64;
+export const DARK_BELOW = 0.01;
+export const DEG = Math.PI / 180;
+export const HOUR_MS = 3_600_000;
+export const MIN_MS = 60_000;

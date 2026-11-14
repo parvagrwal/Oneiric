@@ -1,0 +1,1 @@
+markdownlint: clean (checked with pymarkdown: markdownlint-cli could not install on this machine, npm EPERM chown; same disabled rules as .markdownlint.json: MD013 line length, MD060 table alignment)
