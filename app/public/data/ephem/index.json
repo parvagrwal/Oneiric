@@ -1,0 +1,19 @@
+{
+  "firstYear": 2023,
+  "lastYear": 2040,
+  "valuesPerRow": 8,
+  "type": "float32-le",
+  "layout": [
+    "sunUx",
+    "sunUy",
+    "sunUz",
+    "sunRangeKm",
+    "earthUx",
+    "earthUy",
+    "earthUz",
+    "earthRangeKm"
+  ],
+  "frame": "MOON_ME (DE441), east-positive longitude, origin at the Moon centre",
+  "source": "JPL Horizons, target 301 from 500@399, quantities 14, 15, 19, 20, hourly UTC",
+  "rowsNote": "each file runs from Jan 1 00:00 UTC to the next Jan 1 00:00 UTC inclusive"
+}

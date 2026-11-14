@@ -1,0 +1,13 @@
+$ npm test -- --reporter=dot
+$ npm run typecheck
+$ (cd app && npm run lint)
+$ (cd app && npm run build)
+$ npm run validate
+$ npm run mutation-check
+$ npx markdownlint-cli README.md
+$ git diff --check
+$ curl -fsS -o /tmp/oneiric-index.html -w 'preview / status=%{http_code} bytes=%{size_download}\n' http://127.0.0.1:5173/
+$ curl -fsS -o /tmp/oneiric-sites.json -w 'sites / status=%{http_code} bytes=%{size_download}\n' http://127.0.0.1:5173/data/sites.json
+$ curl -fsS -o /tmp/oneiric-validation.json -w 'validation / status=%{http_code} bytes=%{size_download}\n' http://127.0.0.1:5173/data/validation.json
+$ grep -F 'aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End Space"' app/src/App.tsx
+$ grep -F 'Keys: ← / → 10 min · Home / End jump · Space play' app/src/App.tsx

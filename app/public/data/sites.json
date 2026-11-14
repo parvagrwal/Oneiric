@@ -1,0 +1,87 @@
+{
+  "generatedBy": "draft site library of 9 sites; each entry names its source",
+  "frame": "MOON_ME, east-positive longitude",
+  "sites": [
+    {
+      "id": "connecting-ridge",
+      "name": "Connecting Ridge",
+      "label": "Connecting Ridge reference point",
+      "lat": -89.45,
+      "eLon": 222.69,
+      "source": "Mazarico et al. 2011, via Gläser et al. 2018 Table 1",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "shackleton-rim",
+      "name": "Shackleton rim",
+      "label": "Shackleton rim reference point",
+      "lat": -89.78,
+      "eLon": 204.27,
+      "source": "Mazarico et al. 2011, via Gläser et al. 2018 Table 1",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "nobile-rim-2",
+      "name": "Nobile Rim 2",
+      "label": "Nobile Rim 2 reference point",
+      "lat": -84.20156,
+      "eLon": 60.69989,
+      "source": "Acta Astronautica 2024 site study",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "im-2-athena",
+      "name": "IM-2 Athena",
+      "label": "IM-2 Athena",
+      "lat": -84.7906,
+      "eLon": 29.1957,
+      "source": "LRO-derived position",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "im-1-odysseus",
+      "name": "IM-1 Odysseus",
+      "label": "IM-1 Odysseus",
+      "lat": -80.13,
+      "eLon": 1.44,
+      "source": "LROC",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "chandrayaan-3",
+      "name": "Chandrayaan-3",
+      "label": "Chandrayaan-3",
+      "lat": -69.3741,
+      "eLon": 32.32,
+      "source": "LROC",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "chang-e-6",
+      "name": "Chang'e-6",
+      "label": "Chang'e-6",
+      "lat": -41.6384,
+      "eLon": 206.0146,
+      "source": "QuickMap feature link",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "slim",
+      "name": "SLIM",
+      "label": "SLIM",
+      "lat": -13.3,
+      "eLon": 25.2,
+      "source": "JAXA",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "blue-ghost-m1",
+      "name": "Blue Ghost M1",
+      "label": "Blue Ghost M1",
+      "lat": 18.5623,
+      "eLon": 61.8103,
+      "source": "NASA LEAG 2025 slides",
+      "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    }
+  ]
+}

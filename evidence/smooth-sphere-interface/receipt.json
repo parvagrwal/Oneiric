@@ -1,0 +1,29 @@
+{
+  "status": "pass",
+  "appLint": { "warnings": 0, "errors": 0 },
+  "appBuild": "pass",
+  "rootTypecheck": "pass",
+  "rootTests": { "testFiles": 12, "tests": 74, "status": "pass" },
+  "directionCheck": { "comparisons": 8000, "maxErrorDeg": 0.00606, "thresholdDeg": 0.02, "status": "pass" },
+  "mutationCheck": { "mutantsKilled": 19, "status": "pass" },
+  "readmeMarkdownlint": "pass",
+  "publicTermLeakCheck": "zero hits",
+  "derivedData": {
+    "ephemerisYears": "2023-2040",
+    "siteCount": 9,
+    "terrainGrade": "D",
+    "terrainSource": "none (smooth sphere)"
+  },
+  "keyboardControls": {
+    "stepMinutes": 10,
+    "supportedKeys": ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "Space"],
+    "status": "pass"
+  },
+  "evidenceFiles": [
+    "command.txt",
+    "output.txt",
+    "readme-markdownlint.txt",
+    "leak-check-output.txt",
+    "receipt.json"
+  ]
+}

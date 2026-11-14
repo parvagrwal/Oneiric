@@ -1,0 +1,77 @@
+$ (cd app && npm run lint)
+
+> app@0.0.0 lint
+> oxlint
+
+Found 0 warnings and 0 errors.
+Finished in 70ms on 6 files with 116 rules using 2 threads.
+$ (cd app && npm run build)
+
+> app@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 30 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.66 kB │ gzip:  0.39 kB
+dist/assets/engine.worker-CdpYCJPn.js   10.58 kB
+dist/assets/index-DZTD5VRI.css          11.05 kB │ gzip:  3.11 kB
+dist/assets/index-DFaSgMqL.js          236.01 kB │ gzip: 74.20 kB
+
+✓ built in 278ms
+$ npm test -- --reporter=dot
+
+> oneiric@0.0.0 test
+> vitest run --reporter=dot
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/home/user/Oneiric[39m
+
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m74 passed[39m[22m[90m (74)[39m
+[2m   Start at [22m 20:19:10
+[2m   Duration [22m 5.67s[2m (transform 289ms, setup 0ms, import 881ms, tests 2.57s, environment 2ms)[22m
+
+$ npm run typecheck
+
+> oneiric@0.0.0 typecheck
+> tsc --noEmit
+
+$ npm run validate
+
+> oneiric@0.0.0 validate
+> tsx pipeline/validate.ts
+
+PASS  Sun and Earth direction check against JPL Horizons
+  n = 8000, max = 0.00606 deg, rms = 0.00284 deg, threshold = 0.02 deg
+wrote app/public/data/validation.json
+$ npm run mutation-check
+
+> oneiric@0.0.0 mutation-check
+> bash scripts/mutation-check.sh
+
+KILLED    east vector sign flipped (Tests  5 failed | 69 passed (74))
+KILLED    azimuth atan2 arguments swapped (Tests  3 failed | 71 passed (74))
+KILLED    direction from Moon centre instead of site (Tests  5 failed | 69 passed (74))
+KILLED    no interpolation between hourly rows (Tests  8 failed | 66 passed (74))
+KILLED    silent extrapolation outside table (Tests  1 failed | 73 passed (74))
+KILLED    dark threshold 0.01 -> 0.02 (dark counts 1 sample) (Tests  1 failed | 73 passed (74))
+KILLED    Earth disc radius ignored (point Earth) (Tests  2 failed | 72 passed (74))
+KILLED    sky elevation test uses > H + 1 degree (Tests  7 failed | 67 passed (74))
+KILLED    skyline lookup does not wrap at 360 (Tests  1 failed | 73 passed (74))
+KILLED    MARGINAL limit 3 -> 2 days (Tests  1 failed | 73 passed (74))
+KILLED    failed rule no longer beats MARGINAL (slip checked first) (Tests  1 failed | 73 passed (74))
+KILLED    slip run crosses a gap (Tests  1 failed | 73 passed (74))
+KILLED    smooth data allowed to carry terrain grade (Tests  1 failed | 73 passed (74))
+KILLED    verdict without grade allowed (Tests  1 failed | 73 passed (74))
+KILLED    gap not clipped to window (Tests  2 failed | 72 passed (74))
+KILLED    solar disc radius 10x (Tests  5 failed | 69 passed (74))
+KILLED    fixed array stuck on north (no best-of-8) (Tests  1 failed | 73 passed (74))
+KILLED    verdict uses early slip instead of late (Tests  2 failed | 72 passed (74))
+KILLED    Earth visibility ignores its margin (Tests  1 failed | 73 passed (74))
+all mutants killed
+$ git diff --check

@@ -5,5 +5,8 @@ dist/
 # Raw elevation rasters are large; only derived skylines are shipped.
 data/
 data-raw/
+# Derived ephemeris and validation data are shipped with the static app.
+!app/public/data/
+!app/public/data/**
 *.tif
 *.tiff

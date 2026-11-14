@@ -2,9 +2,9 @@
 
 Oneiric compares lunar landing sites and dates. For a site and a date it will show when a mission has sunlight for power and a line of sight to Earth, and how many days of schedule slip that answer survives. It is for mission planners who must re-evaluate a site and date after a delay.
 
-**Status:** the calculation engine, the Sun and Earth position tables and the first check are built. There is no web app and no terrain yet, so every result today is **grade D** (smooth sphere, no terrain). There is no demo link yet.
+**Status:** the calculation engine, the Sun and Earth position tables, the first check, and a smooth-sphere web preview are built. The preview loads the draft site library, UTC scenarios, clocks, a timeline, and basic metrics through a Web Worker. No terrain is used yet, so every preview result is **grade D** (smooth sphere, no terrain). There is no external deployment URL yet.
 
-NASA data in this step: JPL Horizons (Sun and Earth positions seen from the Moon, 2023 to 2040). LOLA elevation data is not used yet.
+NASA data in this step: JPL Horizons (Sun and Earth positions seen from the Moon, 2023 to 2040). LOLA elevation data is not used yet; the terrain step comes next.
 
 ## Proof: Sun and Earth directions match JPL Horizons
 
@@ -37,13 +37,20 @@ You need Node 20 or later. The Horizons responses are already saved, so these co
 ```bash
 npm ci
 npm run build:ephemeris   # raw responses -> app/public/data/ephem/<year>.bin
-npm test                  # 66 tests
+npm test                  # 74 tests
 npm run typecheck
 npm run validate          # direction check -> app/public/data/validation.json
 npm run mutation-check    # changes the engine one element at a time; every change must make a test fail
+
+# Start the smooth-sphere preview
+cd app
+npm ci
+npm run dev -- --host 0.0.0.0
 ```
 
-To fetch the responses again, run `npm run fetch:ephemeris` and `npm run fetch:fixtures`. They send one request at a time with a pause between requests and save every raw response.
+In the preview, focus the skyline view or its scrubber. Use **Left** and **Right** to move by 10 minutes, **Home** and **End** to jump to either end, and **Space** to play or pause.
+
+The preview uses the derived files in `app/public/data/`: the 2023–2040 hourly tables, the draft site list, and the recorded validation row. To fetch the responses again, run `npm run fetch:ephemeris` and `npm run fetch:fixtures`. They send one request at a time with a pause between requests and save every raw response.
 
 ## How it computes
 

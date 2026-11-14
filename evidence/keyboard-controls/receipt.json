@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "scope": "Keyboard navigation for the smooth-sphere time view",
+  "keyboardBehavior": {
+    "stepMinutes": 10,
+    "supportedKeys": ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "Space"],
+    "boundaryClamping": true,
+    "unitTests": 4,
+    "unitTestStatus": "pass"
+  },
+  "previewRoutes": {
+    "/": 200,
+    "/data/sites.json": 200,
+    "/data/validation.json": 200
+  },
+  "accessibilityHooks": {
+    "focusableSkylineView": true,
+    "ariaKeyShortcuts": true,
+    "visibleKeyboardHint": true
+  },
+  "browserFlow": "not exercised in this sandbox; no browser automation binary is available",
+  "verificationFiles": ["command.txt", "output.txt", "receipt.json"]
+}

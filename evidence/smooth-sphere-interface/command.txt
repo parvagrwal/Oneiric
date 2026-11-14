@@ -1,0 +1,9 @@
+# Smooth-sphere scenario card verification
+(cd app && npm run lint)
+(cd app && npm run build)
+npm test -- --reporter=dot
+npm run typecheck
+npm run validate
+npm run mutation-check
+npx markdownlint-cli README.md
+git diff --check

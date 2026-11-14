@@ -1,7 +1,7 @@
 import { DARK_BELOW, MIN_MS } from './constants.ts';
 import { ephemAt, type EphemTable } from './ephemeris.ts';
 import { azElOfDirection, directionFromSite, type SiteFrame } from './frame.ts';
-import { skylineAt, type Grade, type Skyline } from './skyline.ts';
+import { type Grade, type Skyline } from './skyline.ts';
 import { earthVisible, sunFraction } from './sunlight.ts';
 import { norm, sub } from './vec.ts';
 
