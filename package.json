@@ -11,12 +11,14 @@
     "fetch:ephemeris": "tsx pipeline/fetch-ephemeris.ts",
     "fetch:fixtures": "tsx pipeline/fetch-fixtures.ts",
     "build:ephemeris": "tsx pipeline/build-ephemeris.ts",
+    "build:skylines": "tsx pipeline/build-skylines.ts",
     "validate": "tsx pipeline/validate.ts",
     "mutation-check": "bash scripts/mutation-check.sh"
   },
   "devDependencies": {
     "@types/node": "20.19.43",
     "esbuild": "0.28.2",
+    "geotiff": "3.1.0-beta.0",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
     "vitest": "4.1.12"

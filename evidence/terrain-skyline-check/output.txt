@@ -1,0 +1,244 @@
+$ npm run typecheck
+
+> oneiric@0.0.0 typecheck
+> tsc --noEmit
+
+exit 0
+
+$ npm test
+
+> oneiric@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/terrain.test.ts (17 tests) 3344ms
+     ✓ adds the terrain height at the site to the observer radius  504ms
+     ✓ gives the same elevation for a ridge crest as the site-frame geometry used for the Sun and Earth  496ms
+     ✓ a step of seven pixels, as in a 1 percent of distance rule at 15 km, steps over part of a ridge; half a pixel does not  500ms
+     ✓ falls through to a coarser raster outside the fine one, and says the near field is incomplete  329ms
+     ✓ beyond its 15 km limit the fine raster gives way to the coarser one, even where the fine raster still has data  1067ms
+ ✓ tests/skyline-check.test.ts (10 tests) 7608ms
+     ✓ a raster mirrored east to west moves the east hill to the west, and the check fails  1073ms
+     ✓ a raster with its axes swapped fails  1111ms
+     ✓ heights at half scale fail the ridge case  519ms
+     ✓ a raster shifted by one pixel does not hide: flat ground still passes, so the check is not failing for everything  906ms
+     ✓ moves the stay metrics by less than 1 point on rough synthetic terrain (near field only in this test)  1765ms
+     ✓ sabotage: a build that starts from a seven-pixel step moves the metrics or the horizon far more  2021ms
+ ✓ tests/terrain-pipeline.test.ts (12 tests) 2739ms
+     ✓ takes origin, pixel size and the no-data value from the file, and a hill east of the site ends up at azimuth 90  507ms
+     ✓ is grade B when the 20 m raster covers the near field, with every raster used named as the terrain source  947ms
+     ✓ drops to grade C on the 240 m raster alone when the 20 m near field is incomplete, never B  629ms
+     ✓ sabotage: changing one horizon height in one shipped file fails the check and names the file and the azimuth block  627ms
+ ✓ tests/engine-runtime.test.ts (3 tests) 2211ms
+     ✓ series and metrics match exactly between Node and a bare JavaScript context (the Worker stand-in)  303ms
+     ✓ a terrain skyline built in the bare context is byte-for-byte the one built in Node  1902ms
+ ✓ tests/scenario.test.ts (6 tests) 544ms
+ ✓ tests/adversarial.test.ts (6 tests) 617ms
+ ✓ tests/sunlight.test.ts (8 tests) 327ms
+     ✓ the fast path gives exactly the same answer as sampling the disc, over 3000 random cases  318ms
+ ✓ tests/verdict.test.ts (18 tests) 273ms
+ ✓ tests/direction-check.test.ts (5 tests) 154ms
+ ✓ tests/ephemeris.test.ts (5 tests) 43ms
+ ✓ tests/metrics.test.ts (11 tests) 18ms
+ ✓ tests/keyboard.test.ts (4 tests) 5ms
+ ✓ tests/vec.test.ts (1 test) 5ms
+ ✓ tests/skyline.test.ts (6 tests) 6ms
+ ✓ tests/frame.test.ts (6 tests) 6ms
+
+ Test Files  15 passed (15)
+      Tests  118 passed (118)
+   Start at  21:53:56
+   Duration  29.05s (transform 305ms, setup 0ms, import 9.09s, tests 17.90s, environment 2ms)
+
+exit 0
+
+$ npm run validate
+
+> oneiric@0.0.0 validate
+> tsx pipeline/validate.ts
+
+PASS  Sun and Earth direction check against JPL Horizons
+  n = 8000, max = 0.00606 deg, rms = 0.00284 deg, threshold = 0.02 deg
+PASS  Skyline maths check on synthetic terrain
+  n = 10084, max = 0.00293 deg, rms = 0.00055 deg, threshold = 0.01 deg
+PENDING  Elevation raster orientation check on two named craters
+  no LOLA raster in data-raw/; this check has not been run
+PENDING  Shipped skylines match their build records
+  no skyline in app/public/data/skylines/; none has been built yet
+wrote app/public/data/validation.json
+exit 0
+
+$ npx tsx pipeline/skyline-check.ts
+PASS flat          n 5760 max 0.00033 {"perHeight":[{"heightM":0,"expectedDeg":0,"maxErrorDeg":0.0003297787334304303},{"heightM":2,"expectedDeg":-0.08693657193373108,"maxErrorDeg":8.81772193872532e-8},{"heightM":10,"expectedDeg":-0.19439571161359603,"maxErrorDeg":6.8949758458281e-8},{"heightM":20,"expectedDeg":-0.274916392525113,"maxErrorDeg":0.00027771596106251906}]}
+PASS ridge-near    n 1440 max 0.00175 {"expectedDeg":4.4799357815220855,"worstAzDeg":60.875,"heightM":2,"blockingDistanceKm":{"min":4.97,"max":4.98},"samplesPerTier":[2868480],"distanceReachedKm":4.99}
+PASS ridge-mid     n 1440 max 0.00137 {"expectedDeg":2.9143326301341914,"worstAzDeg":59.125,"heightM":2,"blockingDistanceKm":{"min":39.92,"max":39.96},"samplesPerTier":[8628480,3605760],"distanceReachedKm":40}
+PASS ridge-far     n 1440 max 0.00130 {"expectedDeg":0.9526361512688186,"worstAzDeg":240.875,"heightM":2,"blockingDistanceKm":{"min":149.72,"max":149.84},"samplesPerTier":[8628480,9360000,3363840],"distanceReachedKm":149.96}
+PASS hill-azimuth  n 4 max 0.00293 {"hills":[{"hillAzimuthDeg":90,"foundAzimuthDeg":90.125,"azErrorDeg":0.125,"expectedDeg":5.601937128227331,"foundDeg":5.599008560180664,"errorDeg":0.0029285680466673014},{"hillAzimuthDeg":0,"foundAzimuthDeg":359.875,"azErrorDeg":0.125,"expectedDeg":2.749435789708236,"foundDeg":2.7481071949005127,"errorDeg":0.0013285948077235155}],"flatElsewhere":[{"azimuthDeg":180,"foundDeg":-0.08693666011095047,"errorDeg":8.81772193872532e-8},{"azimuthDeg":270,"foundDeg":-0.08693666011095047,"errorDeg":8.81772193872532e-8}],"azimuthToleranceDeg":0.25}
+synthetic cases took 6837 ms
+{
+ "pass": true,
+ "maxMovePoints": 0.21701388888888573,
+ "maxGapMovePctOfStay": 0.024801587301581662,
+ "maxHorizonMoveDeg": 0.041491806507110596,
+ "windows": [
+  {
+   "startUtc": "2027-03-01T00:00:00Z",
+   "standard": {
+    "sunlitPct": 12.42249503968254,
+    "earthVisiblePct": 19.642857142857142,
+    "overlapPct": 0,
+    "longestDarkGapH": 148.52083333333334,
+    "longestLinkGapH": 260.8854166666667
+   },
+   "refined": {
+    "sunlitPct": 12.260509672619047,
+    "earthVisiblePct": 19.642857142857142,
+    "overlapPct": 0,
+    "longestDarkGapH": 148.55208333333334,
+    "longestLinkGapH": 260.9583333333333
+   },
+   "movePoints": 0.1619853670634921,
+   "gapMovePctOfStay": 0.02170138888887761
+  },
+  {
+   "startUtc": "2028-07-10T00:00:00Z",
+   "standard": {
+    "sunlitPct": 34.10838293650794,
+    "earthVisiblePct": 27.628968253968253,
+    "overlapPct": 7.440476190476191,
+    "longestDarkGapH": 130.75,
+    "longestLinkGapH": 180.23958333333334
+   },
+   "refined": {
+    "sunlitPct": 33.89136904761905,
+    "earthVisiblePct": 27.628968253968253,
+    "overlapPct": 7.440476190476191,
+    "longestDarkGapH": 130.78125,
+    "longestLinkGapH": 180.32291666666666
+   },
+   "movePoints": 0.21701388888888573,
+   "gapMovePctOfStay": 0.024801587301581662
+  },
+  {
+   "startUtc": "2029-11-20T00:00:00Z",
+   "standard": {
+    "sunlitPct": 23.072451636904763,
+    "earthVisiblePct": 0,
+    "overlapPct": 0,
+    "longestDarkGapH": 222.08333333333334,
+    "longestLinkGapH": 336
+   },
+   "refined": {
+    "sunlitPct": 22.884114583333332,
+    "earthVisiblePct": 0,
+    "overlapPct": 0,
+    "longestDarkGapH": 222.11458333333334,
+    "longestLinkGapH": 336
+   },
+   "movePoints": 0.1883370535714306,
+   "gapMovePctOfStay": 0.009300595238095238
+  }
+ ],
+ "standardBuild": {
+  "stepPixels": 0.5,
+  "subRays": 4,
+  "samples": 6218754
+ },
+ "refinedBuild": {
+  "stepPixels": 0.25,
+  "subRays": 8,
+  "samples": 24839347
+ }
+}
+total 11939 ms
+exit 0
+
+$ npm run build:skylines
+
+> oneiric@0.0.0 build:skylines
+> tsx pipeline/build-skylines.ts
+
+LOLA 20 m: could not be opened (Request failed)
+LOLA 80 m: could not be opened (Request failed)
+LOLA 240 m: could not be opened (Request failed)
+No elevation raster could be opened. Download the files listed at https://pgda.gsfc.nasa.gov/products/90 into data-raw/:
+  https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF
+  https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_80MPP_ADJ.TIF
+  https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_60S_240MPP_ADJ.TIF
+No skyline was written. Every site stays on the smooth sphere, grade D.
+exit 1
+
+$ npm run mutation-check
+
+> oneiric@0.0.0 mutation-check
+> bash scripts/mutation-check.sh
+
+KILLED    east vector sign flipped (Tests  6 failed | 112 passed (118))
+KILLED    azimuth atan2 arguments swapped (Tests  3 failed | 115 passed (118))
+KILLED    direction from Moon centre instead of site (Tests  6 failed | 112 passed (118))
+KILLED    no interpolation between hourly rows (Tests  8 failed | 110 passed (118))
+KILLED    silent extrapolation outside table (Tests  1 failed | 117 passed (118))
+KILLED    dark threshold 0.01 -> 0.02 (dark counts 1 sample) (Tests  1 failed | 117 passed (118))
+KILLED    Earth disc radius ignored (point Earth) (Tests  2 failed | 116 passed (118))
+KILLED    sky elevation test uses > H + 1 degree (Tests  7 failed | 111 passed (118))
+KILLED    skyline lookup does not wrap at 360 (Tests  1 failed | 117 passed (118))
+KILLED    MARGINAL limit 3 -> 2 days (Tests  1 failed | 117 passed (118))
+KILLED    failed rule no longer beats MARGINAL (slip checked first) (Tests  2 failed | 116 passed (118))
+KILLED    slip run crosses a gap (Tests  1 failed | 117 passed (118))
+KILLED    smooth data allowed to carry terrain grade (Tests  2 failed | 116 passed (118))
+KILLED    verdict without grade allowed (Tests  1 failed | 117 passed (118))
+KILLED    gap not clipped to window (Tests  2 failed | 116 passed (118))
+KILLED    solar disc radius 10x (Tests  5 failed | 113 passed (118))
+KILLED    fixed array stuck on north (no best-of-8) (Tests  1 failed | 117 passed (118))
+KILLED    verdict uses early slip instead of late (Tests  2 failed | 116 passed (118))
+KILLED    Earth visibility ignores its margin (Tests  1 failed | 117 passed (118))
+KILLED    ray samples mirrored east to west (Tests  13 failed | 89 passed (102))
+KILLED    ray samples with map axes swapped (Tests  15 failed | 93 passed (108))
+KILLED    site projected with x and y swapped (Tests  16 failed | 92 passed (108))
+KILLED    curvature left out of terrain elevation (Tests  5 failed | 113 passed (118))
+KILLED    ray step 0.5 -> 7 pixels (crest stepped over) (Tests  5 failed | 113 passed (118))
+KILLED    one ray per bin instead of four (Tests  2 failed | 116 passed (118))
+KILLED    terrain height at the site left out of the observer radius (Tests  4 failed | 114 passed (118))
+KILLED    array height left out of the observer radius (Tests  7 failed | 111 passed (118))
+KILLED    ray stopped before the highest shell's tangent point (Tests  1 failed | 117 passed (118))
+KILLED    blocking distance never recorded (Tests  4 failed | 114 passed (118))
+KILLED    raster lookup shifted half a pixel (Tests  4 failed | 114 passed (118))
+KILLED    raster rows read bottom-up (Tests  14 failed | 88 passed (102))
+KILLED    fine raster used beyond its distance limit (Tests  1 failed | 117 passed (118))
+KILLED    incomplete 20 m near field still graded B (Tests  1 failed | 117 passed (118))
+KILLED    stored skyline decoded big-endian (Tests  5 failed | 113 passed (118))
+KILLED    heights that cannot be metres accepted (Tests  1 failed | 117 passed (118))
+all mutants killed
+exit 0
+
+$ (cd app && npm run lint)
+
+> app@0.0.0 lint
+> oxlint
+
+Found 0 warnings and 0 errors.
+Finished in 51ms on 6 files with 116 rules using 2 threads.
+exit 0
+
+$ (cd app && npm run build)
+
+> app@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.66 kB │ gzip:  0.39 kB
+dist/assets/engine.worker-CnHOOxb8.js   12.12 kB
+dist/assets/index-DZTD5VRI.css          11.05 kB │ gzip:  3.11 kB
+dist/assets/index-Cqh6uJuZ.js          237.49 kB │ gzip: 74.74 kB
+
+✓ built in 197ms
+exit 0
+
+$ git diff --check
+exit 0

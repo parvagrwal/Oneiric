@@ -1,0 +1,1 @@
+markdownlint exit 0

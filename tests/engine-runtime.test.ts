@@ -2,7 +2,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { buildSync } from 'esbuild';
 import { describe, expect, it } from 'vitest';
-import { HOUR_MS, metrics, series, smoothSiteFrame, smoothSkyline } from '../engine/index.ts';
+import { buildSkyline, encodeSkyline, HOUR_MS, metrics, series, smoothSiteFrame, smoothSkyline } from '../engine/index.ts';
+import { syntheticDem } from '../pipeline/synthetic-terrain.ts';
 import { loadTable } from '../pipeline/direction-check.ts';
 
 describe('the engine is pure', () => {
@@ -32,5 +33,17 @@ describe('the same engine code gives identical numbers in a sandbox with no Node
     expect(typeof vm.runInContext('typeof process + typeof require + typeof window', ctx)).toBe('string');
     expect(vm.runInContext('typeof process + typeof require + typeof window', ctx)).toBe('undefinedundefinedundefined');
     expect(inside).toBe(JSON.stringify(direct));
+  });
+  it('a terrain skyline built in the bare context is byte-for-byte the one built in Node', () => {
+    const bundle = buildSync({ entryPoints: ['engine/index.ts'], bundle: true, write: false, format: 'iife', globalName: 'Engine', platform: 'neutral', target: 'es2022' });
+    const dem = syntheticDem('synthetic test terrain', 20, 3_000, -85, 30, (rel) => 200 * Math.sin(rel.eastM / 400) * Math.cos(rel.northM / 300) + 250);
+    const direct = buildSkyline([{ dem, maxDistM: 15_000 }], -85, 30, 2);
+    const ctx = vm.createContext({ dem });
+    vm.runInContext(bundle.outputFiles[0].text, ctx);
+    const inside = vm.runInContext(
+      `const b = Engine.buildSkyline([{ dem, maxDistM: 15000 }], -85, 30, 2);
+       Array.from(new Uint8Array(Engine.encodeSkyline(b.H, b.D))).join(',');`, ctx);
+    expect(inside).toBe(Array.from(new Uint8Array(encodeSkyline(direct.H, direct.D))).join(','));
+    expect(Math.max(...direct.H) - Math.min(...direct.H)).toBeGreaterThan(1); // real relief, not a flat line
   });
 });

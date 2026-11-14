@@ -5,9 +5,9 @@ import {
   MIN_MS,
   provenanceFooter,
 } from '../../engine/index.ts'
-import type { Clock } from '../../engine/index.ts'
+import type { Clock, Grade } from '../../engine/index.ts'
 import './App.css'
-import type { ScenarioResult, SiteDefinition, TrackPoint } from './scenario.ts'
+import type { ScenarioResult, SiteDefinition, TerrainPayload, TrackPoint } from './scenario.ts'
 import { floorToTenMinutes } from './scenario.ts'
 import { timeControlForKey } from './keyboard.ts'
 
@@ -16,10 +16,21 @@ type SitesFile = {
 }
 
 type ValidationRow = {
+  id: string
   name: string
   n: number
-  maxDeg: number
-  thresholdDeg: number
+  maxDeg: number | null
+  thresholdDeg: number | null
+}
+
+/** One line of the skyline list written by the pipeline: which site and height has a terrain skyline. */
+type SkylineEntry = {
+  siteId: string
+  heightM: number
+  grade: Grade
+  terrain: string
+  siteElevationM: number
+  file: string
 }
 
 type WorkerResponse =
@@ -159,18 +170,31 @@ function SkylineCanvas({ result, scrubMinutes }: { result: ScenarioResult; scrub
         context.fillText(azimuth === 0 ? 'Earth mean direction' : `${azimuth > 0 ? '+' : ''}${azimuth}°`, x, height - 16)
       }
 
-      context.beginPath()
-      result.skyline.forEach((point, index) => {
-        const x = toX(point.az)
-        const y = toY(point.elevation)
-        if (index === 0 || Math.abs(x - toX(result.skyline[index - 1].az)) > plotWidth / 2) context.moveTo(x, y)
-        else context.lineTo(x, y)
-      })
-      context.lineTo(width - padding.right, height - padding.bottom)
-      context.lineTo(padding.left, height - padding.bottom)
-      context.closePath()
-      context.fillStyle = 'rgba(208, 185, 137, 0.17)'
-      context.fill()
+      const hasTerrain = result.verdict.grade !== 'D'
+      if (hasTerrain) {
+        // Terrain: one strip per azimuth bin, shaded by the distance to the terrain that sets the horizon.
+        const stripWidth = plotWidth / result.skyline.length
+        const floorY = height - padding.bottom
+        for (const point of result.skyline) {
+          const nearness = 1 - Math.min(1, Math.sqrt((point.distanceKm ?? 0) / 150))
+          const y = Math.max(padding.top, Math.min(floorY, toY(point.elevation)))
+          context.fillStyle = `rgba(208, 185, 137, ${(0.14 + 0.46 * nearness).toFixed(3)})`
+          context.fillRect(toX(point.az) - stripWidth / 2, y, stripWidth + 0.5, floorY - y)
+        }
+      } else {
+        context.beginPath()
+        result.skyline.forEach((point, index) => {
+          const x = toX(point.az)
+          const y = toY(point.elevation)
+          if (index === 0 || Math.abs(x - toX(result.skyline[index - 1].az)) > plotWidth / 2) context.moveTo(x, y)
+          else context.lineTo(x, y)
+        })
+        context.lineTo(width - padding.right, height - padding.bottom)
+        context.lineTo(padding.left, height - padding.bottom)
+        context.closePath()
+        context.fillStyle = 'rgba(208, 185, 137, 0.17)'
+        context.fill()
+      }
 
       context.beginPath()
       result.skyline.forEach((point, index) => {
@@ -180,7 +204,7 @@ function SkylineCanvas({ result, scrubMinutes }: { result: ScenarioResult; scrub
         else context.lineTo(x, y)
       })
       context.strokeStyle = '#e7c98d'
-      context.lineWidth = 2
+      context.lineWidth = hasTerrain ? 1.25 : 2
       context.stroke()
 
       const drawBodyTrack = (
@@ -230,7 +254,7 @@ function SkylineCanvas({ result, scrubMinutes }: { result: ScenarioResult; scrub
       context.fillStyle = '#6ed6e8'
       context.fillText('Earth', padding.left + 42, 14)
       context.fillStyle = '#e7c98d'
-      context.fillText('smooth horizon', padding.left + 92, 14)
+      context.fillText(hasTerrain ? 'terrain horizon' : 'smooth horizon', padding.left + 92, 14)
     }
 
     draw()
@@ -239,12 +263,13 @@ function SkylineCanvas({ result, scrubMinutes }: { result: ScenarioResult; scrub
     return () => observer.disconnect()
   }, [result, scrubMinutes])
 
+  const hasTerrain = result.verdict.grade !== 'D'
   return (
     <div className="skyline-frame">
-      <canvas ref={canvasRef} role="img" aria-label="Skyline view showing the smooth horizon with the Sun and Earth tracks" />
+      <canvas ref={canvasRef} role="img" aria-label={`Skyline view showing the ${hasTerrain ? 'terrain' : 'smooth'} horizon with the Sun and Earth tracks`} />
       <div className="skyline-caption">
         <span>Skyline view · azimuth centered on mean Earth direction</span>
-        <span>Exaggeration 1× · hidden portions dashed</span>
+        <span>Exaggeration 1× · hidden portions dashed{hasTerrain ? ' · terrain shaded by distance, nearer is lighter' : ''}</span>
       </div>
     </div>
   )
@@ -301,6 +326,8 @@ function App() {
   const [ephemState, setEphemState] = useState<DataState>({ kind: 'idle' })
   const [tables, setTables] = useState<TableBuffer[]>([])
   const [validation, setValidation] = useState<ValidationRow | null>(null)
+  const [skylineIndex, setSkylineIndex] = useState<Map<string, SkylineEntry> | null>(null)
+  const [loadedTerrain, setLoadedTerrain] = useState<{ siteId: string; payload: TerrainPayload | null } | null>(null)
   const [result, setResult] = useState<ScenarioResult | null>(null)
   const [calculationState, setCalculationState] = useState<DataState>({ kind: 'idle' })
   const [scrubMinutes, setScrubMinutes] = useState(0)
@@ -336,11 +363,53 @@ function App() {
         if (!response.ok) throw new Error(`validation data returned ${response.status}`)
         return response.json() as Promise<{ rows: ValidationRow[] }>
       })
-      .then((payload) => setValidation(payload.rows[0] ?? null))
+      .then((payload) => setValidation(payload.rows.find((row) => row.id === 'sun-earth-direction') ?? null))
       .catch(() => setValidation(null))
   }, [])
 
+  // Which sites have a terrain skyline. A missing or unreadable list means none: every site is then grade D.
+  useEffect(() => {
+    fetch(dataUrl('data/skylines/index.json'))
+      .then((response) => {
+        if (!response.ok) return { skylines: [] }
+        return response.json() as Promise<{ skylines: SkylineEntry[] }>
+      })
+      .then((payload) => setSkylineIndex(new Map(
+        payload.skylines.filter((entry) => entry.heightM === HEIGHT_M).map((entry) => [entry.siteId, entry]),
+      )))
+      .catch(() => setSkylineIndex(new Map()))
+  }, [])
+
   const selectedSite = sites.find((site) => site.id === selectedSiteId) ?? sites[0]
+
+  // Load the selected site's terrain skyline. If there is none, or it cannot be loaded, the scenario uses the
+  // smooth sphere and says grade D.
+  useEffect(() => {
+    const entry = selectedSite && skylineIndex?.get(selectedSite.id)
+    if (!selectedSite || !entry) return undefined
+    const siteId = selectedSite.id
+    let active = true
+    fetch(dataUrl(`data/skylines/${entry.file}`))
+      .then((response) => {
+        if (!response.ok) throw new Error(`skyline returned ${response.status}`)
+        return response.arrayBuffer()
+      })
+      .then((buffer) => {
+        if (!active) return
+        setLoadedTerrain({ siteId, payload: { buffer, grade: entry.grade, terrain: entry.terrain, siteElevationM: entry.siteElevationM, heightM: entry.heightM } })
+      })
+      .catch(() => {
+        if (active) setLoadedTerrain({ siteId, payload: null })
+      })
+    return () => {
+      active = false
+    }
+  }, [selectedSite, skylineIndex])
+
+  const selectedHasSkyline = Boolean(selectedSite && skylineIndex?.has(selectedSite.id))
+  const terrainLoaded = selectedHasSkyline && loadedTerrain?.siteId === selectedSite?.id
+  const terrainReady = Boolean(selectedSite && skylineIndex) && (!selectedHasSkyline || terrainLoaded)
+  const terrainPayload = terrainLoaded ? loadedTerrain.payload : null
   const selectedYear = Number(dateTime.slice(0, 4))
   const dateRangeError = !Number.isInteger(selectedYear) || selectedYear < 2024 || selectedYear > 2039
     ? 'Choose a date from January 2024 through December 2039 so the surrounding cached years are available.'
@@ -396,6 +465,7 @@ function App() {
 
   useEffect(() => {
     if (!selectedSite || tables.length === 0 || ephemState.kind !== 'ready') return
+    if (!terrainReady) return
     const startMs = parseUtcInput(dateTime)
     if (!Number.isFinite(startMs)) return
     const worker = workerRef.current
@@ -412,8 +482,9 @@ function App() {
       startMs,
       presetId,
       heightM: HEIGHT_M,
+      terrain: terrainPayload,
     })
-  }, [dateTime, ephemState.kind, presetId, selectedSite, tables])
+  }, [dateTime, ephemState.kind, presetId, selectedSite, tables, terrainReady, terrainPayload])
 
   useEffect(() => {
     if (!playing || !result) return undefined
@@ -499,12 +570,12 @@ function App() {
           </div>
           <div className="proof-card" aria-live="polite">
             <span className="proof-kicker">Direction check</span>
-            {validation ? (
+            {validation && validation.maxDeg !== null ? (
               <strong>{validation.maxDeg.toFixed(4)}° max error <small>· {validation.n.toLocaleString()} comparisons</small></strong>
             ) : (
               <strong>Loading the recorded check</strong>
             )}
-            <span>JPL Horizons · limit 0.02° · see the validation record</span>
+            <span>JPL Horizons · limit {validation?.thresholdDeg ?? 0.02}° · see the validation record</span>
           </div>
         </section>
 
@@ -525,7 +596,7 @@ function App() {
           <div className="control-readout">
             <span>Observer height</span>
             <strong>{HEIGHT_M} m</strong>
-            <small>Smooth sphere preview</small>
+            <small>{result && result.verdict.grade !== 'D' ? `Above the terrain · grade ${result.verdict.grade}` : 'Smooth sphere, no terrain · grade D'}</small>
           </div>
         </section>
 
@@ -557,7 +628,7 @@ function App() {
                     <strong>{site.name}</strong>
                     <small>{site.lat.toFixed(2)}° {site.lat < 0 ? 'S' : 'N'} · {site.eLon.toFixed(2)}° E</small>
                   </span>
-                  <b> D </b>
+                  <b title={skylineIndex?.get(site.id)?.terrain ?? 'Smooth sphere, no terrain'}> {skylineIndex?.get(site.id)?.grade ?? 'D'} </b>
                 </button>
               ))}
             </div>
@@ -656,7 +727,7 @@ function App() {
       </main>
 
       <footer className="site-footer">
-        <span>Oneiric · a working smooth-sphere preview</span>
+        <span>Oneiric · a working preview</span>
         <span>JPL Horizons ephemeris · no terrain is used in Grade D</span>
       </footer>
     </div>

@@ -2,9 +2,15 @@ import {
   HOUR_MS,
   MIN_MS,
   PRESETS,
+  R_MOON_KM,
+  SKY_BINS,
+  SKY_BIN_DEG,
   SLIP_STEP_MS,
+  decodeSkyline,
+  makeSkyline,
+  siteFrame,
   smoothSiteFrame,
-  smoothSkyline,
+  skylineOrSmooth,
   skylineAt,
   meanEarthAzimuth,
   metrics,
@@ -16,9 +22,11 @@ import {
   viableSeries,
   type Clock,
   type EphemTable,
+  type Grade,
   type Metrics,
   type Preset,
   type Sample,
+  type Skyline,
   type Slip,
   type Verdict,
 } from '../../engine/index.ts';
@@ -36,6 +44,15 @@ export interface SiteDefinition {
   eLon: number;
   source: string;
   sourceUrl: string;
+}
+
+/** A stored terrain skyline for one site and height, as shipped with the app, plus what its build record says about it. */
+export interface TerrainPayload {
+  buffer: ArrayBuffer;
+  grade: Grade;
+  terrain: string;
+  siteElevationM: number;
+  heightM: number;
 }
 
 export interface TrackPoint {
@@ -59,7 +76,8 @@ export interface ScenarioResult {
   sunset: Clock;
   earthset: Clock;
   meanEarthAzimuth: number;
-  skyline: Array<{ az: number; elevation: number }>;
+  /** Horizon points for drawing. With terrain: every 0.25 degree bin, with the distance to the terrain that sets it. */
+  skyline: Array<{ az: number; elevation: number; distanceKm?: number }>;
   track: TrackPoint[];
   timeline: TrackPoint[];
 }
@@ -87,6 +105,13 @@ function presetFor(id: string): Preset {
   return preset;
 }
 
+function terrainSkyline(terrain: TerrainPayload, heightM: number): Skyline {
+  if (terrain.heightM !== heightM) throw new RangeError(`the terrain skyline was built for ${terrain.heightM} m, not ${heightM} m`);
+  if (!Number.isFinite(terrain.siteElevationM)) throw new RangeError('the terrain skyline has no site elevation');
+  const { H, D } = decodeSkyline(terrain.buffer);
+  return makeSkyline({ H, D, grade: terrain.grade, terrain: terrain.terrain, heightM });
+}
+
 /**
  * Orchestrates the existing pure engine for the first app scenario.
  * The worker calls this function; it contains no display arithmetic.
@@ -97,6 +122,7 @@ export function calculateScenario(
   requestedStartMs: number,
   presetId: string,
   heightM = 2,
+  terrain: TerrainPayload | null = null,
 ): ScenarioResult {
   const preset = presetFor(presetId);
   const startMs = floorToTenMinutes(requestedStartMs);
@@ -105,8 +131,12 @@ export function calculateScenario(
   const firstStartMs = gridStartMs - SLIP_DAYS_EACH_SIDE * DAY_MS;
   const lastStartMs = firstStartMs + (SLIP_START_COUNT - 1) * SLIP_STEP_MS;
   const seriesEndMs = lastStartMs + stayMs;
-  const sky = smoothSkyline(heightM);
-  const frame = smoothSiteFrame(site.lat, site.eLon, heightM);
+  // With a terrain skyline the site sits on the terrain. Without one, the smooth sphere is used and the grade is D.
+  const terrainSky = terrain ? terrainSkyline(terrain, heightM) : null;
+  const sky = skylineOrSmooth(terrainSky, heightM);
+  const frame = terrain && terrainSky
+    ? siteFrame(site.lat, site.eLon, R_MOON_KM * 1000 + terrain.siteElevationM + heightM)
+    : smoothSiteFrame(site.lat, site.eLon, heightM);
   const siteInput = { frame, sky };
   const calculated = series(table, siteInput, firstStartMs, seriesEndMs, SERIES_STEP_MIN);
   const windowEndMs = startMs + stayMs;
@@ -129,10 +159,12 @@ export function calculateScenario(
     sunset: nextClock(calculated, 'sunset', startMs, windowEndMs),
     earthset: nextClock(calculated, 'earthset', startMs, windowEndMs),
     meanEarthAzimuth: meanEarthAzimuth(frame),
-    skyline: Array.from({ length: 181 }, (_, index) => {
-      const az = index * 2;
-      return { az, elevation: skylineAt(sky, az).H };
-    }),
+    skyline: terrainSky
+      ? Array.from({ length: SKY_BINS }, (_, bin) => ({ az: (bin + 0.5) * SKY_BIN_DEG, elevation: sky.H[bin], distanceKm: sky.D[bin] / 100 }))
+      : Array.from({ length: 181 }, (_, index) => {
+        const az = index * 2;
+        return { az, elevation: skylineAt(sky, az).H };
+      }),
     track,
     timeline,
   };

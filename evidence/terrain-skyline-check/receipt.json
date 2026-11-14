@@ -1,0 +1,19 @@
+{
+  "status": "partial",
+  "summary": "The skyline builder passes its checks on synthetic terrain. It has not been run on the LOLA rasters: they could not be downloaded on the build machine, so no skyline file exists and every site is still grade D.",
+  "rootTypecheck": "pass",
+  "rootTests": { "testFiles": 15, "tests": 118, "status": "pass" },
+  "directionCheck": { "comparisons": 8000, "maxErrorDeg": 0.00606, "rmsErrorDeg": 0.00284, "thresholdDeg": 0.02, "status": "pass" },
+  "skylineMathsOnSyntheticTerrain": { "comparisons": 10084, "maxErrorDeg": 0.00293, "rmsErrorDeg": 0.00055, "thresholdDeg": 0.01, "status": "pass" },
+  "refinementOnSyntheticTerrain": { "maxMetricMovePoints": 0.217, "limitPoints": 1, "maxGapMovePctOfStay": 0.0248, "limitPct": 1, "status": "pass" },
+  "rasterOrientationCheck": { "status": "pending", "reason": "no LOLA raster available" },
+  "storedSkylineFileCheck": { "status": "pending", "reason": "no skyline has been built" },
+  "skylineBuildOnLolaRasters": { "status": "failed to start", "reason": "all three rasters: Request failed", "skylinesWritten": 0 },
+  "mutationCheck": { "mutants": 35, "mutantsKilled": 35, "status": "pass" },
+  "appLint": { "warnings": 0, "errors": 0 },
+  "appBuild": "pass",
+  "markdownlint": "pass",
+  "publicTermLeakCheck": "see leak-check-output.txt",
+  "derivedData": { "siteCount": 9, "sitesWithTerrainSkyline": 0, "terrainGrade": "D", "terrainSource": "none (smooth sphere)" },
+  "evidenceFiles": ["command.txt", "output.txt", "readme-markdownlint.txt", "leak-check-output.txt", "receipt.json"]
+}

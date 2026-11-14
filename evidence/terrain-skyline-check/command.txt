@@ -1,0 +1,11 @@
+# Terrain skyline: builder, checks and preview integration
+npm run typecheck
+npm test
+npm run validate
+npx tsx pipeline/skyline-check.ts
+npm run build:skylines
+npm run mutation-check
+(cd app && npm run lint)
+(cd app && npm run build)
+npx markdownlint-cli README.md
+git diff --check

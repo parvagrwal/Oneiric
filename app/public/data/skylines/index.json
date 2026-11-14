@@ -1,0 +1,53 @@
+{
+  "generatedBy": "pipeline/build-skylines.ts",
+  "skylines": [
+    {
+      "siteId": "chandrayaan-3",
+      "heightM": 2,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 529.7234449007681,
+      "file": "chandrayaan-3-2m.bin"
+    },
+    {
+      "siteId": "connecting-ridge",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1955.0103866231666,
+      "file": "connecting-ridge-2m.bin"
+    },
+    {
+      "siteId": "im-1-odysseus",
+      "heightM": 2,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 2591.9232101406938,
+      "file": "im-1-odysseus-2m.bin"
+    },
+    {
+      "siteId": "im-2-athena",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5321.905530307851,
+      "file": "im-2-athena-2m.bin"
+    },
+    {
+      "siteId": "nobile-rim-2",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1122.0162970693514,
+      "file": "nobile-rim-2-2m.bin"
+    },
+    {
+      "siteId": "shackleton-rim",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1728.8692214407415,
+      "file": "shackleton-rim-2m.bin"
+    }
+  ]
+}

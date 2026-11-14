@@ -8,3 +8,4 @@ export * from './series.ts';
 export * from './metrics.ts';
 export * from './requirements.ts';
 export * from './provenance.ts';
+export * from './terrain.ts';
