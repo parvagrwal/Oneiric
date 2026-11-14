@@ -1,0 +1,16 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 206 Partial Content
+Date: Sat, 14 Nov 2026 17:23:57 GMT
+X-Frame-Options: SAMEORIGIN
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Fri, 07 Jul 2023 22:28:19 GMT
+ETag: W/"a0b2f283-189327867b8"
+Content-Type: image/tiff
+Content-Range: bytes 0-1023/2696082051
+Content-Security-Policy: upgrade-insecure-requests
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Content-Length: 1024
+

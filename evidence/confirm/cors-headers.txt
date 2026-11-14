@@ -1,0 +1,7 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 405 Method Not Allowed
+Server: nginx
+Date: Sat, 14 Nov 2026 17:23:37 GMT
+Content-Type: application/json
+

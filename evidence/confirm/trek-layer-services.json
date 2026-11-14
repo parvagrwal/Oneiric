@@ -1,0 +1,21 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":0,
+    "params":{
+      "q":"item_UUID:c630f783-89d6-41a5-993f-cac88b89cf01",
+      "indent":"on",
+      "version":"2.2",
+      "wt":"json"}},
+  "response":{"numFound":1,"start":0,"docs":[
+      {
+        "serviceType":"Mosaic",
+        "endPoint":"https://trek.nasa.gov/tiles/Moon/SP/LRO_LOLA_Shade_SPole75_30mp_v04",
+        "protocol":"WMTS",
+        "item_UUID":"c630f783-89d6-41a5-993f-cac88b89cf01",
+        "wmts_mode":"rest",
+        "layerId":"LRO_LOLA_Shade_SPole75_30mp_v04",
+        "item_DBID":289751,
+        "id":"01e0eceb-bbd4-400c-84c1-c806946e0dc2",
+        "_version_":1881151176937832448}]
+  }}

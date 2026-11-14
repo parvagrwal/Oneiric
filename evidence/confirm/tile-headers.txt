@@ -1,0 +1,15 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 200 OK
+Date: Sat, 14 Nov 2026 17:25:50 GMT
+Server: Apache/2.4.65 (Unix) OpenSSL/3.4.3
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+Last-Modified: Sat, 24 Sep 2016 06:30:50 GMT
+ETag: "3a86-53d3b0931b960"
+Accept-Ranges: bytes
+Content-Security-Policy: frame-ancestors 'self' aelp.smartsparrow.com;
+Access-Control-Allow-Origin: *
+Content-Type: image/png
+Content-Length: 14982
+

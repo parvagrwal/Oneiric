@@ -1,0 +1,3 @@
+c630f783-89d6-41a5-993f-cac88b89cf01
+bbox: -457440,-457440,457440,457440
+thumbnail: https://trek.nasa.gov/tiles/Moon/SP/LRO_LOLA_Shade_SPole75_30mp_v04/thumbnail/LRO_LOLA_Shade_SPole75_30mp_v04-
