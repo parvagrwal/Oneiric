@@ -3,11 +3,59 @@
   "skylines": [
     {
       "siteId": "artemis-de-gerlache-rim-2-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -88.41293238085407,
+      "file": "artemis-de-gerlache-rim-2-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -88.41293238085407,
+      "file": "artemis-de-gerlache-rim-2-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -88.41293238085407,
+      "file": "artemis-de-gerlache-rim-2-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": -88.41293238085407,
       "file": "artemis-de-gerlache-rim-2-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1765.1918508719357,
+      "file": "artemis-de-gerlache-rim-2-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1765.1918508719357,
+      "file": "artemis-de-gerlache-rim-2-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1765.1918508719357,
+      "file": "artemis-de-gerlache-rim-2-highest-20m.bin"
     },
     {
       "siteId": "artemis-de-gerlache-rim-2-highest",
@@ -19,11 +67,59 @@
     },
     {
       "siteId": "artemis-haworth-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1628.0178355384364,
+      "file": "artemis-haworth-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1628.0178355384364,
+      "file": "artemis-haworth-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1628.0178355384364,
+      "file": "artemis-haworth-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 1628.0178355384364,
       "file": "artemis-haworth-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 2842.2043195759857,
+      "file": "artemis-haworth-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 2842.2043195759857,
+      "file": "artemis-haworth-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 2842.2043195759857,
+      "file": "artemis-haworth-highest-20m.bin"
     },
     {
       "siteId": "artemis-haworth-highest",
@@ -35,11 +131,59 @@
     },
     {
       "siteId": "artemis-malapert-massif-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4784.1719677276415,
+      "file": "artemis-malapert-massif-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4784.1719677276415,
+      "file": "artemis-malapert-massif-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4784.1719677276415,
+      "file": "artemis-malapert-massif-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 4784.1719677276415,
       "file": "artemis-malapert-massif-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5173.297416083579,
+      "file": "artemis-malapert-massif-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5173.297416083579,
+      "file": "artemis-malapert-massif-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5173.297416083579,
+      "file": "artemis-malapert-massif-highest-20m.bin"
     },
     {
       "siteId": "artemis-malapert-massif-highest",
@@ -51,11 +195,59 @@
     },
     {
       "siteId": "artemis-mons-mouton-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6398.637266753315,
+      "file": "artemis-mons-mouton-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6398.637266753315,
+      "file": "artemis-mons-mouton-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6398.637266753315,
+      "file": "artemis-mons-mouton-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 6398.637266753315,
       "file": "artemis-mons-mouton-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6463.62366774368,
+      "file": "artemis-mons-mouton-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6463.62366774368,
+      "file": "artemis-mons-mouton-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6463.62366774368,
+      "file": "artemis-mons-mouton-highest-20m.bin"
     },
     {
       "siteId": "artemis-mons-mouton-highest",
@@ -67,11 +259,59 @@
     },
     {
       "siteId": "artemis-mons-mouton-plateau-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m",
+      "siteElevationM": 5248.701327686278,
+      "file": "artemis-mons-mouton-plateau-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m",
+      "siteElevationM": 5248.701327686278,
+      "file": "artemis-mons-mouton-plateau-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m",
+      "siteElevationM": 5248.701327686278,
+      "file": "artemis-mons-mouton-plateau-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m",
       "siteElevationM": 5248.701327686278,
       "file": "artemis-mons-mouton-plateau-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 7027.227248745103,
+      "file": "artemis-mons-mouton-plateau-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 7027.227248745103,
+      "file": "artemis-mons-mouton-plateau-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 7027.227248745103,
+      "file": "artemis-mons-mouton-plateau-highest-20m.bin"
     },
     {
       "siteId": "artemis-mons-mouton-plateau-highest",
@@ -83,11 +323,59 @@
     },
     {
       "siteId": "artemis-nobile-rim-1-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5942.817698492581,
+      "file": "artemis-nobile-rim-1-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5942.817698492581,
+      "file": "artemis-nobile-rim-1-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5942.817698492581,
+      "file": "artemis-nobile-rim-1-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 5942.817698492581,
       "file": "artemis-nobile-rim-1-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6799.986271359264,
+      "file": "artemis-nobile-rim-1-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6799.986271359264,
+      "file": "artemis-nobile-rim-1-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6799.986271359264,
+      "file": "artemis-nobile-rim-1-highest-20m.bin"
     },
     {
       "siteId": "artemis-nobile-rim-1-highest",
@@ -99,11 +387,59 @@
     },
     {
       "siteId": "artemis-nobile-rim-2-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1009.4105505894513,
+      "file": "artemis-nobile-rim-2-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1009.4105505894513,
+      "file": "artemis-nobile-rim-2-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1009.4105505894513,
+      "file": "artemis-nobile-rim-2-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 1009.4105505894513,
       "file": "artemis-nobile-rim-2-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1811.94314078438,
+      "file": "artemis-nobile-rim-2-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1811.94314078438,
+      "file": "artemis-nobile-rim-2-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1811.94314078438,
+      "file": "artemis-nobile-rim-2-highest-20m.bin"
     },
     {
       "siteId": "artemis-nobile-rim-2-highest",
@@ -115,11 +451,59 @@
     },
     {
       "siteId": "artemis-peak-near-cabeus-b-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4491.264262914803,
+      "file": "artemis-peak-near-cabeus-b-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4491.264262914803,
+      "file": "artemis-peak-near-cabeus-b-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4491.264262914803,
+      "file": "artemis-peak-near-cabeus-b-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 4491.264262914803,
       "file": "artemis-peak-near-cabeus-b-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4601.772696352025,
+      "file": "artemis-peak-near-cabeus-b-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4601.772696352025,
+      "file": "artemis-peak-near-cabeus-b-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4601.772696352025,
+      "file": "artemis-peak-near-cabeus-b-highest-20m.bin"
     },
     {
       "siteId": "artemis-peak-near-cabeus-b-highest",
@@ -131,11 +515,59 @@
     },
     {
       "siteId": "artemis-slater-plain-centroid",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -30.876028302453907,
+      "file": "artemis-slater-plain-centroid-0m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-centroid",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -30.876028302453907,
+      "file": "artemis-slater-plain-centroid-10m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-centroid",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -30.876028302453907,
+      "file": "artemis-slater-plain-centroid-20m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-centroid",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": -30.876028302453907,
       "file": "artemis-slater-plain-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-highest",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 533.4838843674008,
+      "file": "artemis-slater-plain-highest-0m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-highest",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 533.4838843674008,
+      "file": "artemis-slater-plain-highest-10m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-highest",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 533.4838843674008,
+      "file": "artemis-slater-plain-highest-20m.bin"
     },
     {
       "siteId": "artemis-slater-plain-highest",
@@ -147,11 +579,59 @@
     },
     {
       "siteId": "chandrayaan-3",
+      "heightM": 0,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 529.7234449007681,
+      "file": "chandrayaan-3-0m.bin"
+    },
+    {
+      "siteId": "chandrayaan-3",
+      "heightM": 10,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 529.7234449007681,
+      "file": "chandrayaan-3-10m.bin"
+    },
+    {
+      "siteId": "chandrayaan-3",
+      "heightM": 20,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 529.7234449007681,
+      "file": "chandrayaan-3-20m.bin"
+    },
+    {
+      "siteId": "chandrayaan-3",
       "heightM": 2,
       "grade": "C",
       "terrain": "LOLA 240 m",
       "siteElevationM": 529.7234449007681,
       "file": "chandrayaan-3-2m.bin"
+    },
+    {
+      "siteId": "connecting-ridge",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1955.0103866231666,
+      "file": "connecting-ridge-0m.bin"
+    },
+    {
+      "siteId": "connecting-ridge",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1955.0103866231666,
+      "file": "connecting-ridge-10m.bin"
+    },
+    {
+      "siteId": "connecting-ridge",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1955.0103866231666,
+      "file": "connecting-ridge-20m.bin"
     },
     {
       "siteId": "connecting-ridge",
@@ -163,11 +643,59 @@
     },
     {
       "siteId": "im-1-odysseus",
+      "heightM": 0,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 2591.9232101406938,
+      "file": "im-1-odysseus-0m.bin"
+    },
+    {
+      "siteId": "im-1-odysseus",
+      "heightM": 10,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 2591.9232101406938,
+      "file": "im-1-odysseus-10m.bin"
+    },
+    {
+      "siteId": "im-1-odysseus",
+      "heightM": 20,
+      "grade": "C",
+      "terrain": "LOLA 240 m",
+      "siteElevationM": 2591.9232101406938,
+      "file": "im-1-odysseus-20m.bin"
+    },
+    {
+      "siteId": "im-1-odysseus",
       "heightM": 2,
       "grade": "C",
       "terrain": "LOLA 240 m",
       "siteElevationM": 2591.9232101406938,
       "file": "im-1-odysseus-2m.bin"
+    },
+    {
+      "siteId": "im-2-athena",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5321.905530307851,
+      "file": "im-2-athena-0m.bin"
+    },
+    {
+      "siteId": "im-2-athena",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5321.905530307851,
+      "file": "im-2-athena-10m.bin"
+    },
+    {
+      "siteId": "im-2-athena",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5321.905530307851,
+      "file": "im-2-athena-20m.bin"
     },
     {
       "siteId": "im-2-athena",
@@ -179,11 +707,59 @@
     },
     {
       "siteId": "nobile-rim-2",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1122.0162970693514,
+      "file": "nobile-rim-2-0m.bin"
+    },
+    {
+      "siteId": "nobile-rim-2",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1122.0162970693514,
+      "file": "nobile-rim-2-10m.bin"
+    },
+    {
+      "siteId": "nobile-rim-2",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1122.0162970693514,
+      "file": "nobile-rim-2-20m.bin"
+    },
+    {
+      "siteId": "nobile-rim-2",
       "heightM": 2,
       "grade": "B",
       "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
       "siteElevationM": 1122.0162970693514,
       "file": "nobile-rim-2-2m.bin"
+    },
+    {
+      "siteId": "shackleton-rim",
+      "heightM": 0,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m",
+      "siteElevationM": 1728.8692214407415,
+      "file": "shackleton-rim-0m.bin"
+    },
+    {
+      "siteId": "shackleton-rim",
+      "heightM": 10,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1728.8692214407415,
+      "file": "shackleton-rim-10m.bin"
+    },
+    {
+      "siteId": "shackleton-rim",
+      "heightM": 20,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1728.8692214407415,
+      "file": "shackleton-rim-20m.bin"
     },
     {
       "siteId": "shackleton-rim",

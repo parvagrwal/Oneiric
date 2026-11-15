@@ -1,0 +1,11 @@
+$ grep -rEn "B[0-9]+\.[0-9]+|S[0-9]+|V[0-9]+|P[0-9]+|G[0-9]+|D-2026|C-[0-9]+|F[0-9]+|ship point|Gate [0-9]|tracker|PRD|AGENT\.md|decision log|conflict register|kill gate|timebox|friction|ticked|unticked|not run|in chat" README.md app/src/ engine/ pipeline/ functions/ scripts/ docs/ evidence/ --include="*.md" --include="*.ts" --include="*.tsx" --include="*.sh"
+
+grep: functions/: No such file or directory
+pipeline/find-artemis-points.ts:5:// Landing Site Navigational Grids", DOI 10.5066/P1MEQ6UK), shipped in the repository.
+
+Reviewed by hand: the single hit is the DOI of a USGS data release (10.5066/P1MEQ6UK). It matched the
+P-plus-digit pattern. It is not a plan code, it was present before this change, and it belongs in that file
+because the release it names is the source of the Artemis region outlines. Recorded as a false positive,
+not silently ignored.
+
+Files changed by this task: zero hits.

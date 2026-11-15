@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import type { HeightOption } from '../../engine/index.ts';
 
 export interface ValidationRowData {
   id: string;
@@ -55,6 +56,11 @@ const CHECK_OVERVIEW: Array<{ name: string; compares: string; limit: string }> =
     limit: 'Crater floor below the median ring height and below the mirrored longitude',
   },
   {
+    name: 'Observer heights with a stored terrain skyline',
+    compares: 'One row per site and observer height in the skyline index, and whether every file the index lists is present.',
+    limit: 'Every listed file present; a single height is reported, not failed',
+  },
+  {
     name: 'Shipped skylines match their build records',
     compares: 'SHA-256 of every shipped skyline file, checked in 10° azimuth blocks against the record written when it was built.',
     limit: 'Exact match; any changed block is reported',
@@ -77,9 +83,14 @@ const QUANTITY_SOURCES: Array<{ quantity: string; source: string }> = [
   { quantity: 'Verdict presets', source: '6.5-day sortie, 14-day lander, and one-year stay thresholds are illustrative, not agency requirements, and are editable in the Scenario bar' },
 ];
 
-export function MethodDrawer({ rows, pending, onClose }: {
+export function MethodDrawer({ rows, pending, heights, observedHeightM, unloadedSkylineFiles, onClose }: {
   rows: ValidationRowData[];
   pending: PendingRow[];
+  /** Every observer height the selector offers, and whether a stored skyline exists at it. */
+  heights: HeightOption[];
+  observedHeightM: number;
+  /** Files listed in the skyline index that did not load. Any entry here is a broken build, not a missing height. */
+  unloadedSkylineFiles: string[];
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -193,6 +204,50 @@ export function MethodDrawer({ rows, pending, onClose }: {
           )}
         </section>
 
+        <section aria-label="Observer heights available">
+          <h3>Which observer heights have a terrain skyline</h3>
+          <p className="method-ref">
+            A site uses a terrain horizon only at a height a stored skyline was built for. At any other height it
+            runs the smooth sphere and is labelled grade D. No height is ever approximated from a neighbouring one:
+            on smooth ground the horizon sits at −0.087° from 2 m and −0.194° from 10 m.
+          </p>
+          {unloadedSkylineFiles.length > 0 && (
+            <div className="method-pending" role="status">
+              <strong>{unloadedSkylineFiles.length} skyline file(s) listed in the index did not load</strong>
+              <p className="method-ref">
+                These heights are shown as unavailable rather than borrowed from another height: {unloadedSkylineFiles.slice(0, 6).join(', ')}
+                {unloadedSkylineFiles.length > 6 ? `, and ${unloadedSkylineFiles.length - 6} more` : ''}.
+              </p>
+            </div>
+          )}
+          <div className="method-table-wrap">
+            <table className="method-table">
+              <thead>
+                <tr><th>Height</th><th>Terrain skylines</th><th>What you see</th></tr>
+              </thead>
+              <tbody>
+                {heights.map((option) => (
+                  <tr key={option.heightM}>
+                    <th scope="row">
+                      {option.heightM} m{option.heightM === observedHeightM ? ' (selected)' : ''}
+                    </th>
+                    <td>
+                      {option.available
+                        ? `${option.skylineCount} ${option.skylineCount === 1 ? 'site' : 'sites'}`
+                        : 'none built yet'}
+                    </td>
+                    <td>
+                      {option.available
+                        ? 'Terrain horizon where a skyline exists; grade D elsewhere'
+                        : 'Smooth sphere at grade D for every site'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section aria-label="Where the numbers come from">
           <h3>Where the numbers come from</h3>
           <div className="method-table-wrap">
@@ -221,7 +276,8 @@ export function MethodDrawer({ rows, pending, onClose }: {
             <li>The verdict presets are illustrative, not agency requirements, and are editable in the Scenario bar.</li>
             <li>Artemis III candidate region points are illustrative representative points (Oct 2024 list), not NASA-selected sites.</li>
             <li>Mission hindcasts replay recorded events; they do not predict future missions.</li>
-            <li>The sensitivity report (how the verdict moves with array height) is not available yet: it needs skylines at heights other than 2 m, which are not shipped yet.</li>
+            <li>An observer height is offered only where a stored skyline was built for that exact height. Choosing a height with no skyline runs the smooth sphere at grade D and says so on the card; the horizon is never borrowed from another height.</li>
+            <li>The observer-height comparison — how the metrics move with mast height — is reported by <code>npm run height-report</code>, values only with no threshold. The resolution and shifted-skyline sensitivities are not available yet.</li>
             <li>Nothing in the decision path is live. Every position comes from the cached 2023–2040 hourly table; no network call happens while a verdict is computed.</li>
             <li>The cached per-site Horizons check is shown only for sites with a cached query on file, with its cache date; sites without one say “not cached”, never a made-up number.</li>
           </ul>

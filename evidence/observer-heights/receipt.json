@@ -1,0 +1,107 @@
+{
+  "appBuild": {
+    "modules": 1082,
+    "status": "pass"
+  },
+  "appLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "dataShippedInReview": {
+    "agentNote": "the agent's build environment could not reach pgda.gsfc.nasa.gov, ssd.jpl.nasa.gov or trek.nasa.gov, so the agent shipped the code and the reviewer supplied the files",
+    "builtBy": "the reviewer, whose environment holds the LOLA rasters (240 m and 80 m local, 20 m over PGDA range requests)",
+    "command": "npm run build:skylines -- --heights 0,10,20",
+    "grades": "22 grade B + 2 grade C per height, the same 2 grade-C sites as at 2 m; 0 rays ended at a raster edge; 0 incomplete near fields",
+    "heights": "0, 10 and 20 m skylines for all 24 polar sites, 72 files, added in review",
+    "honesty": "no synthetic or derived terrain file is shipped; every .bin is built from the LOLA rasters by pipeline/build-skylines.ts",
+    "index": "index.json lists 96 skylines"
+  },
+  "date": "2026-11-15",
+  "endToEndProof": {
+    "cleanedUp": "the temporary files were deleted and index.json restored; no derived file is in the tree",
+    "corrected": "the agent's first proof used temporary 10 m files made by shifting the 2 m horizon, and reported 29.47% sunlit at 10 m for connecting-ridge - lower than at 2 m, which is backwards: a higher observer sees more sun, not less. The temporary files were deleted. The numbers above come from the real 10 m skyline built from the LOLA rasters, and the sunlit percentage rises with height at every site.",
+    "method": "npm run height-report on the shipped skylines (review run, sortie preset from 2027-03-01), plus the app's own loader and scenario code in tests/height-selector.test.ts",
+    "observed": [
+      "heights available 0m(24) 2m(24) 10m(24) 20m(24), 0 missing files",
+      "connecting-ridge 0 m -> grade B, sunlit 1.47%",
+      "connecting-ridge 2 m -> grade B, sunlit 36.78%",
+      "connecting-ridge 10 m -> grade B, sunlit 100.00%",
+      "connecting-ridge 20 m -> grade B, sunlit 100.00%",
+      "shackleton-rim 2 m -> 10 m: sunlit +73.02 pts, dark gap -122.03 h"
+    ]
+  },
+  "evidenceFiles": [
+    "command.txt",
+    "output.txt",
+    "height-report-output.txt",
+    "receipt.json"
+  ],
+  "finalGateRun": {
+    "appBuild": "1082 modules, built in 1.18 s",
+    "appLint": "0 warnings, 0 errors",
+    "leakCheck": "1 hit, DOI false positive in pipeline/find-artemis-points.ts:5, pre-existing and reviewed by hand; zero hits in the files changed by this task",
+    "mutationCheck": "45 killed, 0 survived",
+    "order": "typecheck, test, validate, mutation-check, leak check, app lint, app build",
+    "test": "196 passed in 25 files",
+    "typecheck": "exit 0",
+    "validate": "6 PASS rows, 0 pending (review run with the rasters; the agent's run without them had 5 PASS and the raster-orientation row pending, restored from the committed file)"
+  },
+  "mutationCheck": {
+    "mutants": 45,
+    "mutantsKilled": 45,
+    "newMutants": 8,
+    "note": "the new mutants cover the height resolver, the selector list and the index loader",
+    "status": "pass"
+  },
+  "publicTermLeakCheck": "1 hit, pipeline/find-artemis-points.ts:5, a USGS DOI (P1MEQ6UK) matched by the P-plus-digit pattern; present before this change; reviewed by hand and recorded as a false positive",
+  "review": {
+    "changes": [
+      "72 multi-height skylines (0, 10, 20 m x 24 polar sites) plus the 96-entry index, built from the LOLA rasters and added here",
+      "validation.json regenerated: 6 PASS rows, skyline-files n=96, observer-heights lists all four heights",
+      "height-report-output.txt replaced with the review run over all four heights",
+      "receipt.json updated to the merged state; the agent's temporary-file proof numbers replaced with the real ones (see endToEndProof.corrected)",
+      "README.md test counts corrected: 196 tests across 25 files (was 156 across 20)",
+      "docs/observer-height.md: the 2 m to 10 m horizon shift is a fifth of the Sun's diameter, not two thirds",
+      "MethodDrawer.tsx: the observer-height comparison is now reported by npm run height-report; the resolution and shifted-skyline sensitivities are still not run"
+    ],
+    "gatesReRun": "typecheck exit 0; tests 196 passed in 25 files; validate 6 PASS rows, 0 pending; mutation-check 45 killed, 0 survived; leak check 1 hit, DOI false positive, pre-existing; app lint 0 warnings, 0 errors; app build 1082 modules; markdownlint 0 issues",
+    "reviewer": "Muse (review pack)"
+  },
+  "status": "pass",
+  "summary": "The app supports any observer height. A stored skyline is used only at the exact height it was built for; any other height runs the smooth sphere at grade D and is labelled so. All four heights (0, 2, 10 and 20 m) are shipped with 24 polar skylines each, so the selector marks every height as available and the mast comparison reports what each height changes. Adding another height is a build run with no code change.",
+  "task": "observer-heights",
+  "tests": {
+    "status": "pass",
+    "testFiles": 25,
+    "tests": 196
+  },
+  "typecheck": "exit 0, no errors",
+  "validation": {
+    "existingRowsUnchanged": "sun-earth-direction, skyline-synthetic, raster-orientation, skyline-files and mission-hindcasts have the same numbers as the committed rows; skyline-files is now n=96 (was 24) because the 0, 10 and 20 m skylines were added in review; the raster-orientation row was measured in the review run, which has the rasters",
+    "newRow": {
+      "availableHeightsM": [
+        0,
+        2,
+        10,
+        20
+      ],
+      "id": "observer-heights",
+      "n": 96,
+      "name": "Observer heights with a stored terrain skyline",
+      "pass": true
+    },
+    "pass": 6,
+    "pending": 0,
+    "rows": 6
+  },
+  "whatWasBuilt": [
+    "engine/heights.ts: heightOptions and resolveSkylineAtHeight, the single rule used by the pipeline and the app",
+    "pipeline/skyline-index.ts: strict reader for app/public/data/skylines/index.json",
+    "pipeline/height-report.ts and npm run height-report: per-height metrics and the change between neighbouring heights, values only",
+    "app/src/heights-ui.ts and the Observer height selector: every height offered, unavailable ones named, help line for the chosen height",
+    "app/src/App.tsx: loads every height in the index, not only 2 m; site grade follows the height on screen; lists index files that failed to load",
+    "app/src/MethodDrawer.tsx: height coverage table and the unloaded-file warning",
+    "pipeline/validate.ts: observer-heights row",
+    "docs/observer-height.md: the file and index contract the reviewer needs"
+  ]
+}

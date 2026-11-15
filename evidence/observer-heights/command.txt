@@ -1,0 +1,19 @@
+# Observer height support: the resolver, the multi-height index, the tests and the selector.
+
+# 1. The rule and its tests
+npx tsc --noEmit
+npx vitest run
+npx vitest run tests/heights.test.ts tests/height-report.test.ts tests/height-selector.test.ts tests/skyline-index.test.ts tests/heights-ui.test.ts tests/url-state.test.ts
+
+# 2. The checks
+npm run validate
+npm run mutation-check
+
+# 3. What each shipped height changes, from the real files
+npm run height-report
+
+# 4. The interface
+cd app && npm run lint && npm run build
+
+# 5. The public-file leak check
+grep -rEn "B[0-9]+\.[0-9]+|S[0-9]+|V[0-9]+|P[0-9]+|G[0-9]+|D-2026|C-[0-9]+|F[0-9]+|ship point|Gate [0-9]|tracker|PRD|AGENT\.md|decision log|conflict register|kill gate|timebox|friction|ticked|unticked|not run|in chat" README.md app/src/ engine/ pipeline/ scripts/ docs/ evidence/ --include="*.md" --include="*.ts" --include="*.tsx" --include="*.sh"

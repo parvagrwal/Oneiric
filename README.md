@@ -64,7 +64,7 @@ The tool replays six recorded facts with the same engine the app uses. Tolerance
 | `pipeline/` | Node scripts that fetch Horizons responses, build the binary tables, read the elevation rasters, build the skylines, and run the checks. |
 | `docs/` | Engineering notes, including the worked example of a 21-day slip (`docs/worked-case.md`). |
 | `fixtures/` | Raw Horizons responses, saved as received. |
-| `tests/` | Automated unit and integration tests (156 tests across 20 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
+| `tests/` | Automated unit and integration tests (196 tests across 25 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
 | `evidence/` | For each finished step: the command, the raw output, and a saved receipt. |
 
 ## How do you run it locally?
@@ -74,10 +74,11 @@ You need Node 20 or later. The Horizons responses and the 24 polar skylines at 2
 ```bash
 npm ci
 npm run build:ephemeris   # raw responses -> app/public/data/ephem/<year>.bin
-npm test                  # 156 tests across 20 test files
+npm test                  # 196 tests across 25 test files
 npm run typecheck
 npm run validate          # direction, skyline, stored-skyline and hindcast checks -> app/public/data/validation.json
-npm run mutation-check    # changes 37 engine elements one at a time; every mutant must fail a test
+npm run mutation-check    # changes 45 engine elements one at a time; every mutant must fail a test
+npm run height-report     # what each shipped observer height changes, per site; no threshold
 npx tsx pipeline/hook-sun-elevation.ts   # Sun elevation at the recorded IM-2 landing instant
 npx tsx pipeline/find-worked-case.ts     # scan 2027–2029 for 21-day verdict flips
 
@@ -112,6 +113,24 @@ npm run build:skylines    # one skyline per polar site -> app/public/data/skylin
 npm run validate          # runs direction, synthetic terrain, orientation, and stored-file checks
 ```
 
+### How do you add an observer height?
+
+The loader reads `app/public/data/skylines/index.json` and loads every skyline it lists, at every height. Nothing in the app names the heights, so new ones appear in the **Observer height** selector as soon as their files and index rows exist:
+
+```text
+app/public/data/skylines/<siteId>-<heightM>m.bin   8,640 bytes: 1,440 float32 horizons (°), then 1,440 uint16 distances (10 m units)
+app/public/data/skylines/<siteId>-<heightM>m.json  the build record, checked by npm run validate
+app/public/data/skylines/index.json                one row per site and height: siteId, heightM, grade, terrain, siteElevationM, file
+```
+
+```bash
+npm run build:skylines -- --heights 0,2,10,20          # every polar site, four heights
+npm run build:skylines -- --heights 0,2,10,20 --site connecting-ridge   # one site first
+npm run validate && npm run height-report              # file checksums, then what each height changes
+```
+
+The exact index fields, the grade meanings and the failure behaviour are in [`docs/observer-height.md`](docs/observer-height.md). A height with no skyline is offered and labelled **no terrain skyline yet**; it runs the smooth sphere at grade D for every site, and the horizon is never interpolated from another height.
+
 ## How does the calculation work?
 
 - **Frame:** the Moon's mean-Earth frame (`MOON_ME`, DE441 ephemeris), east-positive longitude, sphere radius 1,737.4 km.
@@ -136,13 +155,13 @@ npm run validate          # runs direction, synthetic terrain, orientation, and 
 | Mission hindcasts | Replay of six recorded events | NASA catalogue, Firefly mission log, ISRO statements; all six pass, tolerances fixed before the run (`app/public/data/validation.json`) |
 | 3D Moon view picture | Online NASA imagery only | NASA Scientific Visualization Studio CGI Moon Kit colour map (2K), loaded at runtime; if it does not load, the globe is a plain shaded sphere. Shown for orientation and never used in any calculation |
 | South-polar map basemap | Online NASA imagery only | Moon Trek `LRO_LOLA_Shade_SPole75_30mp_v04` (south pole); loads only with network access and is never used in any calculation |
-| Multi-height skylines beyond 2 m | Not built yet | 2 m only; other heights run the smooth sphere at grade D, labelled as such |
+| Observer heights | 2 m skylines shipped; the loader supports any height | A height with no stored skyline runs the smooth sphere at grade D, labelled as such, and is never filled in from another height. Adding 0, 10 or 20 m files needs a build run and no code change: see [`docs/observer-height.md`](docs/observer-height.md) |
 
 ## What are the known limits?
 
 - No elevation model resolves features smaller than its pixel. The 20 m LOLA product would not have seen the crater where Athena came to rest on the IM-2 mission: Intuitive Machines reported landing 250 m from its target site, and NASA reported more than 400 m.
 - Energy over a stay is a Riemann sum over 10-minute steps; near sunrise and sunset it can differ from the continuous integral by up to half a step at each edge.
-- Multi-height terrain skylines beyond 2 m are not shipped yet, so the Scenario bar shows 2 m. Any other height (set by editing the shared link) runs the site as a smooth sphere at grade D, labelled as such, never as terrain.
+- Only 2 m terrain skylines are shipped so far. The **Observer height** selector lists 0, 2, 10 and 20 m and marks which heights have a stored skyline; a height with none is still selectable, and it runs every site as a smooth sphere at grade D, labelled as such, never as terrain. Horizons are never interpolated between heights: on smooth ground the dip is −0.087° at 2 m and −0.194° at 10 m.
 - The static hillshade the map was planned to ship could not be produced in this build environment: the LOLA rasters stay gitignored and were not reachable. The map therefore shows the Moon Trek LOLA shaded-relief tiles in the south-pole stereographic projection — imagery from the same source rasters — and the basemap needs network access; the site markers, region outlines and pole marker render regardless.
 - The cached Horizons check shown on a card covers that one site only, from the cached site query (three sites use a 500-epoch query, the other thirty a 24-epoch query spread across 2023–2040); a site without a cached query would say it is not cached, and no number is invented for it.
 - Mission hindcasts replay recorded events; they do not predict future missions, and the presets are illustrative, not agency requirements.

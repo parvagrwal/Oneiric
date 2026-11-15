@@ -145,6 +145,24 @@ describe('URL state round-trip and validation', () => {
     expect(restored.customSites[0].name).toBe('Ridge test');
   });
 
+  it('carries the observer height in the link and brings it back unchanged', () => {
+    const base = parseUrlState('');
+    for (const heightM of [0, 10, 20]) {
+      const query = serializeUrlState({ ...base, heightM });
+      expect(query).toContain(`h=${heightM}`);
+      expect(parseUrlState(query).heightM).toBe(heightM);
+    }
+    // 2 m is the default, so it stays out of the link.
+    expect(serializeUrlState({ ...base, heightM: 2 })).toBe('');
+  });
+
+  it('ignores an observer height that is not a height, and keeps a 0 m mast rather than dropping it', () => {
+    expect(parseUrlState('?h=abc').heightM).toBe(2);
+    expect(parseUrlState('?h=-5').heightM).toBe(2);
+    expect(parseUrlState('?h=900').heightM).toBe(2);
+    expect(parseUrlState('?h=0').heightM).toBe(0);
+  });
+
   it('caps cards at four, reconstructs custom sites from card IDs, and ignores malformed coordinates or thresholds', () => {
     const restored = parseUrlState(
       '?c=connecting-ridge&c=im-2-athena&c=apollo-11&c=chandrayaan-3&c=shackleton-rim&c=custom:999,10&sun=150&dark=-5&active=99',

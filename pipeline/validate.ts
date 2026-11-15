@@ -9,6 +9,8 @@ import { loadSites, siteFile } from './fetch-fixtures.ts';
 import { CRATERS, orientationCheck, RING_POINTS, type HeightAt } from './raster-orientation.ts';
 import { REFINEMENT_LIMIT_GAP_PCT, REFINEMENT_LIMIT_POINTS, refinementCheck, SKYLINE_THRESHOLD_DEG, syntheticCases, type CheckOptions } from './skyline-check.ts';
 import { SKYLINE_DIR, verifySkylineFiles } from './skyline-files.ts';
+import { missingSkylineFiles, readSkylineIndex } from './skyline-index.ts';
+import { heightOptions } from '../engine/heights.ts';
 
 export const VALIDATION_FILE = 'app/public/data/validation.json';
 export const DIRECTION_THRESHOLD_DEG = 0.02;
@@ -149,6 +151,40 @@ export function runSkylineFileCheck(dir = SKYLINE_DIR): ValidationRow | null {
   };
 }
 
+/**
+ * Which observer heights have a stored skyline, and whether every file the index lists is actually there.
+ * This passes only when the index and the disk agree. It does NOT require more than one height: one height is a
+ * complete, honest state, and the row says so in its detail instead of failing.
+ */
+export function runHeightCoverageCheck(dir = SKYLINE_DIR): ValidationRow | null {
+  const index = readSkylineIndex(dir);
+  if (!index) return null;
+  const missing = missingSkylineFiles(index, dir);
+  const heights = heightOptions(index.skylines);
+  const available = heights.filter((h) => h.available);
+  return {
+    id: 'observer-heights',
+    name: 'Observer heights with a stored terrain skyline',
+    n: index.skylines.length, maxDeg: null, rmsDeg: null, thresholdDeg: null,
+    pass: missing.length === 0,
+    fixtureFiles: [`${dir}/index.json`, `${dir}/<site>-<height>m.bin`],
+    runAtUtc: new Date().toISOString(),
+    engineCommit: engineVersion(),
+    detail: {
+      heights: heights.map((h) => ({ heightM: h.heightM, available: h.available, skylineCount: h.skylineCount })),
+      availableHeightsM: available.map((h) => h.heightM),
+      missingFiles: missing,
+      note: available.length <= 1
+        ? 'Only one observer height has a stored skyline, so the mast comparison has nothing to compare. Any other height runs the smooth sphere at grade D; nothing is interpolated.'
+        : 'More than one observer height is stored, so the mast comparison reports what each height changes.',
+    },
+    notes: [
+      'One row per site and observer height in the skyline index; the check fails only when a file the index lists is absent.',
+      'A height with no stored skyline is offered in the app and labelled unavailable; it runs the smooth sphere at grade D for every site.',
+    ],
+  };
+}
+
 async function main() {
   const rows = [runDirectionCheck(), runSkylineCheck()];
   const pending: Array<{ id: string; name: string; reason: string }> = [];
@@ -158,6 +194,8 @@ async function main() {
   const files = runSkylineFileCheck();
   if (files) rows.push(files);
   else pending.push({ id: 'skyline-files', name: 'Shipped skylines match their build records', reason: `no skyline in ${SKYLINE_DIR}/; none has been built yet` });
+  const heights = runHeightCoverageCheck();
+  if (heights) rows.push(heights);
   rows.push(runHindcastChecks());
   mkdirSync('app/public/data', { recursive: true });
   writeFileSync(VALIDATION_FILE, JSON.stringify({ generatedBy: 'pipeline/validate.ts', rows, pending }, null, 2) + '\n');

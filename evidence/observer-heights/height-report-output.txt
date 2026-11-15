@@ -1,0 +1,175 @@
+Heights with a stored skyline: 0 m, 2 m, 10 m, 20 m
+
+Sunlit %, longest dark gap, Earth-visible %, longest link gap. Reported values, no threshold.
+  artemis-de-gerlache-rim-2-centroid   0 m  grade B  sunlit 29.72%  dark gap 108.06 h  earth 23.93%  link gap 118.64 h
+  artemis-de-gerlache-rim-2-centroid   2 m  grade B  sunlit 29.78%  dark gap 107.96 h  earth 23.93%  link gap 118.59 h
+  artemis-de-gerlache-rim-2-centroid  10 m  grade B  sunlit 30.05%  dark gap 107.49 h  earth 24.04%  link gap 118.41 h
+  artemis-de-gerlache-rim-2-centroid  20 m  grade B  sunlit 30.39%  dark gap 106.93 h  earth 24.15%  link gap 118.18 h
+  artemis-de-gerlache-rim-2-highest    0 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 31.52%  link gap 106.73 h
+  artemis-de-gerlache-rim-2-highest    2 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 31.52%  link gap 106.70 h
+  artemis-de-gerlache-rim-2-highest   10 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 31.62%  link gap 106.60 h
+  artemis-de-gerlache-rim-2-highest   20 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 31.73%  link gap 106.48 h
+  artemis-haworth-centroid             0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-haworth-centroid             2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-haworth-centroid            10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-haworth-centroid            20 m  grade B  sunlit 34.50%  dark gap 87.79 h  earth 0.00%  link gap 156.00 h
+  artemis-haworth-highest              0 m  grade B  sunlit 21.79%  dark gap 115.99 h  earth 74.25%  link gap 40.02 h
+  artemis-haworth-highest              2 m  grade B  sunlit 44.12%  dark gap 78.59 h  earth 74.36%  link gap 39.92 h
+  artemis-haworth-highest             10 m  grade B  sunlit 75.89%  dark gap 11.56 h  earth 74.68%  link gap 39.49 h
+  artemis-haworth-highest             20 m  grade B  sunlit 76.02%  dark gap 11.41 h  earth 75.00%  link gap 38.96 h
+  artemis-malapert-massif-centroid     0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 10.68%  link gap 139.20 h
+  artemis-malapert-massif-centroid     2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 14.53%  link gap 133.22 h
+  artemis-malapert-massif-centroid    10 m  grade B  sunlit 47.84%  dark gap 38.65 h  earth 30.02%  link gap 109.01 h
+  artemis-malapert-massif-centroid    20 m  grade B  sunlit 49.78%  dark gap 38.59 h  earth 46.90%  link gap 82.77 h
+  artemis-malapert-massif-highest      0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 81.94%  link gap 28.15 h
+  artemis-malapert-massif-highest      2 m  grade B  sunlit 19.45%  dark gap 118.73 h  earth 89.00%  link gap 17.10 h
+  artemis-malapert-massif-highest     10 m  grade B  sunlit 67.43%  dark gap 41.49 h  earth 100.00%  link gap 0.00 h
+  artemis-malapert-massif-highest     20 m  grade B  sunlit 70.73%  dark gap 41.45 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-centroid         0 m  grade B  sunlit 0.06%  dark gap 144.82 h  earth 0.00%  link gap 156.00 h
+  artemis-mons-mouton-centroid         2 m  grade B  sunlit 0.27%  dark gap 144.80 h  earth 0.00%  link gap 156.00 h
+  artemis-mons-mouton-centroid        10 m  grade B  sunlit 1.98%  dark gap 143.91 h  earth 11.43%  link gap 138.06 h
+  artemis-mons-mouton-centroid        20 m  grade B  sunlit 3.18%  dark gap 137.92 h  earth 28.21%  link gap 111.90 h
+  artemis-mons-mouton-highest          0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 66.24%  link gap 52.63 h
+  artemis-mons-mouton-highest          2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-highest         10 m  grade B  sunlit 15.38%  dark gap 125.77 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-highest         20 m  grade B  sunlit 20.19%  dark gap 108.67 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-plateau-centroid   0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 35.68%  link gap 100.18 h
+  artemis-mons-mouton-plateau-centroid   2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 45.30%  link gap 85.32 h
+  artemis-mons-mouton-plateau-centroid  10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 56.30%  link gap 68.01 h
+  artemis-mons-mouton-plateau-centroid  20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 61.22%  link gap 60.49 h
+  artemis-mons-mouton-plateau-highest   0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-plateau-highest   2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-plateau-highest  10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  artemis-mons-mouton-plateau-highest  20 m  grade B  sunlit 0.94%  dark gap 148.29 h  earth 100.00%  link gap 0.00 h
+  artemis-nobile-rim-1-centroid        0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-nobile-rim-1-centroid        2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-nobile-rim-1-centroid       10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-nobile-rim-1-centroid       20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-nobile-rim-1-highest         0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 68.91%  link gap 48.46 h
+  artemis-nobile-rim-1-highest         2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 80.45%  link gap 30.47 h
+  artemis-nobile-rim-1-highest        10 m  grade B  sunlit 30.36%  dark gap 95.19 h  earth 88.03%  link gap 18.55 h
+  artemis-nobile-rim-1-highest        20 m  grade B  sunlit 31.03%  dark gap 95.17 h  earth 89.74%  link gap 15.96 h
+  artemis-nobile-rim-2-centroid        0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 50.32%  link gap 77.39 h
+  artemis-nobile-rim-2-centroid        2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 50.43%  link gap 77.25 h
+  artemis-nobile-rim-2-centroid       10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 50.75%  link gap 76.69 h
+  artemis-nobile-rim-2-centroid       20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 51.28%  link gap 75.99 h
+  artemis-nobile-rim-2-highest         0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 63.03%  link gap 57.51 h
+  artemis-nobile-rim-2-highest         2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 86.86%  link gap 20.48 h
+  artemis-nobile-rim-2-highest        10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 86.86%  link gap 20.36 h
+  artemis-nobile-rim-2-highest        20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 86.97%  link gap 20.23 h
+  artemis-peak-near-cabeus-b-centroid   0 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 0.00%  link gap 156.00 h
+  artemis-peak-near-cabeus-b-centroid   2 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 0.00%  link gap 156.00 h
+  artemis-peak-near-cabeus-b-centroid  10 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 6.20%  link gap 146.32 h
+  artemis-peak-near-cabeus-b-centroid  20 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 15.71%  link gap 131.36 h
+  artemis-peak-near-cabeus-b-highest   0 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 79.59%  link gap 31.79 h
+  artemis-peak-near-cabeus-b-highest   2 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 95.09%  link gap 7.53 h
+  artemis-peak-near-cabeus-b-highest  10 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 96.90%  link gap 4.82 h
+  artemis-peak-near-cabeus-b-highest  20 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 97.01%  link gap 4.64 h
+  artemis-slater-plain-centroid        0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-slater-plain-centroid        2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-slater-plain-centroid       10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-slater-plain-centroid       20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  artemis-slater-plain-highest         0 m  grade B  sunlit 44.86%  dark gap 75.65 h  earth 4.59%  link gap 148.68 h
+  artemis-slater-plain-highest         2 m  grade B  sunlit 64.99%  dark gap 48.28 h  earth 10.36%  link gap 139.79 h
+  artemis-slater-plain-highest        10 m  grade B  sunlit 65.31%  dark gap 47.96 h  earth 10.47%  link gap 139.65 h
+  artemis-slater-plain-highest        20 m  grade B  sunlit 65.62%  dark gap 47.59 h  earth 10.58%  link gap 139.46 h
+  chandrayaan-3                        0 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  chandrayaan-3                        2 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  chandrayaan-3                       10 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  chandrayaan-3                       20 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  connecting-ridge                     0 m  grade B  sunlit 1.47%  dark gap 114.88 h  earth 0.00%  link gap 156.00 h
+  connecting-ridge                     2 m  grade B  sunlit 36.78%  dark gap 23.17 h  earth 3.74%  link gap 150.02 h
+  connecting-ridge                    10 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 30.34%  link gap 108.55 h
+  connecting-ridge                    20 m  grade B  sunlit 100.00%  dark gap 0.00 h  earth 30.45%  link gap 108.50 h
+  im-1-odysseus                        0 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  im-1-odysseus                        2 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  im-1-odysseus                       10 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  im-1-odysseus                       20 m  grade C  sunlit 0.00%  dark gap 156.00 h  earth 100.00%  link gap 0.00 h
+  im-2-athena                          0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 92.52%  link gap 11.57 h
+  im-2-athena                          2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 92.63%  link gap 11.38 h
+  im-2-athena                         10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 93.16%  link gap 10.54 h
+  im-2-athena                         20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 93.91%  link gap 9.49 h
+  nobile-rim-2                         0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  nobile-rim-2                         2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  nobile-rim-2                        10 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  nobile-rim-2                        20 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  shackleton-rim                       0 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  shackleton-rim                       2 m  grade B  sunlit 0.00%  dark gap 156.00 h  earth 0.00%  link gap 156.00 h
+  shackleton-rim                      10 m  grade B  sunlit 73.02%  dark gap 33.97 h  earth 23.18%  link gap 119.75 h
+  shackleton-rim                      20 m  grade B  sunlit 74.16%  dark gap 33.17 h  earth 23.18%  link gap 119.69 h
+
+Change from the lower height to the higher one, same site and same stay:
+  artemis-de-gerlache-rim-2-centroid 0 m -> 2 m  sunlit +0.06 pts  dark gap -0.10 h  earth +0.00 pts  link gap -0.04 h
+  artemis-de-gerlache-rim-2-centroid 2 m -> 10 m  sunlit +0.27 pts  dark gap -0.47 h  earth +0.11 pts  link gap -0.19 h
+  artemis-de-gerlache-rim-2-centroid 10 m -> 20 m  sunlit +0.34 pts  dark gap -0.56 h  earth +0.11 pts  link gap -0.23 h
+  artemis-de-gerlache-rim-2-highest  0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap -0.03 h
+  artemis-de-gerlache-rim-2-highest  2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.09 h
+  artemis-de-gerlache-rim-2-highest  10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.13 h
+  artemis-haworth-centroid           0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-haworth-centroid           2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-haworth-centroid           10 m -> 20 m  sunlit +34.50 pts  dark gap -68.21 h  earth +0.00 pts  link gap +0.00 h
+  artemis-haworth-highest            0 m -> 2 m  sunlit +22.34 pts  dark gap -37.40 h  earth +0.11 pts  link gap -0.10 h
+  artemis-haworth-highest            2 m -> 10 m  sunlit +31.77 pts  dark gap -67.03 h  earth +0.32 pts  link gap -0.43 h
+  artemis-haworth-highest            10 m -> 20 m  sunlit +0.13 pts  dark gap -0.16 h  earth +0.32 pts  link gap -0.53 h
+  artemis-malapert-massif-centroid   0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +3.85 pts  link gap -5.98 h
+  artemis-malapert-massif-centroid   2 m -> 10 m  sunlit +47.84 pts  dark gap -117.35 h  earth +15.49 pts  link gap -24.21 h
+  artemis-malapert-massif-centroid   10 m -> 20 m  sunlit +1.93 pts  dark gap -0.05 h  earth +16.88 pts  link gap -26.24 h
+  artemis-malapert-massif-highest    0 m -> 2 m  sunlit +19.45 pts  dark gap -37.27 h  earth +7.05 pts  link gap -11.04 h
+  artemis-malapert-massif-highest    2 m -> 10 m  sunlit +47.98 pts  dark gap -77.24 h  earth +11.00 pts  link gap -17.10 h
+  artemis-malapert-massif-highest    10 m -> 20 m  sunlit +3.30 pts  dark gap -0.04 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-centroid       0 m -> 2 m  sunlit +0.21 pts  dark gap -0.02 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-centroid       2 m -> 10 m  sunlit +1.70 pts  dark gap -0.90 h  earth +11.43 pts  link gap -17.94 h
+  artemis-mons-mouton-centroid       10 m -> 20 m  sunlit +1.20 pts  dark gap -5.99 h  earth +16.77 pts  link gap -26.17 h
+  artemis-mons-mouton-highest        0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +33.76 pts  link gap -52.63 h
+  artemis-mons-mouton-highest        2 m -> 10 m  sunlit +15.38 pts  dark gap -30.23 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-highest        10 m -> 20 m  sunlit +4.81 pts  dark gap -17.10 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-plateau-centroid 0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +9.62 pts  link gap -14.85 h
+  artemis-mons-mouton-plateau-centroid 2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +11.00 pts  link gap -17.31 h
+  artemis-mons-mouton-plateau-centroid 10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +4.91 pts  link gap -7.52 h
+  artemis-mons-mouton-plateau-highest 0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-plateau-highest 2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-mons-mouton-plateau-highest 10 m -> 20 m  sunlit +0.94 pts  dark gap -7.71 h  earth +0.00 pts  link gap +0.00 h
+  artemis-nobile-rim-1-centroid      0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-nobile-rim-1-centroid      2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-nobile-rim-1-centroid      10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-nobile-rim-1-highest       0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +11.54 pts  link gap -17.99 h
+  artemis-nobile-rim-1-highest       2 m -> 10 m  sunlit +30.36 pts  dark gap -60.81 h  earth +7.59 pts  link gap -11.92 h
+  artemis-nobile-rim-1-highest       10 m -> 20 m  sunlit +0.67 pts  dark gap -0.02 h  earth +1.71 pts  link gap -2.59 h
+  artemis-nobile-rim-2-centroid      0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.14 h
+  artemis-nobile-rim-2-centroid      2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.32 pts  link gap -0.56 h
+  artemis-nobile-rim-2-centroid      10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.53 pts  link gap -0.70 h
+  artemis-nobile-rim-2-highest       0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +23.82 pts  link gap -37.03 h
+  artemis-nobile-rim-2-highest       2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap -0.11 h
+  artemis-nobile-rim-2-highest       10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.14 h
+  artemis-peak-near-cabeus-b-centroid 0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-peak-near-cabeus-b-centroid 2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +6.20 pts  link gap -9.68 h
+  artemis-peak-near-cabeus-b-centroid 10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +9.51 pts  link gap -14.96 h
+  artemis-peak-near-cabeus-b-highest 0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +15.49 pts  link gap -24.26 h
+  artemis-peak-near-cabeus-b-highest 2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +1.82 pts  link gap -2.71 h
+  artemis-peak-near-cabeus-b-highest 10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.19 h
+  artemis-slater-plain-centroid      0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-slater-plain-centroid      2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-slater-plain-centroid      10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  artemis-slater-plain-highest       0 m -> 2 m  sunlit +20.14 pts  dark gap -27.36 h  earth +5.77 pts  link gap -8.89 h
+  artemis-slater-plain-highest       2 m -> 10 m  sunlit +0.31 pts  dark gap -0.32 h  earth +0.11 pts  link gap -0.15 h
+  artemis-slater-plain-highest       10 m -> 20 m  sunlit +0.31 pts  dark gap -0.36 h  earth +0.11 pts  link gap -0.19 h
+  chandrayaan-3                      0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  chandrayaan-3                      2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  chandrayaan-3                      10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  connecting-ridge                   0 m -> 2 m  sunlit +35.31 pts  dark gap -91.71 h  earth +3.74 pts  link gap -5.98 h
+  connecting-ridge                   2 m -> 10 m  sunlit +63.22 pts  dark gap -23.17 h  earth +26.60 pts  link gap -41.47 h
+  connecting-ridge                   10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.05 h
+  im-1-odysseus                      0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  im-1-odysseus                      2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  im-1-odysseus                      10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  im-2-athena                        0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.11 pts  link gap -0.20 h
+  im-2-athena                        2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.53 pts  link gap -0.83 h
+  im-2-athena                        10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.75 pts  link gap -1.05 h
+  nobile-rim-2                       0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  nobile-rim-2                       2 m -> 10 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  nobile-rim-2                       10 m -> 20 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  shackleton-rim                     0 m -> 2 m  sunlit +0.00 pts  dark gap +0.00 h  earth +0.00 pts  link gap +0.00 h
+  shackleton-rim                     2 m -> 10 m  sunlit +73.02 pts  dark gap -122.03 h  earth +23.18 pts  link gap -36.25 h
+  shackleton-rim                     10 m -> 20 m  sunlit +1.13 pts  dark gap -0.80 h  earth +0.00 pts  link gap -0.06 h
+
+Smooth-sphere horizon dip, for reference: -0.087 deg at 2 m, -0.194 deg at 10 m, -0.275 deg at 20 m.

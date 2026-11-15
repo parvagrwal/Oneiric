@@ -3,6 +3,7 @@ export * from './vec.ts';
 export * from './frame.ts';
 export * from './ephemeris.ts';
 export * from './skyline.ts';
+export * from './heights.ts';
 export * from './sunlight.ts';
 export * from './series.ts';
 export * from './metrics.ts';

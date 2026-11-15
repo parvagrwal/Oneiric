@@ -4,6 +4,7 @@ import {
   HOUR_MS,
   MIN_MS,
   PRESETS,
+  heightOptions,
   provenanceFooter,
   type Clock,
   type Grade,
@@ -39,8 +40,8 @@ import {
   type WindowFinderRow,
 } from './scenario.ts';
 import { formatCoordinates, groupSites, parseCustomSite } from './sites.ts';
+import { heightHelpText, heightOptionLabel } from './heights-ui.ts';
 import {
-  DEFAULT_HEIGHT_M,
   MAX_COMPARE_CARDS,
   MAX_DATE_UTC,
   MIN_DATE_UTC,
@@ -64,6 +65,9 @@ type SkylineEntry = {
   siteElevationM: number;
   file: string;
 };
+
+/** The key a stored skyline is filed under: one entry per site and height, never one per site. */
+const terrainKey = (siteId: string, heightM: number): string => `${siteId}:${heightM}`;
 
 type HorizonsCheckEntry = {
   id: string;
@@ -215,7 +219,10 @@ function App() {
   const [horizonsCheck, setHorizonsCheck] = useState<Map<string, HorizonsCheckEntry> | null>(null);
   const [methodOpen, setMethodOpen] = useState(false);
   const [exportNote, setExportNote] = useState<string | null>(null);
-  const [skylineIndex, setSkylineIndex] = useState<Map<string, SkylineEntry> | null>(null);
+  // Every stored skyline, keyed by site and height. One map per height is what lets the selector offer a height
+  // only when a file for it exists, and fall back to the smooth sphere when it does not.
+  const [skylineIndex, setSkylineIndex] = useState<SkylineEntry[] | null>(null);
+  const [skylinePayloads, setSkylinePayloads] = useState<Map<string, TerrainPayload> | null>(null);
   const [skylinesReady, setSkylinesReady] = useState(false);
 
   const [cardResults, setCardResults] = useState<Map<string, ScenarioResult>>(new Map());
@@ -398,7 +405,10 @@ function App() {
     };
   }, []);
 
-  // Load skyline index and send precomputed skylines to the Worker once
+  // Load the skyline index and every stored skyline, at every height, then hand them to the Worker once.
+  // A height missing from the index is not an error: it is offered in the selector as unavailable, and any
+  // request for it runs the smooth sphere, labelled grade D. A file listed in the index but not present is
+  // counted and reported, because that is a broken build rather than a height not built yet.
   useEffect(() => {
     let active = true;
     fetch(dataUrl('data/skylines/index.json'))
@@ -408,8 +418,8 @@ function App() {
       })
       .then(async (payload) => {
         if (!active) return;
-        const entries = payload.skylines.filter((entry) => entry.heightM === DEFAULT_HEIGHT_M);
-        setSkylineIndex(new Map(entries.map((entry) => [entry.siteId, entry])));
+        const entries = payload.skylines;
+        setSkylineIndex(entries);
         const loaded = await Promise.all(
           entries.map(async (entry) => {
             try {
@@ -423,20 +433,25 @@ function App() {
                 siteElevationM: entry.siteElevationM,
                 heightM: entry.heightM,
               };
-              return { siteId: entry.siteId, payload: terrainPayload };
+              return { siteId: entry.siteId, key: terrainKey(entry.siteId, entry.heightM), payload: terrainPayload };
             } catch {
               return null;
             }
           }),
         );
         if (!active) return;
-        const valid = loaded.filter((item): item is { siteId: string; payload: TerrainPayload } => item !== null);
-        workerRef.current?.postMessage({ type: 'set-skylines', skylines: valid });
+        const valid = loaded.filter((item): item is { siteId: string; key: string; payload: TerrainPayload } => item !== null);
+        setSkylinePayloads(new Map(valid.map((item) => [item.key, item.payload])));
+        workerRef.current?.postMessage({
+          type: 'set-skylines',
+          skylines: valid.map((item) => ({ siteId: item.siteId, payload: item.payload })),
+        });
         setSkylinesReady(true);
       })
       .catch(() => {
         if (!active) return;
-        setSkylineIndex(new Map());
+        setSkylineIndex([]);
+        setSkylinePayloads(new Map());
         setSkylinesReady(true);
       });
     return () => {
@@ -471,13 +486,39 @@ function App() {
 
   const siteById = useMemo(() => new Map(allSites.map((s) => [s.id, s])), [allSites]);
 
+  // Grade shown next to a site: the grade of the skyline at the height now on screen. A site with terrain at
+  // 2 m but not at 10 m reads D at 10 m, because that is what the card will compute.
   const skylineGrades = useMemo(() => {
     const grades = new Map<string, Grade>();
     if (skylineIndex) {
-      for (const [siteId, entry] of skylineIndex) grades.set(siteId, entry.grade);
+      for (const entry of skylineIndex) {
+        if (entry.heightM !== urlState.heightM) continue;
+        grades.set(entry.siteId, entry.grade);
+      }
     }
     return grades;
-  }, [skylineIndex]);
+  }, [skylineIndex, urlState.heightM]);
+
+  // The entries whose skyline file actually loaded. A file listed in the index but absent or unreadable is not
+  // counted, so the selector never promises terrain the app does not have in hand.
+  const loadedEntries = useMemo(
+    () => (skylineIndex ?? []).filter((entry) => skylinePayloads?.has(terrainKey(entry.siteId, entry.heightM))),
+    [skylineIndex, skylinePayloads],
+  );
+  const unloadedFiles = useMemo(() => {
+    if (!skylinesReady || !skylineIndex) return [];
+    return skylineIndex
+      .filter((entry) => !skylinePayloads?.has(terrainKey(entry.siteId, entry.heightM)))
+      .map((entry) => entry.file);
+  }, [skylinesReady, skylineIndex, skylinePayloads]);
+
+  // The heights the selector offers, each marked with whether any stored skyline loaded at it.
+  const heights = useMemo(() => heightOptions(loadedEntries, urlState.heightM), [loadedEntries, urlState.heightM]);
+  const heightEntry = useMemo(() => {
+    const map = new Map<string, SkylineEntry>();
+    for (const entry of loadedEntries) map.set(terrainKey(entry.siteId, entry.heightM), entry);
+    return map;
+  }, [loadedEntries]);
 
   const effectivePreset = useMemo(
     () =>
@@ -687,6 +728,14 @@ function App() {
       stayDays: PRESETS[nextPreset].stayDays,
       ruleOverrides: {},
     }));
+  };
+
+  // Changing the observer height changes which stored skyline each site may use. It never changes a stored
+  // skyline: a height with no file falls to the smooth sphere at grade D, and the card labels it so.
+  const handleHeightChange = (heightM: number) => {
+    if (!Number.isFinite(heightM) || heightM < 0) return;
+    resetScrub();
+    setUrlState((prev) => ({ ...prev, heightM }));
   };
 
   const handleStayChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -1216,10 +1265,20 @@ function App() {
               <small>0.5 d steps</small>
             </div>
 
-            <div className="control-readout">
-              <span>Observer height</span>
-              <strong>{urlState.heightM} m</strong>
-              <small>LOLA skylines at 2 m</small>
+            <div className="bar-field bar-field-compact">
+              <label htmlFor="height-select">Observer height</label>
+              <select
+                id="height-select"
+                value={String(urlState.heightM)}
+                onChange={(e) => handleHeightChange(Number(e.target.value))}
+              >
+                {heights.map((option) => (
+                  <option key={option.heightM} value={String(option.heightM)}>
+                    {heightOptionLabel(option)}
+                  </option>
+                ))}
+              </select>
+              <small>{heightHelpText(heights.find((h) => h.heightM === urlState.heightM), skylinesReady, urlState.heightM)}</small>
             </div>
 
             <div className="bar-actions">
@@ -1428,10 +1487,12 @@ function App() {
                       const inCompareIdx = urlState.cards.findIndex((c) => c.siteId === site.id);
                       const inCompare = inCompareIdx >= 0;
                       const isActive = site.id === activeSiteId;
-                      const grade = site.isCustom ? 'D' : (skylineIndex?.get(site.id)?.grade ?? 'D');
-                      const terrainTitle = site.isCustom
-                        ? 'Smooth sphere, no terrain (Grade D)'
-                        : (skylineIndex?.get(site.id)?.terrain ?? 'Smooth sphere, no terrain (Grade D)');
+                      // Grade at the height on screen, not at the height the site happens to have a file for.
+                      const entry = site.isCustom ? undefined : heightEntry.get(terrainKey(site.id, urlState.heightM));
+                      const grade = entry?.grade ?? 'D';
+                      const terrainTitle = entry
+                        ? `${entry.terrain}, observer at ${urlState.heightM} m (Grade ${entry.grade})`
+                        : `Smooth sphere, no terrain at ${urlState.heightM} m (Grade D)`;
                       return (
                         <div className={`site-row ${isActive ? 'is-active' : ''} ${inCompare ? 'is-compared' : ''}`} key={site.id}>
                           <button
@@ -1866,7 +1927,14 @@ function App() {
       </footer>
 
       {methodOpen && (
-        <MethodDrawer rows={validationRows} pending={validationPending} onClose={() => setMethodOpen(false)} />
+        <MethodDrawer
+          rows={validationRows}
+          pending={validationPending}
+          heights={heights}
+          observedHeightM={urlState.heightM}
+          unloadedSkylineFiles={unloadedFiles}
+          onClose={() => setMethodOpen(false)}
+        />
       )}
 
       <AnimatePresence>{tourRunning && <TourOverlay stepIndex={tourStep} />}</AnimatePresence>

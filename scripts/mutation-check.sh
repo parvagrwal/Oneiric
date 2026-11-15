@@ -56,4 +56,12 @@ mut "stored skyline decoded big-endian" terrain.ts "H[i] = view.getFloat32(i * 4
 mut "heights that cannot be metres accepted" terrain.ts "if (zMaxM > 12_000 || zMinM < -12_000) throw" "if (false) throw"
 mut "rolling prefix sum ignores window start" metrics.ts "const sumF = prefixSunF[i1] - prefixSunF[i0];" "const sumF = prefixSunF[i1];"
 mut "rolling gap not clipped to window start" metrics.ts "if (i > winStart) {" "if (r.rStart > 0) {"
+mut "a nearby height's skyline lent to a request" heights.ts "if (s.siteId !== siteId || s.heightM !== heightM) continue;" "if (s.siteId !== siteId || Math.abs(s.heightM - heightM) > 1) continue;"
+mut "two records for one site and height resolved by file order" heights.ts "if (found) throw new Error" "if (found) return found; throw new Error"
+mut "height not a number accepted instead of refused" heights.ts "if (!Number.isFinite(heightM)) throw new RangeError" "if (false) throw new RangeError"
+mut "a height with no skyline hidden from the selector" heights.ts "return { heightM, available: skylineCount > 0, skylineCount };" "return { heightM, available: true, skylineCount };"
+mut "zero height dropped from the selector's standard list" heights.ts "export const STANDARD_HEIGHTS_M: readonly number[] = [0, 2, 10, 20];" "export const STANDARD_HEIGHTS_M: readonly number[] = [2, 10, 20];"
+mut "selector sorts heights as text (10 m before 2 m)" heights.ts "return [...heights].sort((a, b) => a - b).map((heightM) => {" "return [...heights].map(String).sort().map(Number).map((heightM) => {"
+mut "requested height left out of the selector list" heights.ts "    heights.add(requested);" "    void requested;"
+mut "a requested height that is not a number accepted" heights.ts "if (!Number.isFinite(requested)) throw new RangeError" "if (false) throw new RangeError"
 [ -z "$SURVIVORS" ] && echo "all mutants killed" || { echo "some mutants survived"; exit 1; }

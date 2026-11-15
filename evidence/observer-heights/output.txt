@@ -1,0 +1,27 @@
+=== npx tsc --noEmit ===
+exit 0, no errors
+
+=== npx vitest run ===
+
+ Test Files  25 passed (25)
+      Tests  196 passed (196)
+   Start at  12:52:14
+   Duration  21.93s (transform 350ms, setup 0ms, import 6.46s, tests 13.19s, environment 2ms)
+
+
+=== npm run validate ===
+PASS  Sun and Earth direction check against JPL Horizons
+PASS  Skyline maths check on synthetic terrain
+PASS  Shipped skylines match their build records
+PASS  Observer heights with a stored terrain skyline
+PASS  Mission hindcasts against recorded mission events
+PENDING  Elevation raster orientation check on two named craters
+wrote app/public/data/validation.json
+
+=== app lint and build (in app/) ===
+Found 0 warnings and 0 errors. (31 files, 116 rules)
+✓ 1082 modules transformed.
+✓ built in 1.20s
+
+=== markdownlint README.md docs/observer-height.md ===
+Summary: 0 issues in 0 files
