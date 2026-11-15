@@ -1,0 +1,19 @@
+{
+  "status": "pass-with-stated-limits",
+  "summary": "The 100 m landing circle is built as eight points plus the centre, each about 100 m from the centre on the Moon's own radius. The report asks, for each point, whether a stored skyline exists at that point and observer height; in this checkout none do, so every point is reported as having no stored skyline and the share of the circle that keeps the centre verdict is reported as NOT COMPUTED rather than estimated.",
+  "measured": {
+    "centre": "connecting-ridge",
+    "centreVerdict": "NO-GO",
+    "sunlitPct": 36.78,
+    "earthVisiblePct": 3.74,
+    "linkGapHours": 150.0,
+    "circlePoints": 9,
+    "computedFromStoredSkyline": 0,
+    "noStoredSkyline": 9,
+    "shareKeepingCentreVerdict": "not computed",
+    "nearField5m": "no 5 m raster covers these points in this checkout"
+  },
+  "whyNothingIsEstimated": "A circle point's horizon would have to be borrowed from the centre or interpolated, and either would be a number this build did not measure. The report names the missing skyline instead.",
+  "tests": "16 passed across tests/landing-circle.test.ts and tests/ranges-ui.test.ts",
+  "files": ["engine/landing.ts", "pipeline/landing-error-report.ts", "app/src/App.tsx"]
+}

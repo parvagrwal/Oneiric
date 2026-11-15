@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "summary": "A fresh copy of the working tree, carrying no node_modules, no build output and no git history, installs, typechecks, tests, validates and builds cleanly. This is the check that proves the repository alone is sufficient.",
+  "numbers": {
+    "copySizeMb": 32,
+    "typecheckErrors": 0,
+    "testFiles": 36,
+    "tests": 312,
+    "validatePass": 5,
+    "validatePending": 1,
+    "validatePendingReason": "no LOLA elevation raster in data/ or data-raw/, so the raster-orientation check reports PENDING rather than passed",
+    "appLintWarnings": 0,
+    "appLintErrors": 0,
+    "appBuildModules": 1094
+  },
+  "caughtByThisCheck": "The published-illumination reference file would have been swallowed by the data/* ignore rule and been absent from every clone. It is now excepted explicitly, and the fresh copy confirms it is present and the comparison commands run."
+}

@@ -1,0 +1,14 @@
+{
+  "status": "no-comparison-claimed",
+  "summary": "Two published average-illumination values at the Connecting Ridge reference point are compared against this build's annual average. Neither row is comparable: a comparison needs a published observer height and averaging definition, and neither is established for these values. The script prints this build's figure at every stored height and the spread between them, which is 61.88 points; the published values sit inside that spread. No pass or fail is claimed.",
+  "published": [
+    { "id": "glaser-2018-20m", "valuePct": 76, "rasterPixelM": 20, "verified": false },
+    { "id": "mazarico-2011-240m", "valuePct": 89, "rasterPixelM": 240, "verified": false }
+  ],
+  "builtAnnualAverage": { "year": 2030, "stepMinutes": 10, "connectingRidge": { "0m": 31.18, "2m": 64.41, "10m": 92.45, "20m": 93.06 } },
+  "spreadAcrossHeightsPoints": 61.88,
+  "whyNoHeightWasChosen": "Choosing a height would decide whether the comparison passes. At the pole the Sun never rises more than about 2 degrees, so a 2 m rise moves the horizon by degrees and the annual average by tens of points. The height was left unestablished rather than picked to agree.",
+  "verification": "Both published rows are marked unverified in data/published-illumination.json, and that label is printed with them. Neither paper was opened to confirm the figure or its definition.",
+  "tests": "9 passed across tests/illumination-compare.test.ts",
+  "files": ["pipeline/illumination-compare.ts", "data/published-illumination.json"]
+}

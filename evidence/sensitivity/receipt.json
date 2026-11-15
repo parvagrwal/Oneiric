@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "summary": "How much each metric moves with observer height and with start date, reported as values with no threshold. Observer height is the largest of the sensitivities measured; a height-error band is not measured because no vertical error value is on file for any product.",
+  "measured": {
+    "connectingRidge": { "sunlitAt0m": 1.5, "at2m": 36.8, "at10m": 100.0, "at20m": 100.0 },
+    "largestHeightStep": "shackleton-rim, 0.0% at 2 m against 73.0% at 10 m, a change of 73.0 points",
+    "connectingRidgeStartDates": ["2027-03-01: 36.8% sunlit, dark gap 23.2 h", "2027-09-01: 100.0% sunlit, dark gap 0.0 h", "2029-09-01: 100.0% sunlit, dark gap 0.0 h"],
+    "heightErrorBand": "not computed: the product pages name the error rasters, the values are not in this checkout, and a band of zero would read as an exact horizon"
+  },
+  "tests": "13 passed across tests/reports.test.ts",
+  "files": ["pipeline/sensitivity-report.ts", "engine/uncertainty.ts"]
+}

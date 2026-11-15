@@ -1,0 +1,38 @@
+
+> oneiric@0.0.0 illumination-compare
+> tsx pipeline/illumination-compare.ts
+
+Illumination comparison, UTC year 2030, 10-minute steps. A published value is a reference, not a result.
+Tolerance used only where a comparison is possible at all: 5 points.
+
+glaser-2018-20m  Gläser et al. 2018, Table 1: Connecting Ridge illumination from a 20 m LOLA elevation model
+  published 76%  — UNVERIFIED against the paper
+  status: NOT-COMPARABLE
+  - published 76% from a 20 m raster, observer height not established
+  - this build over the same year gives 31.18% at 0 m, 64.41% at 2 m, 92.45% at 10 m, 93.06% at 20 m
+  - the spread across heights alone is 61.88 points, which is why the observer height decides whether the two figures agree
+  - the published observer height is not established, so no stored skyline can be matched to it and no pass or fail is claimed
+  - resolution: this build uses connecting-ridge at 0 m from a LOLA 20 m + LOLA 80 m + LOLA 240 m; the published raster is 20 m
+
+mazarico-2011-240m  Mazarico et al. 2011: Connecting Ridge illumination from a 240 m LOLA elevation model
+  published 89%  — UNVERIFIED against the paper
+  status: NOT-COMPARABLE
+  - published 89% from a 240 m raster, observer height not established
+  - this build over the same year gives 31.18% at 0 m, 64.41% at 2 m, 92.45% at 10 m, 93.06% at 20 m
+  - the spread across heights alone is 61.88 points, which is why the observer height decides whether the two figures agree
+  - the published observer height is not established, so no stored skyline can be matched to it and no pass or fail is claimed
+  - resolution: this build uses connecting-ridge at 0 m from a LOLA 20 m + LOLA 80 m + LOLA 240 m; the published raster is 240 m
+
+0 of 2 published values comparable; 2 reported as not comparable with the reason.
+No pass or fail is claimed for a comparison that could not be made. The measured figure at each height is printed above.
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/illumination-compare.test.ts (9 tests) 1429ms
+     ✓ compute an annual average that rises with observer height, as geometry requires  1172ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  14:34:37
+   Duration  1.78s (transform 163ms, setup 0ms, import 215ms, tests 1.43s, environment 0ms)
+

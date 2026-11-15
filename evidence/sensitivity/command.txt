@@ -1,0 +1,3 @@
+npm run sensitivity-report                      # every site, height steps and start-date steps
+npm run sensitivity-report -- --site connecting-ridge
+npm test -- tests/reports.test.ts

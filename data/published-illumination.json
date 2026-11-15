@@ -1,0 +1,36 @@
+{
+  "generatedBy": "hand-entered from the cited papers; every row names its source and whether it was read from the primary",
+  "note": "Published average-illumination values at the Connecting Ridge reference point (89.45 S, 222.69 E, east-positive). The illumination comparison in pipeline/illumination-compare.ts uses these as its reference. A row whose 'verified' field is false was taken from a secondary source and must be checked against the paper before it is printed as a published value.",
+  "values": [
+    {
+      "id": "glaser-2018-20m",
+      "point": {
+        "latDeg": -89.45,
+        "eLonDeg": 222.69
+      },
+      "valuePct": 76.0,
+      "rasterPixelM": 20,
+      "observerHeightM": null,
+      "citation": "Gl\u00e4ser et al. 2018, Table 1: Connecting Ridge illumination from a 20 m LOLA elevation model",
+      "definition": "annual average of the visible fraction of the solar disc, at surface height, per the paper's stated definition, which has not yet been re-read",
+      "verified": false,
+      "verificationNote": "Taken from the build plan's correction list, which cites the paper. The paper has not been opened in this session, so the figure and its definition are unverified.",
+      "observerHeightNote": "The build plan records the value and the raster, not the observer height. Setting a height here would decide whether the comparison passes, so it is left unestablished."
+    },
+    {
+      "id": "mazarico-2011-240m",
+      "point": {
+        "latDeg": -89.45,
+        "eLonDeg": 222.69
+      },
+      "valuePct": 89.0,
+      "rasterPixelM": 240,
+      "observerHeightM": null,
+      "citation": "Mazarico et al. 2011: Connecting Ridge illumination from a 240 m LOLA elevation model",
+      "definition": "as above, at a coarser raster; reported here as the resolution effect, not as a comparator for this build's near field",
+      "verified": false,
+      "verificationNote": "Taken from the build plan's correction list, which cites the paper. The paper has not been opened in this session.",
+      "observerHeightNote": "The build plan records the value and the raster, not the observer height. Setting a height here would decide whether the comparison passes, so it is left unestablished."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/horizons-proxy.test.ts (11 tests) 36ms
+ ✓ tests/live-check.test.ts (12 tests) 26ms
+
+ Test Files  2 passed (2)
+      Tests  23 passed (23)
+   Start at  14:34:28
+   Duration  439ms (transform 77ms, setup 0ms, import 106ms, tests 62ms, environment 0ms)
+

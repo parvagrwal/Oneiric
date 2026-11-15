@@ -1,0 +1,2 @@
+npm run build:basemap            # draws the static hillshade; writes nothing when the LOLA raster is absent
+npm test -- tests/basemap.test.ts

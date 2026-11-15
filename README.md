@@ -2,9 +2,11 @@
 
 Oneiric compares lunar landing sites and dates. For a site and a UTC landing date, you see when a mission has sunlight for power and a line of sight to Earth, what verdict your stay rules reach, and how many days of schedule slip that answer survives. It is built for mission planners who must re-evaluate a landing site and date after a delay, at $0 out-of-pocket cost.
 
-**Status:** the calculation engine, the 2023–2040 Sun and Earth position tables, the terrain skyline builder, the Compare board, the Window Finder, the south-polar map, and the recorded-mission checks run in the repository preview. The library holds 33 lunar sites — south-polar reference points, Artemis III candidate regions (Oct 2024 list, each marked as an illustrative point, not a NASA-selected site), CLPS and international mission targets, and Apollo landmarks — plus custom latitude and longitude entry. Twenty-four south-polar sites ship with 2 m terrain skylines built from LOLA elevation rasters: 22 **grade B** (complete 20 m near field) and 2 **grade C** (240 m raster only, outside the 20 m tile). The 9 library sites outside the south-polar rasters and every custom coordinate run at **grade D** (smooth sphere, no terrain). Replaying the IM-2 landing instant shows the Sun 2.46° above the horizon at the recorded site (azimuth 65.69°), from the same cached table and 2 m skyline the app uses. There is no external deployment URL yet.
+**Live app: <https://oneiric-1jt.pages.dev/>**
 
-NASA data: JPL Horizons (Sun and Earth positions seen from the Moon, 2023 to 2040) and LOLA south-pole elevation rasters from NASA's Planetary Geodesy Data Archive (20 m, 80 m, and 240 m per pixel) drive the calculations. Raw LOLA rasters stay outside Git; the 24 shipped skylines and their verification checksums are in `app/public/data/skylines/`.
+**Status:** the calculation engine, the 2023–2040 Sun and Earth position tables, the terrain skyline builder, the Compare board, the Window Finder, the south-polar map, and the recorded-mission checks run in the repository preview. The library holds 33 lunar sites — south-polar reference points, Artemis III candidate regions (Oct 2024 list, each marked as an illustrative point, not a NASA-selected site), CLPS and international mission targets, and Apollo landmarks — plus custom latitude and longitude entry. Twenty-four south-polar sites ship with terrain skylines at four observer heights — 0, 2, 10 and 20 m, 96 skylines in all — built from LOLA elevation rasters: 22 **grade B** (complete 20 m near field) and 2 **grade C** (240 m raster only, outside the 20 m tile) at each height. The 9 library sites outside the south-polar rasters and every custom coordinate run at **grade D** (smooth sphere, no terrain). Replaying the IM-2 landing instant shows the Sun 2.46° above the horizon at the recorded site (azimuth 65.69°), from the same cached table and 2 m skyline the app uses.
+
+NASA data: JPL Horizons (Sun and Earth positions seen from the Moon, 2023 to 2040) and LOLA south-pole elevation rasters from NASA's Planetary Geodesy Data Archive (20 m, 80 m, and 240 m per pixel) drive the calculations. Raw LOLA rasters stay outside Git; the 96 shipped skylines and their verification checksums are in `app/public/data/skylines/`.
 
 ## How do we check the Sun and Earth directions?
 
@@ -15,7 +17,7 @@ The engine computes where the Sun and Earth sit in the sky of a lunar surface po
 | Sun and Earth direction against JPL Horizons | 8,000 | 0.0061° | 0.0028° | 0.02° | Pass |
 
 - Sun alone: largest error 0.0002°. Earth alone: largest error 0.0061°.
-- The Earth error is likely stellar aberration, which Horizons includes and the hourly table does not. That cause is not verified yet.
+- The Earth error is stellar aberration, verified: the hourly table is built from Horizons sub-points, and the sub-solar point carries the apparent correction while the sub-Earth point is geometric, so Earth differs by the aberration amount (about 0.0057°). Light-time is ruled out — it contributes only about 0.0002°. A small excess of 0.001–0.002° above pure aberration is not yet separated.
 - Run `npm run validate` to write `app/public/data/validation.json`.
 - Evidence: `evidence/sun-earth-direction-check/` (command, raw output, saved result).
 - The eight points include three equator points and two mid-latitude points that exist only to cover the geometry. They are test points, not landing sites.
@@ -28,7 +30,7 @@ The skyline builder casts rays from a site across an elevation raster and record
 |---|---|---|---|---|---|
 | Skyline elevation on synthetic terrain | 10,084 | 0.0029° | 0.00055° | 0.01° | Pass |
 | Elevation raster orientation on Shackleton and Cabeus | 4 | — | — | Crater floor below rim and mirrored longitude | Pass |
-| Shipped skylines match their build records | 24 | — | — | Exact 10° azimuth block checksums | Pass |
+| Shipped skylines match their build records | 96 | — | — | Exact 10° azimuth block checksums | Pass |
 
 - Refinement on synthetic rough ground: halving the ray step and doubling the rays per bin moved every 14-day metric by at most 0.22 percentage points (limit 1).
 - If you run `npm run validate` without the gitignored LOLA `.TIF` rasters in `data/`, the raster orientation check reports pending rather than passed.
@@ -55,30 +57,90 @@ The tool replays six recorded facts with the same engine the app uses. Tolerance
 
 `npx tsx pipeline/find-worked-case.ts` scanned every shipped polar skyline (24 sites, grade B or C) and every 6.5-day sortie start in 2027–2029, and found 97,542 cases where a 21-day shift flips exactly one verdict in a pair. The top-scoring example is walked through in `docs/worked-case.md`: at de Gerlache Rim 2 centroid the verdict flips GO → NO-GO (sunlit 100 % → 28.3 %), while the rim's highest point holds its GO and gains slip tolerance. Evidence: `evidence/worked-case/`.
 
+## What blocks it, and where the ridge is?
+
+Every card finds the stretches where the Sun is dark and where Earth is below the horizon. Press one and the card
+names what stands in the way: the body's azimuth at the middle of the span, the elevation the stored skyline records
+there, how far away that terrain is, and how high it rises above the site. Where the skyline records no terrain — a
+grade D site, or an azimuth with nothing measured — the card says that instead of naming a peak. The same ridge is
+drawn on the south-polar map when one is open.
+
+At Connecting Ridge on 2027-03-01 with a 6.5-day sortie at 2 m, the Sun is dark for 23.17 h. At the middle of that
+stretch it sits 0.08° below a horizon of 0.35° at azimuth 9.51°, and the terrain behind it is 0.33 km away and 2.0 m
+higher than the site. The card also finds a closed-link stretch of 150.02 h, where Earth is 4.35° below a horizon of
+0.86° and the terrain there is only 0.03 km away. Each span is traced separately: the ridge that blocks the Sun is
+not the ridge that hides Earth, and the card does not average them into one answer. Evidence: `evidence/what-blocks-it/`.
+
+## Is the link open at both ends?
+
+The Earth end of the link is judged only when both halves are computed: Earth above the lunar terrain horizon, and
+the Moon above the receiving station's elevation mask. Pick a station from the four listed, each with its published
+coordinates and a 10° planning mask, and the card reports the share of the stay the link is open and the longest closed run. With no
+station selected it judges the lunar side alone and says so. The station's Moon altitude is computed in the browser
+from the astronomy-engine library, topocentric and airless; the Moon's radius is not added, so a result within a
+quarter degree of the mask is reported as marginal rather than rounded to open or shut. Evidence: `evidence/live-horizons-check/`.
+
+## How do you check it against Horizons yourself?
+
+The live check button asks this deployment's own proxy for the Sun's direction for one site and one instant, and
+puts the answer beside the cached figure. A live answer is labelled live with the time it was fetched and the angular
+difference from the app's own direction; a cached answer is labelled cached with its date. If the proxy is
+unreachable the card says what broke and shows the cached figure, labelled cached. The proxy refuses anything outside
+its allow-list (two bodies, coordinates as numbers, one instant), so it cannot be used as an open relay, and it
+caches for 24 hours. Evidence: `evidence/live-horizons-check/`.
+
+## How much does the answer depend on the observer height?
+
+`npm run sensitivity-report` reports how each metric moves with observer height and with start date, as values only,
+with no threshold. At Connecting Ridge the same 6.5-day stay from the same start date gives 36.8% sunlit at 2 m and
+100.0% at 10 m, a change of 63.2 points. The same comparison across every shipped site puts Shackleton Rim largest,
+0.0% at 2 m against 73.0% at 10 m, a change of 73.0 points: the observer height is what moves the answer most, and
+both the start-date and shift sensitivities sit inside it for these sites. Evidence: `evidence/sensitivity/`.
+
+A horizon band from the raster's own vertical error is **not** shown, because the error value is not in this build:
+the product pages name the `_ERR.TIF` rasters, and the rasters themselves are not here. The card names the product and
+says the value is missing rather than showing a band of zero.
+
+## How does it compare with published illumination values?
+
+`npm run illumination-compare` compares this build's annual average with two published values at the Connecting Ridge
+reference point. It compares only at a published observer height and averaging definition that are both established,
+and neither is established for those two values, so it makes no comparison: it prints this build's figure at every
+stored height — 31.18% at 0 m, 64.41% at 2 m, 92.45% at 10 m, 93.06% at 20 m — and the 61.88-point spread between
+them. The published values sit inside that spread, which is exactly why the height cannot be guessed to make a
+comparison agree. The published rows are marked unverified in their own file, and that label is printed with them. Evidence: `evidence/illumination-compare/`.
+
 ## What is in the repository?
 
 | Folder | What it holds |
 |---|---|
 | `engine/` | Pure TypeScript calculation: site frame, interpolation of the hourly table, terrain skyline builder, skyline lookup, sunlit fraction, Earth visibility, time series, stay metrics, rolling prefix-sum window evaluation, verdict rules, and slip tolerance. It imports nothing from Node or the browser, so one copy runs in the pipeline and in the Web Worker. |
-| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only), and the Method and checks drawer that renders `validation.json`. The first screen is a 3D Moon view (React Three Fiber) with a marker for each of the 33 sites, Sun and Earth pointers from the same cached table at the scrubbed time, a south-pole camera preset, and a 30-second scripted tour; it is navigation only and changes no verdict, metric, or grade. Without WebGL the app shows a static site chart and the Compare board instead. |
-| `pipeline/` | Node scripts that fetch Horizons responses, build the binary tables, read the elevation rasters, build the skylines, and run the checks. |
+| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only) that can mark the ridge a blocked span was traced to, an Explorer strip of five guided scenes, and the Method and checks drawer that renders `validation.json`. The first screen is a 3D Moon view (React Three Fiber) with a marker for each of the 33 sites, Sun and Earth pointers from the same cached table at the scrubbed time, a south-pole camera preset, and a 30-second scripted tour; it is navigation only and changes no verdict, metric, or grade. Without WebGL the app shows a static site chart and the Compare board instead. |
+| `pipeline/` | Node scripts that fetch Horizons responses, build the binary tables, read the elevation rasters, build the skylines, draw the hillshade, and run the checks and the reported comparisons. |
+| `functions/` | The Cloudflare Pages Function behind the live Horizons check: it accepts one body and one instant, validates them against a fixed allow-list, and caches for 24 h. |
 | `docs/` | Engineering notes, including the worked example of a 21-day slip (`docs/worked-case.md`). |
 | `fixtures/` | Raw Horizons responses, saved as received. |
-| `tests/` | Automated unit and integration tests (196 tests across 25 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
-| `evidence/` | For each finished step: the command, the raw output, and a saved receipt. |
+| `tests/` | Automated unit and integration tests (312 tests across 36 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
+| `evidence/` | For each finished step: the command, the raw output, and a saved receipt. One folder per subject, named for what it proves. |
+| `DATA.md` | Every data file the application reads, with its source, its size, and — where something is missing — why it is missing and what the application does instead. |
 
 ## How do you run it locally?
 
-You need Node 20 or later. The Horizons responses and the 24 polar skylines at 2 m are already in the repository, so these commands need no network after `npm ci`.
+You need Node 20 or later. The Horizons responses and the 96 polar skylines at four heights are already in the repository, so these commands need no network after `npm ci`.
 
 ```bash
 npm ci
 npm run build:ephemeris   # raw responses -> app/public/data/ephem/<year>.bin
-npm test                  # 196 tests across 25 test files
+npm test                  # 312 tests across 36 test files
 npm run typecheck
-npm run validate          # direction, skyline, stored-skyline and hindcast checks -> app/public/data/validation.json
+npm run validate          # all six recorded checks -> app/public/data/validation.json
 npm run mutation-check    # changes 45 engine elements one at a time; every mutant must fail a test
 npm run height-report     # what each shipped observer height changes, per site; no threshold
+npm run sensitivity-report      # height and start-date sensitivity; values only, no threshold
+npm run blocking-report         # what blocks the Sun and Earth at each site, and the ridge that does it
+npm run landing-report          # the 100 m circle, and which of its points have a stored skyline
+npm run illumination-compare    # this build against two published values, with the spread across heights
+npm run build:basemap           # draw the static hillshade; writes nothing without the LOLA rasters
 npx tsx pipeline/hook-sun-elevation.ts   # Sun elevation at the recorded IM-2 landing instant
 npx tsx pipeline/find-worked-case.ts     # scan 2027–2029 for 21-day verdict flips
 
@@ -92,6 +154,8 @@ In the web application:
 
 - Add up to four sites on the **Compare board** and set a shared UTC landing date or per-card date overrides. Every control and custom coordinate is stored in the URL for **Share URL**. Each card carries **CSV** (the full 10-minute series) and **JSON** (scenario, metrics, dataset names, grade, engine commit and the shape-B Horizons query that reproduces the comparison) downloads, plus a **Horizons check** line when a cached Horizons query exists for that site.
 - Click **Method and checks** (top bar or footer) to open the evidence drawer: what each check does, the recorded pass/fail rows from `validation.json` rendered as they are, per-quantity sources, the limits the tool states out loud, and how to reproduce the results.
+- Each card carries **What blocks it**: press a dark or closed-link span and the card names the ridge, its distance, and how high it rises. The ridge is drawn on the map while that span is open. The card also carries the **Earth end of the link** (pick a station, or read the lunar side alone), **Ranges and landing error**, and a one-click **Check this instant against Horizons**.
+- The **Explorer** strip above the Compare board holds five guided scenes. Each one sets a site, a date, a stay and an observer height, and the engine computes what the screen then shows; a caption describes what to look at and never states a verdict.
 - Scroll to the **Map** section for the south pole in stereographic projection: the 33 library sites, the nine USGS Artemis III candidate region outlines (simplified), and — when online — the Moon Trek LOLA shaded-relief basemap. Click a marker to load its site into the active card.
 - Open **Edit rules** in the Scenario bar to adjust sunlit minimum, longest dark gap, Earth-visible minimum, longest link gap, stay length, or Earth elevation margin. All presets are labelled **illustrative, not agency requirements**.
 - Enter custom `MOON_ME` latitude and longitude under **+ Custom**. Custom points use the smooth-sphere horizon dip and are always labelled **Grade D (smooth sphere, no terrain)**.
@@ -148,21 +212,27 @@ The exact index fields, the grade meanings and the failure behaviour are in [`do
 | Element | Status | Source or guardrail |
 |---|---|---|
 | Sun and Earth positions (2023–2040) | Real NASA data | JPL Horizons `MOON_ME` vectors (`fixtures/horizons/`); checked across 8,000 comparisons (max error 0.0061°) |
-| 24 polar skylines at 2 m (22 grade B, 2 grade C) | Real NASA data | LOLA south-pole DEMs (PGDA product 90: 20 m, 80 m, 240 m); verified by checksums in `app/public/data/skylines/` |
+| 96 polar skylines at 0, 2, 10 and 20 m (22 grade B, 2 grade C at each height) | Real NASA data | LOLA south-pole DEMs (PGDA product 90: 20 m, 80 m, 240 m); verified by checksums in `app/public/data/skylines/` |
 | 9 non-polar sites and custom coordinates | Smooth-sphere model | Marked **Grade D (smooth sphere, no terrain)** on every card, chart, and matrix row |
 | Artemis III candidate regions (Oct 2024 list) | Illustrative representative points | Each point is labelled **illustrative point, not a NASA-selected site** |
 | Verdict presets (sortie, lander, one-year stay) | Illustrative rules | Editable in the Scenario bar and labelled **illustrative, not agency requirements** |
 | Mission hindcasts | Replay of six recorded events | NASA catalogue, Firefly mission log, ISRO statements; all six pass, tolerances fixed before the run (`app/public/data/validation.json`) |
 | 3D Moon view picture | Online NASA imagery only | NASA Scientific Visualization Studio CGI Moon Kit colour map (2K), loaded at runtime; if it does not load, the globe is a plain shaded sphere. Shown for orientation and never used in any calculation |
 | South-polar map basemap | Online NASA imagery only | Moon Trek `LRO_LOLA_Shade_SPole75_30mp_v04` (south pole); loads only with network access and is never used in any calculation |
-| Observer heights | 2 m skylines shipped; the loader supports any height | A height with no stored skyline runs the smooth sphere at grade D, labelled as such, and is never filled in from another height. Adding 0, 10 or 20 m files needs a build run and no code change: see [`docs/observer-height.md`](docs/observer-height.md) |
+| Published illumination values | Reference only, unverified | Two published values at the Connecting Ridge reference point, each marked unverified in `data/published-illumination.json`; the comparison prints that label and claims no pass or fail (see below) |
+| Earth station coordinates and masks | Published coordinates; 10° planning mask | Four DSN and ESA stations, each row naming the operator page its coordinates come from; the 10° minimum elevation is a planning figure, editable through the custom station entry |
+| Observer heights | Skylines shipped at 0, 2, 10 and 20 m; the loader supports any height | A height with no stored skyline runs the smooth sphere at grade D, labelled as such, and is never filled in from another height. Adding a new height needs a build run and no code change: see [`docs/observer-height.md`](docs/observer-height.md) |
 
 ## What are the known limits?
 
 - No elevation model resolves features smaller than its pixel. The 20 m LOLA product would not have seen the crater where Athena came to rest on the IM-2 mission: Intuitive Machines reported landing 250 m from its target site, and NASA reported more than 400 m.
 - Energy over a stay is a Riemann sum over 10-minute steps; near sunrise and sunset it can differ from the continuous integral by up to half a step at each edge.
-- Only 2 m terrain skylines are shipped so far. The **Observer height** selector lists 0, 2, 10 and 20 m and marks which heights have a stored skyline; a height with none is still selectable, and it runs every site as a smooth sphere at grade D, labelled as such, never as terrain. Horizons are never interpolated between heights: on smooth ground the dip is −0.087° at 2 m and −0.194° at 10 m.
-- The static hillshade the map was planned to ship could not be produced in this build environment: the LOLA rasters stay gitignored and were not reachable. The map therefore shows the Moon Trek LOLA shaded-relief tiles in the south-pole stereographic projection — imagery from the same source rasters — and the basemap needs network access; the site markers, region outlines and pole marker render regardless.
+- Terrain skylines ship at 0, 2, 10 and 20 m. The **Observer height** selector lists those heights; a height with no stored skyline is still selectable, and it runs every site as a smooth sphere at grade D, labelled as such, never as terrain. Horizons are never interpolated between heights: on smooth ground the dip is −0.087° at 2 m and −0.194° at 10 m.
+- No static hillshade is shipped with this build: it is drawn from the LOLA rasters, which stay gitignored and were not in this checkout, so `npm run build:basemap` writes nothing and says why. The map shows the Moon Trek LOLA shaded-relief tiles in the south-pole stereographic projection — imagery from the same source rasters — and needs network access; the site markers, region outlines, and pole marker render regardless.
+- No horizon band is shown for any site. The vertical error of each elevation product is documented (the product pages name the `_ERR.TIF` rasters) but the value itself is not in this build, so the card names the product and says the value is missing instead of drawing a band of zero.
+- The 100 m landing circle has eight points and none of them has a stored skyline, so no point's horizon is computed and the share of the circle that is sunlit is reported as not computed. It is never interpolated from the centre.
+- The four stations carry a 10° planning mask, and the Moon's altitude is computed topocentrically and airless in the browser. Atmospheric refraction is not modelled, and the Moon's angular radius is not added, so a station within a quarter degree of its mask is reported as marginal.
+- The live Horizons check needs network access and this deployment's own proxy; when either is unavailable the card says what broke and falls back to the cached figure, labelled cached. It checks one body at one instant, not a stay.
 - The cached Horizons check shown on a card covers that one site only, from the cached site query (three sites use a 500-epoch query, the other thirty a 24-epoch query spread across 2023–2040); a site without a cached query would say it is not cached, and no number is invented for it.
 - Mission hindcasts replay recorded events; they do not predict future missions, and the presets are illustrative, not agency requirements.
 - The 3D Moon view is for orientation. Its picture is a 2K map that its source describes as made for appearance rather than measurement, so close to the pole it is blurred; sites a few kilometres apart sit almost on top of each other at globe scale, so use the site list or the south-polar map to pick between them. The Sun and Earth pointers show directions from the Moon's centre, not from a site. The 3D view has been checked only without a browser (a scene test with no graphics card, `evidence/3d-moon-view-and-dark-interface/`); how it looks and how smoothly it runs on a real device has not been recorded as evidence yet.

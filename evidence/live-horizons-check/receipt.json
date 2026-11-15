@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "summary": "The live Horizons check is a Cloudflare Pages Function at /api/horizons, which is the host this build deploys to. It accepts exactly one body (Sun or Earth), one decimal longitude and latitude, and one ISO instant; anything else is refused with 400 before any upstream request is made, so the deployment cannot be used as an open relay. The answer is cached for 24 hours at the edge. The app labels a live answer live with the time it was fetched and the angular difference from its own direction; on failure it names what broke and falls back to the cached figure, labelled cached.",
+  "securityBoundary": {
+    "bodies": ["10", "399"],
+    "longitudeRangeDeg": [0, 360],
+    "latitudeRangeDeg": [-90, 90],
+    "instants": 1,
+    "center": "coord@301 (the Moon), geodetic site coordinates",
+    "quantities": "4 (apparent az/el), airless, degrees",
+    "cacheTtlSeconds": 86400,
+    "onUpstreamFailure": "502 with no number in the body"
+  },
+  "whyCloudflare": "The deployed host is Cloudflare Pages, which runs functions from a functions/ directory at the repository root. A Vercel function would not be served there.",
+  "failurePath": "A failed live request never renders as a live number: liveFailureMessage names the status or the network error, and the chip shows the cached figure with its date and the word cached.",
+  "tests": "27 passed across tests/live-check.test.ts and tests/horizons-proxy.test.ts, including 4 review-added regression tests: the parser on a verbatim live Horizons row (trailing comma), the client URL answered by the proxy handler end to end, and the proxy reply read at the top level",
+  "liveVerification": "Review verified the proxy against live Horizons on 2026-11-15 (the build environment could reach JPL): the proxy's own URL builder and parser return Sun azimuth 42.8199 degrees, elevation -0.1665 degrees at Connecting Ridge on 2027-03-01T00:00Z, and Earth elevation -6.6804 degrees at the same instant, matching the app's cached table to about 0.01 degrees. That live run caught a parser defect the stubbed tests missed: the real Horizons row ends with a trailing comma, so reading the last two columns returned the elevation as the azimuth and zero as the elevation. The parser now reads the fixed azimuth and elevation columns, and the regression test pins the recorded row. The same review found the client sent body 'sun' where the proxy accepts only '10' or '399', and read the direction from a result wrapper the proxy does not send; both are fixed and covered by the end-to-end test. The deployed endpoint's own response has still not been observed; check /api/horizons on the live site after deploy.",
+  "files": ["functions/api/horizons.ts", "app/src/live-check.ts"]
+}

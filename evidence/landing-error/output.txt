@@ -1,0 +1,164 @@
+
+> oneiric@0.0.0 landing-report
+> tsx pipeline/landing-error-report.ts
+
+Landing-error robustness: 6.5-day sortie (illustrative, not agency requirements), start 2027-03-01T00:00:00.000Z, 2 m observer, 100 m circle
+A circle point is computed only where a stored skyline exists for that point at that height.
+
+connecting-ridge  grade B  centre NO-GO: Fails: sunlit at least 95% (got 36.8%).
+  centre: sunlit 36.78%, dark gap 23.2 h, Earth visible 3.74%, link gap 150.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+shackleton-rim  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+nobile-rim-2  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+im-2-athena  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 92.63%, link gap 11.4 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+im-1-odysseus  grade C  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 100.00%, link gap 0.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 240 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+chandrayaan-3  grade C  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 100.00%, link gap 0.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 240 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-nobile-rim-2-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 50.43%, link gap 77.3 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-nobile-rim-2-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 86.86%, link gap 20.5 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-mons-mouton-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0.3%).
+  centre: sunlit 0.27%, dark gap 144.8 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-mons-mouton-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 100.00%, link gap 0.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-malapert-massif-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 14.53%, link gap 133.2 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-malapert-massif-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 19.5%).
+  centre: sunlit 19.45%, dark gap 118.7 h, Earth visible 89.00%, link gap 17.1 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-de-gerlache-rim-2-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 29.8%).
+  centre: sunlit 29.78%, dark gap 108.0 h, Earth visible 23.93%, link gap 118.6 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-de-gerlache-rim-2-highest  grade B  centre NO-GO: Fails: Earth visible at least 90% (got 31.5%).
+  centre: sunlit 100.00%, dark gap 0.0 h, Earth visible 31.52%, link gap 106.7 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-mons-mouton-plateau-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 45.30%, link gap 85.3 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (none on file) but its value has not been read into this checkout, so no band is shown.
+artemis-mons-mouton-plateau-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 100.00%, link gap 0.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-slater-plain-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-slater-plain-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 65%).
+  centre: sunlit 64.99%, dark gap 48.3 h, Earth visible 10.36%, link gap 139.8 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-peak-near-cabeus-b-centroid  grade B  centre NO-GO: Fails: Earth visible at least 90% (got 0%).
+  centre: sunlit 100.00%, dark gap 0.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-peak-near-cabeus-b-highest  grade B  centre NO-GO: Fails: longest link gap at most 6 h (got 7.5 h).
+  centre: sunlit 100.00%, dark gap 0.0 h, Earth visible 95.09%, link gap 7.5 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-nobile-rim-1-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-nobile-rim-1-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 80.45%, link gap 30.5 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-haworth-centroid  grade B  centre NO-GO: Fails: sunlit at least 95% (got 0%).
+  centre: sunlit 0.00%, dark gap 156.0 h, Earth visible 0.00%, link gap 156.0 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+artemis-haworth-highest  grade B  centre NO-GO: Fails: sunlit at least 95% (got 44.1%).
+  centre: sunlit 44.12%, dark gap 78.6 h, Earth visible 74.36%, link gap 39.9 h
+  9 circle points, 0 computed from a stored skyline, 9 with no stored skyline
+  share of the circle that keeps the centre verdict: not computed
+  5 m near field: no 5 m raster covers these points in this checkout
+  range: not available. The product documents an error raster (LOLA 20 m south-polar DEM (product 90)) but its value has not been read into this checkout, so no band is shown.
+
+Sites with at least one computed circle point: none. The share is reported as not computed rather than assumed, and no horizon is borrowed from the centre site.
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/ranges-ui.test.ts (7 tests) 12ms
+ ✓ tests/landing-circle.test.ts (9 tests) 10ms
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  14:34:35
+   Duration  598ms (transform 167ms, setup 0ms, import 247ms, tests 22ms, environment 0ms)
+

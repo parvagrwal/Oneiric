@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "summary": "A dark or closed-link span on a card is traced back to the ridge the stored skyline records at the body's azimuth at the middle of the span. The card prints the azimuth, the body elevation, the horizon there, the clearance, the terrain distance, and how far the terrain rises above the site; the ridge is drawn on the south-polar map while that span is open. Where a skyline records no terrain the card says so and names no peak.",
+  "caseQuoted": {
+    "site": "connecting-ridge",
+    "start": "2027-03-01T00:00:00.000Z",
+    "preset": "6.5-day sortie, 2 m observer",
+    "sunDarkHours": 23.17,
+    "sunDarkMidUtc": "2027-03-03T17:36:15.000Z",
+    "sunAtMid": { "azimuthDeg": 9.51, "elevationDeg": -0.08, "horizonDeg": 0.35, "clearanceDeg": -0.43 },
+    "terrain": { "distanceKm": 0.33, "riseM": 2.0, "latDeg": -89.4393, "eLonDeg": 222.8738 },
+    "separateSpans": "The closed-link stretch is a different span: 150.02 h, Earth 4.35 deg below a horizon of 0.86 deg, terrain 0.03 km away. The two spans are reported separately and never averaged."
+  },
+  "smoothSphere": "A site with no stored skyline reports the stretch against the smooth sphere and says the model is the horizon, naming no ridge.",
+  "tests": "26 passed across tests/blocking-terrain.test.ts and tests/p1-ui.test.ts",
+  "limits": "The rise is read from the skyline's recorded elevation at that azimuth, not from a raster this build can re-read. The point is the skyline's own recorded point, so it is the terrain the skyline saw, not an independent measurement.",
+  "files": ["engine/blocking.ts", "engine/geo.ts", "app/src/blocking-ui.ts", "app/src/App.tsx", "app/src/MapView.tsx", "pipeline/blocking-report.ts"]
+}

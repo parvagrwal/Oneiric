@@ -1,10 +1,36 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  horizonsChipText as liveChipText,
+  liveCheckUrl,
+  liveFailureMessage,
+  parseLiveCheckResponse,
+  residualDeg,
+  type CachedCheck,
+  type LiveCheckState,
+} from './live-check.ts';
+import {
+  blockedSpanLabel,
+  blockedSpans,
+  explainBlocked,
+  type BlockedExplanation,
+  type BlockedKind,
+} from './blocking-ui.ts';
+import { STATION_CHOICES, earthLinkSentence, earthLinkSummary, stationById } from './earth-link-ui.ts';
+import { EXPLORER_SCENES, applyScene, nextScene, sceneAt } from './explorer.ts';
+import { hillshadeResolutionM, hillshadeState } from './hillshade.ts';
+import type { HillshadeManifest, HillshadeState } from './hillshade.ts';
 import type { ChangeEvent, FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   HOUR_MS,
   MIN_MS,
   PRESETS,
+  decodeSkyline,
+  hasHeightErrorValue,
+  heightErrorFor,
   heightOptions,
+  landingCirclePoints,
+  worstHorizonShiftDeg,
+  makeSkyline,
   provenanceFooter,
   type Clock,
   type Grade,
@@ -14,11 +40,13 @@ import { SkylineCanvas } from './SkylineCanvas.tsx';
 import { WindowFinder } from './WindowFinder.tsx';
 import { MethodDrawer, type ValidationRowData, type PendingRow } from './MethodDrawer.tsx';
 import { shapeBUrl } from './horizons-url.ts';
+import { moonAltitudeForStations } from './moon-altitude.ts';
 import { timeControlForKey } from './keyboard.ts';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { AUTOPILOT_SCENARIO, AUTOPILOT_STEPS, autopilotStepAt } from './autopilot-script.ts';
 import { EPHEMERIS_FIRST_YEAR, EPHEMERIS_LAST_YEAR } from './coverage.ts';
 import { formatHours, formatPercent, formatSlipDays, formatUtc } from './format.ts';
+import { nearestTrackPoint } from './status.ts';
 import { NEAR_SIDE_POSE, SOUTH_POLE_POSE, poseForSite } from './globe-math.ts';
 import { Hero, type CameraPreset, type GlobeMode, type HeroStats } from './Hero.tsx';
 import type { PoseRequest } from './MoonGlobe.tsx';
@@ -226,6 +254,9 @@ function App() {
   const [skylinesReady, setSkylinesReady] = useState(false);
 
   const [cardResults, setCardResults] = useState<Map<string, ScenarioResult>>(new Map());
+  useEffect(() => {
+    resultsRef.current = cardResults;
+  }, [cardResults]);
   const [compareState, setCompareState] = useState<DataState>({ kind: 'idle' });
   const [matrixRows, setMatrixRows] = useState<Map<string, WindowFinderRow>>(new Map());
   const [matrixProgress, setMatrixProgress] = useState<{
@@ -468,14 +499,106 @@ function App() {
     [validationRows],
   );
 
-  const horizonsChipText = useCallback((site: SiteDefinition): string => {
-    if (site.isCustom) return 'Horizons check: not cached for custom coordinates';
-    if (horizonsCheck === null) return 'Horizons check: loading…';
-    const entry = horizonsCheck.get(site.id);
-    if (!entry) return 'Horizons check: not cached for this site';
-    const date = entry.cachedDate ?? 'date unknown';
-    return `Horizons check: max ${entry.maxDeg.toFixed(4)}° · cached ${date} · ${entry.n.toLocaleString()} epochs · this site only`;
-  }, [horizonsCheck]);
+  // The app's own Sun direction at an instant, read from whatever card is showing that site. Used only to put a
+  // residual next to a live answer; when no card covers the instant there is no residual and the chip omits it.
+  const resultsRef = useRef<Map<string, ScenarioResult>>(new Map());
+  const mineAt = useCallback(
+    (atMs: number, site: SiteDefinition): { azDeg: number; elDeg: number } | null => {
+      for (const result of resultsRef.current.values()) {
+        if (!result.track.length) continue;
+        const first = result.track[0];
+        const last = result.track[result.track.length - 1];
+        if (atMs < first.tMs || atMs > last.tMs) continue;
+        const point = nearestTrackPoint(result.track, atMs);
+        if (point) return { azDeg: point.sunAz, elDeg: point.sunEl };
+      }
+      void site;
+      return null;
+    },
+    [],
+  );
+
+  // Live Horizons check, per site. The state machine lives in live-check.ts, so what a reader sees is one of four
+  // fixed things: live with a fetched time, cached with a date, loading, or a failure that names what broke and
+  // falls back to the cached figure. A failure never reads like a live answer.
+  const [liveChecks, setLiveChecks] = useState<Map<string, LiveCheckState>>(new Map());
+  const cachedCheck = useCallback(
+    (site: SiteDefinition): CachedCheck | null => {
+      const entry = horizonsCheck?.get(site.id);
+      if (!entry) return null;
+      return { maxDeg: entry.maxDeg, rmsDeg: entry.rmsDeg, n: entry.n, cachedDate: entry.cachedDate ?? null };
+    },
+    [horizonsCheck],
+  );
+  const horizonsChipText = useCallback(
+    (site: SiteDefinition): string =>
+      liveChipText({
+        site,
+        cached: cachedCheck(site),
+        live: liveChecks.get(site.id) ?? { kind: 'idle' },
+        loadingFile: horizonsCheck === null,
+      }),
+    [cachedCheck, horizonsCheck, liveChecks],
+  );
+
+  const runLiveCheck = useCallback(
+    async (site: SiteDefinition, atMs: number) => {
+      if (site.isCustom) return;
+      const url = liveCheckUrl(site, atMs, '');
+      setLiveChecks((prev) => new Map(prev).set(site.id, { kind: 'loading', startedMs: Date.now() }));
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          const detail = await response.text().catch(() => null);
+          setLiveChecks((prev) =>
+            new Map(prev).set(site.id, {
+              kind: 'failed',
+              failedMs: Date.now(),
+              message: liveFailureMessage(response.status, detail ? detail.slice(0, 120) : null),
+              url,
+            }),
+          );
+          return;
+        }
+        const direction = parseLiveCheckResponse(await response.json());
+        if (!direction) {
+          setLiveChecks((prev) =>
+            new Map(prev).set(site.id, {
+              kind: 'failed',
+              failedMs: Date.now(),
+              message: 'the proxy answered without a direction, so no number is shown',
+              url,
+            }),
+          );
+          return;
+        }
+        const { azDeg, elDeg } = direction;
+        // The app's own direction at the same instant, read from the card's track when it covers that instant.
+        const mine = mineAt(atMs, site);
+        setLiveChecks((prev) =>
+          new Map(prev).set(site.id, {
+            kind: 'live',
+            sunAzDeg: azDeg,
+            sunElDeg: elDeg,
+            residualDeg: mine ? residualDeg({ azDeg, elDeg }, mine) : Number.NaN,
+            fetchedMs: Date.now(),
+            url,
+            cacheTtlS: direction.cacheTtlS,
+          }),
+        );
+      } catch (error) {
+        setLiveChecks((prev) =>
+          new Map(prev).set(site.id, {
+            kind: 'failed',
+            failedMs: Date.now(),
+            message: liveFailureMessage(null, error instanceof Error ? error.message : String(error)),
+            url,
+          }),
+        );
+      }
+    },
+    [mineAt],
+  );
 
   const allSites = useMemo(() => {
     const map = new Map<string, SiteDefinition>();
@@ -511,6 +634,89 @@ function App() {
       .filter((entry) => !skylinePayloads?.has(terrainKey(entry.siteId, entry.heightM)))
       .map((entry) => entry.file);
   }, [skylinesReady, skylineIndex, skylinePayloads]);
+
+  // The static south-polar hillshade, when the build shipped one. Absent is the normal case in this checkout: the
+  // note under the map then says the map is using the online tiles and why, rather than showing a blank frame.
+  const [basemap, setBasemap] = useState<HillshadeState>({ kind: 'unavailable', reason: 'loading' });
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await fetch(new URL('data/basemap/basemap.json', document.baseURI).toString());
+        if (!response.ok) throw new Error(String(response.status));
+        const manifest = (await response.json()) as HillshadeManifest;
+        if (!cancelled) setBasemap(hillshadeState(manifest, document.baseURI));
+      } catch {
+        if (!cancelled) setBasemap(hillshadeState(null, document.baseURI));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // What blocks it: the dark and closed-link spans of the card on screen, each traced back to the ridge the stored
+  // skyline records at the body's azimuth mid-span. One span open at a time, keyed by span identity, so two cards
+  // never open each other's sentences. The explanation is the engine's, through blocking-ui; the app adds no lookup.
+  const [blockingOpenId, setBlockingOpenId] = useState<string | null>(null);
+  const [stationChoice, setStationChoice] = useState<string>('none');
+
+  // Explorer mode: a strip of five scenes. A scene sets a site, a date and a preset; the engine computes the rest.
+  // Applying one never states a result, so a reader who opens a scene still reads the verdict off the card.
+  const [explorerIndex, setExplorerIndex] = useState<number | null>(null);
+  const openScene = useCallback((index: number) => {
+    const scene = sceneAt(index);
+    setExplorerIndex(index);
+    setUrlState((prev) => applyScene(prev, scene));
+    scrollToSection(scene.scrollTo);
+  }, []);
+
+  const skylineFor = useCallback(
+    (siteId: string) => {
+      const payload = skylinePayloads?.get(terrainKey(siteId, urlState.heightM));
+      if (!payload) return null;
+      const { H, D } = decodeSkyline(payload.buffer);
+      return makeSkyline({ H, D, grade: payload.grade, terrain: payload.terrain, heightM: payload.heightM });
+    },
+    [skylinePayloads, urlState.heightM],
+  );
+
+  // Ranges and landing error, stated only where the data behind them is on file. A height error that has no value
+  // says so and shows no band; the 100 m circle is geometry, and whether each point has a stored skyline is a fact
+  // this build can report without inventing one.
+  const rangesFor = useCallback(
+    (slot: { site: { lat: number; eLon: number; id: string } }): { range: string; circle: string } => {
+      const sky = skylineFor(slot.site.id);
+      if (!sky) return { range: 'unavailable: the stored skyline for this site and height has not loaded', circle: 'unavailable for the same reason' };
+      const error = heightErrorFor(sky.terrain);
+      let range: string;
+      if (error === null) {
+        range = `no height error is on file for ${sky.terrain}, so no band is shown`;
+      } else if (!hasHeightErrorValue(sky.terrain) || error.sigmaZM === null) {
+        range = `${error.product}: the error raster is documented but its value is not in this build, so no band is shown`;
+      } else {
+        range = `±${worstHorizonShiftDeg(sky, error.sigmaZM).toFixed(2)}° at worst, from ±${error.sigmaZM.toFixed(2)} m vertical`;
+      }
+      const points = landingCirclePoints({ latDeg: slot.site.lat, eLonDeg: slot.site.eLon });
+      // The same id convention the skylines are built under: <centre>~circle-<azimuth>. Looked up by id, not by
+      // latitude, because two circle points can share a rounding latitude and a substring match would be wrong.
+      const stored = points.filter((p) =>
+        skylinePayloads?.has(terrainKey(`${slot.site.id}~circle-${Number(p.azDeg.toFixed(2))}`, urlState.heightM)),
+      ).length;
+      const circle =
+        stored === 0
+          ? `${points.length} points on the 100 m circle, none with a stored skyline, so no point's horizon is computed`
+          : `${points.length} points on the 100 m circle, ${stored} with a stored skyline; the rest are reported as unavailable, never borrowed`;
+      return { range, circle };
+    },
+    [skylineFor, skylinePayloads, urlState.heightM],
+  );
+
+  const liveCheckRunning = useCallback(
+    (site: SiteDefinition): boolean => liveChecks.get(site.id)?.kind === 'loading',
+    [liveChecks],
+  );
+
 
   // The heights the selector offers, each marked with whether any stored skyline loaded at it.
   const heights = useMemo(() => heightOptions(loadedEntries, urlState.heightM), [loadedEntries, urlState.heightM]);
@@ -615,6 +821,55 @@ function App() {
       return [{ index: idx, slotKey: `${idx}:${site.id}:${startMs}`, card, site, startMs, effectiveDate }];
     });
   }, [siteById, urlState.cards, urlState.dateTime]);
+
+  // The Earth end of the link for each card, at the station the reader picked. Memoised on the inputs rather than
+  // recomputed on every render: the station half asks an external ephemeris for the Moon's altitude at every track
+  // point, and a year-long stay carries about 1,500 of them.
+  const station = stationChoice === 'none' ? null : stationById(stationChoice) ?? null;
+  const earthLinkNotes = useMemo(() => {
+    const notes = new Map<string, string>();
+    for (const slot of resolvedSlots) {
+      const result = cardResults.get(slot.slotKey);
+      if (!result) continue;
+      const sky = skylineFor(slot.site.id);
+      if (!sky) {
+        notes.set(
+          slot.slotKey,
+          'The stored skyline for this site and height has not loaded, so the lunar side of the link is unavailable.',
+        );
+        continue;
+      }
+      const summary = earthLinkSummary(result.track, sky, result.marginDeg, station, moonAltitudeForStations);
+      notes.set(slot.slotKey, earthLinkSentence(summary, station));
+    }
+    return notes;
+  }, [resolvedSlots, cardResults, station, skylineFor]);
+
+  // The ridge behind the open blocking span, for the map. Only the explanation on screen contributes a point, and
+  // only when the skyline recorded terrain there; a card with nothing open leaves the map unchanged.
+  const activeBlockingPoints = useMemo(() => {
+    if (!blockingOpenId) return [];
+    const [slotKey, kind, startMs] = blockingOpenId.split('|');
+    const slot = resolvedSlots.find((s) => s.slotKey === slotKey);
+    const result = slot ? cardResults.get(slot.slotKey) : undefined;
+    if (!slot || !result) return [];
+    const sky = skylineFor(slot.site.id);
+    if (!sky) return [];
+    const span = blockedSpans(result, kind as BlockedKind).find((x) => String(x.startMs) === startMs);
+    if (!span) return [];
+    const e = explainBlocked(result, sky, { latDeg: slot.site.lat, eLonDeg: slot.site.eLon }, kind as BlockedKind, span);
+    if (!e.mapPoint) return [];
+    return [
+      {
+        id: blockingOpenId,
+        latDeg: e.mapPoint.latDeg,
+        eLonDeg: e.mapPoint.eLonDeg,
+        label: `${e.kind === 'sun' ? 'Sun' : 'Earth'} blocked here`,
+        distanceKm: e.blocking.distanceKm,
+      },
+    ];
+  }, [blockingOpenId, resolvedSlots, cardResults, skylineFor]);
+
 
   // Dispatch Compare board calculation
   useEffect(() => {
@@ -1531,6 +1786,52 @@ function App() {
           </aside>
 
           <div className="main-column">
+            <section className="explorer-strip" aria-label="Explorer scenes">
+              <div className="explorer-head">
+                <h2>Explorer</h2>
+                <p>Five short scenes on the same planner. Each one sets a site, a date and a stay; the card below does the rest.</p>
+              </div>
+              <div className="explorer-scenes" role="tablist" aria-label="Scenes">
+                {EXPLORER_SCENES.map((scene, i) => (
+                  <button
+                    key={scene.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={explorerIndex === i}
+                    className={`explorer-scene${explorerIndex === i ? ' is-open' : ''}`}
+                    onClick={() => openScene(i)}
+                  >
+                    <span className="explorer-scene-index">{i + 1}</span>
+                    <strong>{scene.title}</strong>
+                  </button>
+                ))}
+              </div>
+              {explorerIndex !== null && (
+                <div className="explorer-caption" role="tabpanel">
+                  <p>{sceneAt(explorerIndex).caption}</p>
+                  {sceneAt(explorerIndex).link && (
+                    <a href={sceneAt(explorerIndex).link!.href} target="_blank" rel="noreferrer">
+                      {sceneAt(explorerIndex).link!.text} ↗
+                    </a>
+                  )}
+                  <div className="explorer-nav">
+                    <button type="button" onClick={() => openScene(Math.max(0, explorerIndex - 1))} disabled={explorerIndex === 0}>
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openScene(EXPLORER_SCENES.findIndex((s) => s.id === nextScene(sceneAt(explorerIndex).id).id))}
+                    >
+                      Next scene
+                    </button>
+                    <button type="button" onClick={() => setExplorerIndex(null)}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+
             <section id="board" className="compare-section" aria-label="Compare board" aria-live="polite">
               <div className="compare-board-bar">
                 <div>
@@ -1581,6 +1882,23 @@ function App() {
               <div className={`compare-grid cards-${Math.min(4, Math.max(1, resolvedSlots.length))}`}>
                 {resolvedSlots.map((slot) => {
                   const result = cardResults.get(slot.slotKey);
+                  // The blocking spans for this card, from its own track and the skyline at the height on screen.
+                  const blockingFor = (() => {
+                    if (!result) return null;
+                    const sky = skylineFor(slot.site.id);
+                    if (!sky) return null;
+                    const site = { latDeg: slot.site.lat, eLonDeg: slot.site.eLon };
+                    const explanations: Array<{ id: string; item: BlockedExplanation }> = [];
+                    for (const kind of ['sun', 'earth'] as BlockedKind[]) {
+                      for (const span of blockedSpans(result, kind)) {
+                        explanations.push({
+                          id: `${slot.slotKey}|${kind}|${span.startMs}`,
+                          item: explainBlocked(result, sky, site, kind, span),
+                        });
+                      }
+                    }
+                    return { spans: explanations.map((e) => e.item.span), explanations };
+                  })();
                   const isActiveSlot = slot.index === urlState.activeCardIndex;
                   const compact = resolvedSlots.length > 1;
                   const eclipses = result ? eclipseSummary(result) : null;
@@ -1832,6 +2150,90 @@ function App() {
                             {provenanceFooter(result.verdict.grade, result.verdict.terrain)}
                           </p>
                           <p className="horizons-chip">{horizonsChipText(slot.site)}</p>
+                          {!slot.site.isCustom && (
+                            <div className="live-check-row" aria-label="Live Horizons check">
+                              <button
+                                type="button"
+                                className="export-btn"
+                                disabled={liveCheckRunning(slot.site)}
+                                onClick={() => void runLiveCheck(slot.site, result.startMs + Math.min(scrubMinutes, stayMinutes) * MIN_MS)}
+                              >
+                                {liveCheckRunning(slot.site) ? 'Checking with Horizons…' : 'Check this instant against Horizons'}
+                              </button>
+                              {liveChecks.get(slot.site.id)?.kind === 'live' && (
+                                <small className="live-check-note">
+                                  Sun {liveChecks.get(slot.site.id)!.kind === 'live'
+                                    ? `${(liveChecks.get(slot.site.id) as { sunAzDeg: number }).sunAzDeg.toFixed(3)}° azimuth`
+                                    : ''}
+                                </small>
+                              )}
+                              {liveChecks.get(slot.site.id)?.kind === 'failed' && (
+                                <small className="live-check-note is-error" role="status">
+                                  {(liveChecks.get(slot.site.id) as { message: string }).message}
+                                </small>
+                              )}
+                            </div>
+                          )}
+
+                          {blockingFor && blockingFor.spans.length > 0 ? (
+                            <div className="blocking-row" aria-label="What blocks it" onClick={(e) => e.stopPropagation()}>
+                              <span className="blocking-head">What blocks it</span>
+                              {blockingFor.explanations.slice(0, 3).map(({ id, item }) => {
+                                const open = id === blockingOpenId;
+                                return (
+                                  <div key={id}>
+                                    <button
+                                      type="button"
+                                      className={`blocking-btn${open ? ' is-open' : ''}`}
+                                      onClick={() => setBlockingOpenId(open ? null : id)}
+                                    >
+                                      {blockedSpanLabel(item)}
+                                    </button>
+                                    {open && <p className="blocking-sentence">{item.sentence}</p>}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className="blocking-row" onClick={(e) => e.stopPropagation()}>
+                              <span className="blocking-head">What blocks it</span>
+                              <p className="blocking-none">
+                                No Sun-dark stretch and no Earth-below-horizon stretch inside this stay, so there is
+                                nothing to trace back to a ridge.
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="ranges-row" onClick={(e) => e.stopPropagation()}>
+                            <span className="blocking-head">Ranges and landing error</span>
+                            <p className="range-line">
+                              <strong>Horizon range · </strong>
+                              {rangesFor(slot).range}
+                            </p>
+                            <p className="range-line">
+                              <strong>100 m circle · </strong>
+                              {rangesFor(slot).circle}
+                            </p>
+                          </div>
+
+                          <div className="earth-link-row" onClick={(e) => e.stopPropagation()}>
+                            <label className="earth-link-head">
+                              <span>Earth end of the link</span>
+                              <select
+                                value={stationChoice}
+                                onChange={(e) => setStationChoice(e.target.value)}
+                                aria-label="Receiving station"
+                              >
+                                {STATION_CHOICES.map((c) => (
+                                  <option key={c.id} value={c.id}>
+                                    {c.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                            <p className="earth-link-note">{earthLinkNotes.get(slot.slotKey) ?? ''}</p>
+                          </div>
+
                           <div className="export-row" aria-label="Export this scenario">
                             <button type="button" className="export-btn" onClick={() => handleExportCsv(slot, result)}>
                               CSV · 10-minute series
@@ -1910,8 +2312,14 @@ function App() {
                 sites={allSites}
                 skylineGrades={skylineGrades}
                 onPickSite={selectSiteIntoActiveCard}
+                blockingPoints={activeBlockingPoints}
               />
             </Suspense>
+            <p className="map-note">
+              {basemap.kind === 'available'
+                ? `Static hillshade below the overlay: ${basemap.manifest.product}, ${hillshadeResolutionM(basemap.manifest).toFixed(0)} m per pixel, built ${basemap.manifest.builtUtc.slice(0, 10)}.`
+                : basemap.reason}
+            </p>
             </motion.div>
           </div>
         </div>

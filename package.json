@@ -15,7 +15,12 @@
     "height-report": "tsx pipeline/height-report.ts",
     "artemis-points": "tsx pipeline/find-artemis-points.ts",
     "validate": "tsx pipeline/validate.ts",
-    "mutation-check": "bash scripts/mutation-check.sh"
+    "mutation-check": "bash scripts/mutation-check.sh",
+    "blocking-report": "tsx pipeline/blocking-report.ts",
+    "landing-report": "tsx pipeline/landing-error-report.ts",
+    "sensitivity-report": "tsx pipeline/sensitivity-report.ts",
+    "build:basemap": "tsx pipeline/build-basemap.ts",
+    "illumination-compare": "tsx pipeline/illumination-compare.ts"
   },
   "devDependencies": {
     "@types/node": "20.19.43",

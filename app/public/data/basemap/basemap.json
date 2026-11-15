@@ -1,0 +1,17 @@
+{
+  "image": "south-pole-hillshade.png",
+  "width": 1900,
+  "height": 1900,
+  "extentM": [
+    -457440,
+    -457440,
+    457440,
+    457440
+  ],
+  "sourcePixelM": 320,
+  "product": "LOLA 80 m south-polar hillshade (product 90)",
+  "source": "NASA Planetary Geodesy Data Archive, product 90: LDEM_80S_80MPP_ADJ_HILL.TIF, \"LDEM hillshade (45 deg altitude, 45 deg azimuth)\"",
+  "builtUtc": "2026-11-15T15:57:13.728Z",
+  "command": "npm run build:basemap",
+  "derivation": "LOLA shaded relief"
+}

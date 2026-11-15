@@ -272,13 +272,17 @@ export function MethodDrawer({ rows, pending, heights, observedHeightM, unloaded
           <ul className="method-notes">
             <li>No elevation model resolves features smaller than its own pixel. The 20 m LOLA product would not have seen the crater where Athena came to rest on the IM-2 mission; Intuitive Machines reported a landing 250 m from target and NASA reported more than 400 m.</li>
             <li>Grade D points and custom coordinates use a smooth sphere with no terrain; no terrain wording is ever used for them.</li>
-            <li>The measured residual of about 0.006° is almost certainly stellar aberration, which Horizons includes in apparent positions and the hourly table does not. That cause is not verified.</li>
+            <li>The measured residual of about 0.006° is stellar aberration, verified: the hourly table is built from Horizons sub-points, and the sub-solar point carries the apparent correction while the sub-Earth point is geometric. Light-time contributes only about 0.0002° and is ruled out; a small excess of 0.001–0.002° above pure aberration is not yet separated.</li>
             <li>The verdict presets are illustrative, not agency requirements, and are editable in the Scenario bar.</li>
             <li>Artemis III candidate region points are illustrative representative points (Oct 2024 list), not NASA-selected sites.</li>
             <li>Mission hindcasts replay recorded events; they do not predict future missions.</li>
             <li>An observer height is offered only where a stored skyline was built for that exact height. Choosing a height with no skyline runs the smooth sphere at grade D and says so on the card; the horizon is never borrowed from another height.</li>
-            <li>The observer-height comparison — how the metrics move with mast height — is reported by <code>npm run height-report</code>, values only with no threshold. The resolution and shifted-skyline sensitivities are not available yet.</li>
-            <li>Nothing in the decision path is live. Every position comes from the cached 2023–2040 hourly table; no network call happens while a verdict is computed.</li>
+            <li>The observer-height comparison — how the metrics move with mast height — is reported by <code>npm run height-report</code>, values only with no threshold. The shifted-skyline sensitivity is reported by <code>npm run sensitivity-report</code>, also as values with no threshold.</li>
+            <li>What blocks it names the ridge a dark or closed span is behind, from the distance the stored skyline records at the body's azimuth mid-span. Where the skyline records no terrain the card says so instead of naming a peak.</li>
+            <li>The Earth end of the link judges both halves only when both are computed. With no station selected the card reports the lunar side alone; a station whose Moon altitude could not be computed is never treated as clear sky.</li>
+            <li>The Moon altitude at a station is the Moon's centre, topocentric and airless, from the astronomy-engine library in the browser. The Moon's own radius (about 0.26°) is not added, so a result within a quarter degree of a station mask is marginal rather than open or shut.</li>
+            <li>Measuring observer height against published values is reported by <code>npm run illumination-compare</code>. It compares only at a published observer height and averaging definition that are both established; where they are not, it prints the spread across heights and claims no pass or fail.</li>
+            <li>Nothing in the decision path is live. Every position comes from the cached 2023–2040 hourly table; no network call happens while a verdict is computed. The live check is a separate button: it asks this deployment's own proxy for one instant and one body, and puts the answer beside the cached figure, labelled live with the time it was fetched.</li>
             <li>The cached per-site Horizons check is shown only for sites with a cached query on file, with its cache date; sites without one say “not cached”, never a made-up number.</li>
           </ul>
         </section>

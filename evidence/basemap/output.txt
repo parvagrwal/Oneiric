@@ -1,0 +1,17 @@
+
+> oneiric@0.0.0 build:basemap
+> tsx pipeline/build-basemap.ts
+
+No LDEM_80S_80MPP_ADJ_HILL.TIF in data/ or data-raw/.
+Nothing was written. The map reports the static hillshade as unavailable and uses the online Moon Trek tiles.
+To build it, place the LOLA hillshade from the product page in data/ and run this command again.
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/basemap.test.ts (12 tests) 14ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  14:34:30
+   Duration  444ms (transform 141ms, setup 0ms, import 216ms, tests 14ms, environment 0ms)
+

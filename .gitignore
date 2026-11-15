@@ -6,6 +6,8 @@ dist/
 # The Artemis region outlines are small source data for the site library, so they are tracked.
 data/*
 !data/A3_9regions-lonlat-simplified.geojson
+# The published illumination reference values are a few hundred bytes of cited figures, not a raster.
+!data/published-illumination.json
 data-raw/
 # Derived ephemeris and validation data are shipped with the static app.
 !app/public/data/

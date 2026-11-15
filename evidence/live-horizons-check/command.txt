@@ -1,0 +1,1 @@
+npx vitest run tests/live-check.test.ts tests/horizons-proxy.test.ts

@@ -1,0 +1,5 @@
+# A fresh copy of the working tree, with no node_modules, no build output and no git history, to prove the repository
+# alone is enough to build and check the project.
+tar -c --exclude=./node_modules --exclude=./app/node_modules --exclude=./app/dist --exclude=./.git . | tar -x -C /tmp/coldstart
+cd /tmp/coldstart && npm ci && npm run typecheck && npm test && npm run validate
+cd /tmp/coldstart/app && npm ci && npm run lint && npm run build

@@ -1949,3 +1949,202 @@ h2 {
     height: 300px;
   }
 }
+
+/* Live Horizons check, what-blocks-it, the Earth end of the link, and the Explorer strip. */
+.live-check-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.live-check-note {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.live-check-note.is-error {
+  color: var(--warn, #ffb27a);
+}
+
+.blocking-row {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.blocking-head,
+.earth-link-head > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.blocking-btn {
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  min-height: 36px;
+  padding: 6px 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.blocking-btn.is-open {
+  border-color: rgba(255, 122, 89, 0.8);
+}
+
+.blocking-sentence,
+.blocking-none,
+.earth-link-note {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.blocking-none {
+  color: var(--muted);
+}
+
+.ranges-row {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.range-line {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.range-line strong {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.earth-link-row {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.earth-link-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.earth-link-head select {
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  min-height: 36px;
+  padding: 6px 8px;
+}
+
+.explorer-strip {
+  margin-bottom: 18px;
+}
+
+.explorer-head h2 {
+  font-size: 15px;
+  margin: 0 0 2px;
+}
+
+.explorer-head p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+
+.explorer-scenes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.explorer-scene {
+  align-items: center;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 12px;
+}
+
+.explorer-scene.is-open {
+  border-color: rgba(95, 212, 230, 0.9);
+}
+
+.explorer-scene-index {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.explorer-caption {
+  border-left: 2px solid rgba(95, 212, 230, 0.6);
+  margin-top: 10px;
+  padding-left: 12px;
+}
+
+.explorer-caption p {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.explorer-caption a {
+  color: rgba(95, 212, 230, 1);
+  font-size: 12px;
+}
+
+.explorer-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.explorer-nav button {
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  min-height: 36px;
+  padding: 6px 12px;
+}
+
+.explorer-nav button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

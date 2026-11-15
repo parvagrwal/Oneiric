@@ -1,0 +1,3 @@
+npm run blocking-report          # what blocks the Sun and the Earth at every shipped skyline site
+npm run blocking-report -- --site connecting-ridge --height 2 --start 2027-03-01   # one site, the case quoted in README
+npm test -- tests/blocking-terrain.test.ts tests/p1-ui.test.ts                     # the engine and the card's words

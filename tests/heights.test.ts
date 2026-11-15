@@ -72,6 +72,14 @@ describe('the heights offered in the selector', () => {
     expect(options.every((o) => !o.available)).toBe(true);
   });
 
+  it('marks every height unavailable when nothing at all is stored, so no height promises terrain it lacks', () => {
+    // The selector's `available` flag is what stops the app offering a height it cannot compute. A mutant that
+    // forces it true leaves the flat-list assertion above passing and only shows up here, on every entry at once.
+    const options = heightOptions([]);
+    expect(options.map((o) => o.available)).toEqual([false, false, false, false]);
+    expect(options.every((o) => o.skylineCount === 0)).toBe(true);
+  });
+
   it('counts a height once per site, and refuses a stored record with no usable height', () => {
     expect(heightOptions([...shipped, ...shipped]).find((o) => o.heightM === 2)?.skylineCount).toBe(4);
     expect(() => heightOptions([{ siteId: 'x', heightM: Number.POSITIVE_INFINITY }])).toThrow(/finite/);

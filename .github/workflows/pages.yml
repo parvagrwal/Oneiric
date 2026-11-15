@@ -1,0 +1,65 @@
+# Publish the static site to GitHub Pages, as a mirror of the Cloudflare Pages deployment.
+#
+# The application is a static build: every data file it reads is in app/public/data, so a Pages build is the same
+# build. One thing does not carry over. The live Horizons check is a Cloudflare Pages Function at functions/api/
+# horizons.ts, and GitHub Pages serves no functions, so on this mirror the live check reports that the proxy is
+# unreachable and the card falls back to the cached figure, labelled cached. The cached figures are static files and
+# are identical on both hosts. Nothing else in the application depends on either host.
+name: Publish to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install and check
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+
+      - name: Build the application
+        run: |
+          cd app
+          npm ci
+          npm run build
+
+      - name: Add the Pages fallback and no-Jekyll marker
+        run: |
+          # A single-page application needs its own index.html for any unknown path.
+          cp app/dist/index.html app/dist/404.html
+          touch app/dist/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

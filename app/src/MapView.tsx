@@ -94,17 +94,66 @@ const POLE_STYLE = [
   }),
 ];
 
+/**
+ * A ridge the card traced a blocked span back to. It is drawn on the map, never calculated here: the coordinates
+ * come from the skyline's own recorded point, and this component only puts a dot where it is told.
+ */
+export interface MapPoint {
+  id: string;
+  latDeg: number;
+  eLonDeg: number;
+  label: string;
+  /** Distance from the site, kilometres, for the label. Null when the skyline recorded none. */
+  distanceKm: number | null;
+}
+
 export interface MapViewProps {
   sites: SiteDefinition[];
   skylineGrades: Map<string, Grade>;
   onPickSite: (siteId: string) => void;
+  /** Ridges to mark, from the card's blocked spans. Empty when nothing is open. */
+  blockingPoints?: MapPoint[];
 }
 
-export function MapView({ sites, skylineGrades, onPickSite }: MapViewProps) {
+export function MapView({ sites, skylineGrades, onPickSite, blockingPoints = [] }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<OlMap | null>(null);
   const [selected, setSelected] = useState<SiteDefinition | null>(null);
   const [regionsError, setRegionsError] = useState(false);
+  const blockingSourceRef = useRef<VectorSource | null>(null);
+  // State, not a ref, so the drawing effect below re-runs once the map exists: on the first render the source is
+  // null, and a ref would leave the first set of points undrawn until the next change.
+  const [mapReady, setMapReady] = useState(false);
+  // The points are drawn after the map exists and again whenever the card's open span changes. A point with no
+  // recorded terrain never reaches here, so a dashed ring always means a measured ridge.
+  useEffect(() => {
+    const source = blockingSourceRef.current;
+    if (!source || !mapReady) return;
+    source.clear();
+    for (const point of blockingPoints) {
+      const feature = new Feature(new Point(transform([point.eLonDeg, point.latDeg], 'EPSG:4326', PROJECTION)));
+      feature.setStyle([
+        new Style({
+          image: new CircleStyle({
+            radius: 5,
+            fill: new Fill({ color: 'rgba(255, 122, 89, 0.95)' }),
+            stroke: new Stroke({ color: '#0e1829', width: 1.5 }),
+          }),
+        }),
+        new Style({
+          text: new Text({
+            text: point.distanceKm === null ? point.label : `${point.label} · ${point.distanceKm.toFixed(2)} km`,
+            font: '600 10px ui-sans-serif, system-ui, sans-serif',
+            fill: new Fill({ color: '#ffd9c9' }),
+            stroke: new Stroke({ color: '#0e1829', width: 3 }),
+            offsetY: -13,
+            overflow: true,
+          }),
+        }),
+      ]);
+      source.addFeature(feature);
+    }
+  }, [blockingPoints, mapReady]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return undefined;
@@ -159,9 +208,13 @@ export function MapView({ sites, skylineGrades, onPickSite }: MapViewProps) {
     });
     const poleLayer = new VectorLayer({ source: poleSource, style: POLE_STYLE });
 
+    const blockingSource = new VectorSource();
+    const blockingLayer = new VectorLayer({ source: blockingSource, zIndex: 10 });
+    blockingSourceRef.current = blockingSource;
+
     const map = new OlMap({
       target: containerRef.current,
-      layers: [basemap, regionLayer, siteLayer, poleLayer],
+      layers: [basemap, regionLayer, siteLayer, poleLayer, blockingLayer],
       view: new View({
         projection,
         center: [0, 0],
@@ -174,6 +227,7 @@ export function MapView({ sites, skylineGrades, onPickSite }: MapViewProps) {
       controls: [],
     });
     mapRef.current = map;
+    setMapReady(true);
 
     fetch(new URL('data/artemis-regions.geojson', document.baseURI).toString())
       .then((response) => {
@@ -211,6 +265,8 @@ export function MapView({ sites, skylineGrades, onPickSite }: MapViewProps) {
     return () => {
       map.setTarget(undefined);
       mapRef.current = null;
+      blockingSourceRef.current = null;
+      setMapReady(false);
     };
     // Map and layers are built once; site grades only affect styling and are read through the closure.
     // eslint-disable-next-line react-hooks/exhaustive-deps

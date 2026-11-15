@@ -1,0 +1,2 @@
+npm run illumination-compare     # this build against every published value on file, at every stored height
+npm test -- tests/illumination-compare.test.ts

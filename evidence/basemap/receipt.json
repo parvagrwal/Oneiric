@@ -1,0 +1,11 @@
+{
+  "status": "pass-unavailable-as-designed",
+  "verdict": "The static hillshade was not built, because the LOLA hillshade raster is not in this checkout. The command says so, writes no file, and leaves app/public/data/basemap/ absent. The map reports the static hillshade as unavailable and uses the online Moon Trek tiles, which are drawn from the same LOLA source data.",
+  "commandOutput": "No LDEM_80S_80MPP_ADJ_HILL.TIF in data/ or data-raw/. Nothing was written.",
+  "writtenFiles": [],
+  "absentDirectory": "app/public/data/basemap/",
+  "doesTheMapBreak": "No. The map renders the online tiles, the site markers, the region outlines and the pole marker. The note under the map states the static hillshade is unavailable and why.",
+  "whatWouldBuildIt": "Place LDEM_80S_80MPP_ADJ_HILL.TIF from the LOLA product page in data/ and run npm run build:basemap. The builder downsamples to at most 2048 px, tags the manifest as LOLA shaded relief, records the product, source, build date and command, and the app refuses to show any image whose manifest lacks those.",
+  "tests": "12 passed across tests/basemap.test.ts, including that no manifest is read as availability and that a manifest claiming a synthetic surface is rejected",
+  "files": ["pipeline/build-basemap.ts", "app/src/hillshade.ts", "app/src/hillshade-types.ts"]
+}

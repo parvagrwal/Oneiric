@@ -1,0 +1,65 @@
+
+> oneiric@0.0.0 sensitivity-report
+> tsx pipeline/sensitivity-report.ts
+
+Sensitivity report: 6.5-day sortie (illustrative, not agency requirements), start 2027-03-01T00:00:00.000Z
+Observer heights with a stored skyline: 0 m, 2 m, 10 m, 20 m
+Values only. No threshold, no pass mark.
+
+A. Observer height
+   connecting-ridge: sunlit 0 m 1.5% | 2 m 36.8% | 10 m 100.0% | 20 m 100.0%
+   shackleton-rim: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 73.0% | 20 m 74.2%
+   nobile-rim-2: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   im-2-athena: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   im-1-odysseus: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   chandrayaan-3: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-nobile-rim-2-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-nobile-rim-2-highest: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-mons-mouton-centroid: sunlit 0 m 0.1% | 2 m 0.3% | 10 m 2.0% | 20 m 3.2%
+   artemis-mons-mouton-highest: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 15.4% | 20 m 20.2%
+   artemis-malapert-massif-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 47.8% | 20 m 49.8%
+   artemis-malapert-massif-highest: sunlit 0 m 0.0% | 2 m 19.5% | 10 m 67.4% | 20 m 70.7%
+   artemis-de-gerlache-rim-2-centroid: sunlit 0 m 29.7% | 2 m 29.8% | 10 m 30.0% | 20 m 30.4%
+   artemis-de-gerlache-rim-2-highest: sunlit 0 m 100.0% | 2 m 100.0% | 10 m 100.0% | 20 m 100.0%
+   artemis-mons-mouton-plateau-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-mons-mouton-plateau-highest: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.9%
+   artemis-slater-plain-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-slater-plain-highest: sunlit 0 m 44.9% | 2 m 65.0% | 10 m 65.3% | 20 m 65.6%
+   artemis-peak-near-cabeus-b-centroid: sunlit 0 m 100.0% | 2 m 100.0% | 10 m 100.0% | 20 m 100.0%
+   artemis-peak-near-cabeus-b-highest: sunlit 0 m 100.0% | 2 m 100.0% | 10 m 100.0% | 20 m 100.0%
+   artemis-nobile-rim-1-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 0.0%
+   artemis-nobile-rim-1-highest: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 30.4% | 20 m 31.0%
+   artemis-haworth-centroid: sunlit 0 m 0.0% | 2 m 0.0% | 10 m 0.0% | 20 m 34.5%
+   artemis-haworth-highest: sunlit 0 m 21.8% | 2 m 44.1% | 10 m 75.9% | 20 m 76.0%
+   72 height steps; the largest sunlit change is 73.0 points for shackleton-rim from 2 m to 10 m
+
+B. Horizon shift from a stated height error
+   not computed: 96 site-height rows have no height-error value on file.
+   The product documentation names the error rasters (LDEM_80S_20MPP_ADJ_ERR.TIF for the 20 m product, LDEM_60S_240MPP_ADJ_ERR.TIF for the 240 m product).
+   The value is read from those rasters by this script when they are present in data/; no figure is assumed here.
+
+C. Start date
+   connecting-ridge 2027-03-01: sunlit 36.8%, dark gap 23.2 h, Earth visible 3.7%, link gap 150.0 h
+   connecting-ridge 2027-09-01: sunlit 100.0%, dark gap 0.0 h, Earth visible 0.0%, link gap 156.0 h
+   connecting-ridge 2028-03-01: sunlit 61.6%, dark gap 33.9 h, Earth visible 90.3%, link gap 15.3 h
+   connecting-ridge 2029-09-01: sunlit 100.0%, dark gap 0.0 h, Earth visible 16.0%, link gap 131.0 h
+
+D. Published illumination against this build
+   connecting-ridge annual average (UTC year 2030): 31.18% at 0 m, 64.41% at 2 m, 92.45% at 10 m, 93.06% at 20 m
+   spread from observer height alone: 61.88 points, 0 m to 20 m.
+   The published comparison allows 5 points, so a published value is compared only at a known height. npm run illumination-compare prints every published value and why none is a pass or fail yet.
+
+E. Landing circle
+   not computed: no stored skyline exists for a circle point yet. See npm run landing-report for what would be needed.
+
+Sensitivity line: observer height moves the sunlit share most. At shackleton-rim the same stay and start date gives 0.0% at 2 m and 73.0% at 10 m, a change of 73.0 points. A height error band and a start-date band would sit inside that for this site; both are reported above, and both are unavailable or smaller here.
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/reports.test.ts (13 tests) 251ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  14:34:36
+   Duration  972ms (transform 178ms, setup 0ms, import 585ms, tests 251ms, environment 0ms)
+

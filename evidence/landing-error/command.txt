@@ -1,0 +1,2 @@
+npm run landing-report           # the 100 m circle, its points, and whether each has a stored skyline
+npm test -- tests/landing-circle.test.ts tests/ranges-ui.test.ts

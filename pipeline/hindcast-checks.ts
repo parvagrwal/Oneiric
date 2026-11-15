@@ -149,9 +149,10 @@ export function runHindcastChecks(table: EphemTable = loadTable()): ValidationRo
 
   // 4. Chandrayaan-3: the tool's sunset falls after the sleep date. Uses the shipped 2 m LOLA 240 m skyline (grade C).
   const index = JSON.parse(readFileSync('app/public/data/skylines/index.json', 'utf8')) as {
-    skylines: Array<{ siteId: string; file: string; grade: Grade; terrain: string; siteElevationM: number }>;
+    skylines: Array<{ siteId: string; heightM: number; file: string; grade: Grade; terrain: string; siteElevationM: number }>;
   };
-  const entry = index.skylines.find((s) => s.siteId === 'chandrayaan-3');
+  // The 2 m skyline exactly: the index lists every stored height, and the first row for a site is the 0 m one.
+  const entry = index.skylines.find((s) => s.siteId === 'chandrayaan-3' && s.heightM === 2);
   if (!entry) throw new Error('no shipped skyline for chandrayaan-3');
   const binBytes = readFileSync(`app/public/data/skylines/${entry.file}`);
   const decoded = decodeSkyline(binBytes.buffer.slice(binBytes.byteOffset, binBytes.byteOffset + binBytes.byteLength));

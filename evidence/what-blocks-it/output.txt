@@ -1,0 +1,167 @@
+
+> oneiric@0.0.0 blocking-report
+> tsx pipeline/blocking-report.ts
+
+What blocks each site: 6.5-day sortie (illustrative, not agency requirements), start 2027-03-01T00:00:00.000Z, 2 m observer
+Distance and point come from the stored skyline's blocking distance; a smooth-sphere record has none.
+
+connecting-ridge  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 23.17 h, mid 2027-03-03T17:36:15.000Z
+    body azimuth 9.51°, body elevation -0.08°, horizon there 0.35°, clearance -0.43°
+    terrain: 0.33 km at -89.4393 S/E 222.8738 (rise 2.0 m)
+  no-link 150.02 h, mid 2027-03-04T03:00:37.500Z
+    body azimuth 137.17°, body elevation -3.49°, horizon there 0.86°, clearance -4.35°
+    terrain: 0.03 km at -89.4507 S/E 222.7602 (rise 0.4 m)
+shackleton-rim  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 21.64°, body elevation -0.43°, horizon there 3.28°, clearance -3.71°
+    terrain: 0.09 km at -89.7772 S/E 204.5515 (rise 5.2 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 155.44°, body elevation -3.13°, horizon there 6.56°, clearance -9.69°
+    terrain: 0.05 km at -89.7815 S/E 204.4497 (rise 5.8 m)
+nobile-rim-2  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 165.12°, body elevation -6.24°, horizon there -1.68°, clearance -4.56°
+    terrain: 68.56 km at -86.3405 S/E 69.8343 (rise 0.0 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 299.12°, body elevation -0.11°, horizon there 7.08°, clearance -7.19°
+    terrain: 2.01 km at -84.1690 S/E 60.1299 (rise 249.6 m)
+im-2-athena  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 196.79°, body elevation -5.62°, horizon there 2.67°, clearance -8.29°
+    terrain: 0.58 km at -84.8089 S/E 29.1346 (rise 27.0 m)
+  no-link 11.38 h, mid 2027-03-01T05:41:15.000Z
+    body azimuth 334.72°, body elevation -1.38°, horizon there -1.19°, clearance -0.19°
+    terrain: 16.20 km at -84.3030 S/E 26.8966 (rise 0.0 m)
+im-1-odysseus  grade C  LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 224.97°, body elevation -7.65°, horizon there 3.87°, clearance -11.53°
+    terrain: 1.80 km at -80.1719 S/E 1.1942 (rise 121.8 m)
+chandrayaan-3  grade C  LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 194.54°, body elevation -20.65°, horizon there 0.54°, clearance -21.19°
+    terrain: 4.56 km at -69.5196 S/E 32.2121 (rise 42.6 m)
+artemis-nobile-rim-2-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 167.00°, body elevation -6.52°, horizon there 7.16°, clearance -13.68°
+    terrain: 3.16 km at -84.0555 S/E 59.0479 (rise 396.8 m)
+  no-link 77.25 h, mid 2027-03-02T14:37:30.000Z
+    body azimuth 303.42°, body elevation -1.54°, horizon there 0.20°, clearance -1.73°
+    terrain: 15.56 km at -83.6570 S/E 54.9420 (rise 53.6 m)
+artemis-nobile-rim-2-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 170.98°, body elevation -6.48°, horizon there 1.11°, clearance -7.59°
+    terrain: 0.27 km at -84.0827 S/E 54.8788 (rise 5.2 m)
+  no-link 20.48 h, mid 2027-03-01T10:14:22.500Z
+    body azimuth 308.99°, body elevation -2.22°, horizon there -1.95°, clearance -0.27°
+    terrain: 144.32 km at -80.3454 S/E 32.2495 (rise 0.0 m)
+artemis-mons-mouton-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 144.80 h, mid 2027-03-04T00:24:03.750Z
+    body azimuth 197.07°, body elevation -5.00°, horizon there -3.37°, clearance -1.63°
+    terrain: 1.65 km at -85.4786 S/E 31.5401 (rise 0.0 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 328.00°, body elevation 0.95°, horizon there 6.24°, clearance -5.29°
+    terrain: 0.21 km at -85.4207 S/E 31.6968 (rise 23.0 m)
+artemis-mons-mouton-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 194.25°, body elevation -5.09°, horizon there -3.06°, clearance -2.03°
+    terrain: 0.25 km at -85.4119 S/E 31.6825 (rise 0.0 m)
+artemis-malapert-massif-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 226.24°, body elevation -3.40°, horizon there -0.98°, clearance -2.42°
+    terrain: 0.07 km at -85.9964 S/E 359.7403 (rise 0.0 m)
+  no-link 133.22 h, mid 2027-03-03T18:36:33.750Z
+    body azimuth 0.60°, body elevation 0.48°, horizon there 4.20°, clearance -3.72°
+    terrain: 0.31 km at -85.9846 S/E 359.7657 (rise 22.8 m)
+artemis-malapert-massif-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 118.73 h, mid 2027-03-05T00:38:07.500Z
+    body azimuth 214.46°, body elevation -3.96°, horizon there -2.17°, clearance -1.79°
+    terrain: 0.13 km at -85.9915 S/E 2.0324 (rise 0.0 m)
+  no-link 17.10 h, mid 2027-03-01T08:33:07.500Z
+    body azimuth 1.56°, body elevation -1.98°, horizon there -1.68°, clearance -0.31°
+    terrain: 0.48 km at -85.9721 S/E 2.0732 (rise 0.0 m)
+artemis-de-gerlache-rim-2-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 107.96 h, mid 2027-03-05T06:01:15.000Z
+    body azimuth 278.34°, body elevation -0.39°, horizon there 5.07°, clearance -5.46°
+    terrain: 6.33 km at -88.1879 S/E 288.8258 (rise 561.1 m)
+  no-link 118.59 h, mid 2027-03-03T11:17:48.750Z
+    body azimuth 65.32°, body elevation -3.16°, horizon there 0.05°, clearance -3.21°
+    terrain: 77.24 km at -86.3415 S/E 334.6352 (rise 72.2 m)
+artemis-de-gerlache-rim-2-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  no-link 106.70 h, mid 2027-03-03T05:20:56.250Z
+    body azimuth 68.95°, body elevation -3.68°, horizon there -1.02°, clearance -2.66°
+    terrain: 80.96 km at -86.5604 S/E 338.5291 (rise 0.0 m)
+artemis-mons-mouton-plateau-centroid  grade B  LOLA 20 m + LOLA 80 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 195.40°, body elevation -6.09°, horizon there 8.94°, clearance -15.03°
+    terrain: 1.09 km at -84.3693 S/E 30.4950 (rise 171.5 m)
+  no-link 85.32 h, mid 2027-03-02T18:39:41.250Z
+    body azimuth 331.25°, body elevation 0.29°, horizon there 2.20°, clearance -1.91°
+    terrain: 0.15 km at -84.3304 S/E 30.5682 (rise 5.8 m)
+artemis-mons-mouton-plateau-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 186.56°, body elevation -5.92°, horizon there -2.12°, clearance -3.80°
+    terrain: 0.20 km at -84.6784 S/E 39.3750 (rise 0.0 m)
+artemis-slater-plain-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 100.33°, body elevation -1.14°, horizon there 7.24°, clearance -8.38°
+    terrain: 2.20 km at -87.1758 S/E 126.9865 (rise 279.4 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 234.31°, body elevation -4.58°, horizon there 0.77°, clearance -5.36°
+    terrain: 18.76 km at -87.4742 S/E 114.0591 (rise 252.8 m)
+artemis-slater-plain-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 48.28 h, mid 2027-03-02T00:08:26.250Z
+    body azimuth 125.62°, body elevation -2.19°, horizon there -0.53°, clearance -1.66°
+    terrain: 24.12 km at -87.6292 S/E 143.4220 (rise 0.0 m)
+  no-link 139.79 h, mid 2027-03-03T21:53:45.000Z
+    body azimuth 232.73°, body elevation -5.02°, horizon there -0.79°, clearance -4.23°
+    terrain: 46.04 km at -87.8116 S/E 94.0701 (rise 0.0 m)
+artemis-peak-near-cabeus-b-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 68.30°, body elevation -0.58°, horizon there 6.79°, clearance -7.37°
+    terrain: 0.05 km at -83.6369 S/E 291.2643 (rise 6.0 m)
+artemis-peak-near-cabeus-b-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  no-link 7.53 h, mid 2027-03-01T03:45:56.250Z
+    body azimuth 71.81°, body elevation -4.17°, horizon there -4.03°, clearance -0.13°
+    terrain: 0.18 km at -83.5811 S/E 291.5880 (rise 0.0 m)
+artemis-nobile-rim-1-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 188.59°, body elevation -5.14°, horizon there 12.50°, clearance -17.65°
+    terrain: 0.06 km at -85.4384 S/E 37.3433 (rise 13.3 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 322.41°, body elevation 0.69°, horizon there 7.18°, clearance -6.49°
+    terrain: 3.51 km at -85.3441 S/E 36.4770 (rise 442.3 m)
+artemis-nobile-rim-1-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 189.35°, body elevation -5.34°, horizon there -3.22°, clearance -2.11°
+    terrain: 0.17 km at -85.2382 S/E 36.5840 (rise 0.0 m)
+  no-link 30.47 h, mid 2027-03-01T15:14:03.750Z
+    body azimuth 326.85°, body elevation -1.78°, horizon there -1.22°, clearance -0.57°
+    terrain: 0.54 km at -85.2178 S/E 36.4782 (rise 0.0 m)
+artemis-haworth-centroid  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 248.75°, body elevation -1.81°, horizon there -0.01°, clearance -1.80°
+    terrain: 0.76 km at -86.7729 S/E 336.8080 (rise 0.0 m)
+  no-link 156.00 h, mid 2027-03-04T06:00:00.000Z
+    body azimuth 22.46°, body elevation 0.06°, horizon there 5.01°, clearance -4.95°
+    terrain: 6.28 km at -86.5716 S/E 338.5462 (rise 550.4 m)
+artemis-haworth-highest  grade B  LOLA 20 m + LOLA 80 m + LOLA 240 m
+  dark 78.59 h, mid 2027-03-05T20:42:11.250Z
+    body azimuth 229.51°, body elevation -3.02°, horizon there -1.83°, clearance -1.20°
+    terrain: 0.15 km at -86.3670 S/E 336.7529 (rise 0.0 m)
+  no-link 39.92 h, mid 2027-03-01T19:57:30.000Z
+    body azimuth 26.11°, body elevation -2.34°, horizon there -1.58°, clearance -0.76°
+    terrain: 25.64 km at -85.5888 S/E 341.6559 (rise 0.0 m)
+
+41 blocker(s) with a recorded ground point, 0 with no recorded terrain.
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/p1-ui.test.ts (19 tests) 31ms
+ ✓ tests/blocking-terrain.test.ts (7 tests) 7ms
+
+ Test Files  2 passed (2)
+      Tests  26 passed (26)
+   Start at  14:34:33
+   Duration  706ms (transform 232ms, setup 0ms, import 402ms, tests 39ms, environment 0ms)
+

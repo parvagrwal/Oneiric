@@ -1,0 +1,15 @@
+Cold start from a fresh copy of the working tree (32 MB, no node_modules, no dist, no .git).
+
+npm ci                       -> found 0 vulnerabilities
+npm run typecheck            -> tsc --noEmit, no output (0 errors)
+npm test                     -> Test Files 36 passed (36)
+                                Tests 312 passed (312)
+npm run validate             -> 5 PASS, 1 PENDING (no LOLA raster present)
+npm run illumination-compare -> 0 of 2 published values comparable; 2 reported as not comparable with the reason
+cd app
+npm ci                       -> found 0 vulnerabilities
+npm run lint                 -> Found 0 warnings and 0 errors (38 files, 116 rules)
+npm run build                -> 1094 modules transformed, built with no error
+
+The checked-in reference file data/published-illumination.json is present in the fresh copy. It is deliberately not
+caught by the data/* ignore rule; without the exception added for it, the comparison commands would fail on a clone.
