@@ -5,12 +5,14 @@
 // Nothing is written for a site whose build fails; a site with no skyline stays on the smooth sphere.
 import { readFileSync } from 'node:fs';
 import { engineVersion } from './engine-version.ts';
-import { haveLocalRaster, openRaster, PRODUCT_PAGE, PRODUCTS, RASTER_DIR, siteWindow, type OpenRaster } from './dem.ts';
+import { failCleanlyOnNetworkError, haveLocalRaster, openRaster, PRODUCT_PAGE, PRODUCTS, RASTER_DIR, siteWindow, type OpenRaster } from './dem.ts';
 import { buildGraded, SKYLINE_DIR, writeIndex, writeSkyline, type SiteInfo } from './skyline-files.ts';
 import type { Tier } from '../engine/terrain.ts';
 
 export const SITES_FILE = 'app/public/data/sites.json';
 export const POLAR_LIMIT_LAT = -60;
+
+failCleanlyOnNetworkError();
 
 function args() {
   const a = process.argv.slice(2);
@@ -31,7 +33,12 @@ async function main() {
       if (r) { rasters.push(r); console.log(`${p.name}: ${r.header.source} (${r.header.width} x ${r.header.height} pixels of ${r.header.pixelM} m)`); }
       else console.log(`${p.name}: not in data/ or data-raw/ and --local-only was given; skipped`);
     } catch (e) {
-      console.log(`${p.name}: could not be opened (${(e as Error).message})`);
+      // A failed open is not a missing raster: the file or URL is there but could not be read. Continuing
+      // would silently rebuild every grade-B site from the 240 m raster alone and exit 0, overwriting good
+      // skylines with grade-C ones. Stop instead, write nothing, and let the user re-run. (A raster that is
+      // simply absent under --local-only returns null above and is still skipped.)
+      console.error(`${p.name}: could not be opened (${(e as Error).message}). No skyline is written: a build without this raster would silently downgrade every site. Check the connection or the file and re-run the same command.`);
+      process.exit(1);
     }
   }
   if (rasters.length === 0) {

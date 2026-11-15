@@ -12,6 +12,7 @@
     "fetch:fixtures": "tsx pipeline/fetch-fixtures.ts",
     "build:ephemeris": "tsx pipeline/build-ephemeris.ts",
     "build:skylines": "tsx pipeline/build-skylines.ts",
+    "artemis-points": "tsx pipeline/find-artemis-points.ts",
     "validate": "tsx pipeline/validate.ts",
     "mutation-check": "bash scripts/mutation-check.sh"
   },

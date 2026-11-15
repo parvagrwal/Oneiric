@@ -1,0 +1,7 @@
+Leak check over the public files (README, app, engine, pipeline, functions, scripts, docs, evidence).
+
+3 hits, all false positives, reviewed by hand:
+- The USGS DOI for the Artemis region grids appears in pipeline/find-artemis-points.ts and in evidence/site-library/command.txt. Part of its suffix matches an internal-code pattern. It is the published DOI of the cited source data. It stays.
+- The USGS region code for de Gerlache Rim 2 appears in evidence/site-library/output.json. It matches an internal-code pattern. It is the region's code from the source file, part of the published data. It stays.
+
+No internal term leaks into any public file.

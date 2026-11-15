@@ -1,0 +1,4 @@
+npm run artemis-points
+# derivation script: pipeline/find-artemis-points.ts
+# input: data/A3_9regions-lonlat-simplified.geojson (USGS, DOI 10.5066/P1MEQ6UK)
+# the 20 m raster is read over the network from PGDA; windows are cached under data/dem-windows/

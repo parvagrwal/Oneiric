@@ -65,7 +65,7 @@ In the preview, focus the skyline view or its scrubber. Use **Left** and **Right
 
 ### Building the terrain skylines
 
-The skylines shipped with the repository were built with this step. To rebuild them, put the 80 m and 240 m files from the [LOLA south pole product page](https://pgda.gsfc.nasa.gov/products/90) in `data/` (about 400 MB together; the folder is ignored by Git). The 20 m file is 2.6 GB and is not downloaded: the builder reads the 15 km window it needs over the network. `data-raw/` is accepted as an alternative folder for any of the three files.
+The skylines shipped with the repository were built with this step. To rebuild them, put the 80 m and 240 m files from the [LOLA south pole product page](https://pgda.gsfc.nasa.gov/products/90) in `data/` (about 400 MB together; the folder is ignored by Git). The 20 m file is 2.6 GB and is not downloaded: the builder reads the 15 km window it needs over the network. `data-raw/` is accepted as an alternative folder for any of the three files. A network read that fails is retried twice with backoff, and opening a raster over the network is retried the same way; if a raster still cannot be opened, the build stops and writes nothing instead of rebuilding sites from a coarser raster. If a build still stops on the network, re-run the same command — the skylines already built and the cached windows are kept.
 
 - `LDEM_80S_20MPP_ADJ.TIF` (20 m per pixel, used out to 15 km) — read over the network
 - `LDEM_80S_80MPP_ADJ.TIF` (80 m, 15 to 80 km) — in `data/`

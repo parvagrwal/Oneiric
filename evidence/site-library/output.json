@@ -1,0 +1,490 @@
+{
+  "source": "USGS Artemis III candidate regions (Oct 2024 list), https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids",
+  "points": "outline centroid and highest 20 m pixel per region, both illustrative points, not NASA-selected sites",
+  "regions": [
+    {
+      "region": "Nobile Rim 2",
+      "code": "N2",
+      "centroid": {
+        "lat": -83.95405,
+        "eLon": 58.82155
+      },
+      "centroidSpherical": {
+        "lat": -83.95405,
+        "eLon": 58.82155
+      },
+      "centroidPlanar": {
+        "lat": -83.94515,
+        "eLon": 58.82196
+      },
+      "highest": {
+        "lat": -84.07387,
+        "eLon": 54.86523,
+        "heightM": 1811.9,
+        "pixelsInside": 984741,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Mons Mouton",
+      "code": "MM",
+      "centroid": {
+        "lat": -85.42658,
+        "eLon": 31.74276
+      },
+      "centroidSpherical": {
+        "lat": -85.42658,
+        "eLon": 31.74276
+      },
+      "centroidPlanar": {
+        "lat": -85.41901,
+        "eLon": 31.74226
+      },
+      "highest": {
+        "lat": -85.40391,
+        "eLon": 31.70791,
+        "heightM": 6463.6,
+        "pixelsInside": 630622,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Malapert Massif",
+      "code": "MA",
+      "centroid": {
+        "lat": -85.99478,
+        "eLon": 359.76422
+      },
+      "centroidSpherical": {
+        "lat": -85.99478,
+        "eLon": 359.76422
+      },
+      "centroidPlanar": {
+        "lat": -85.97979,
+        "eLon": 359.76427
+      },
+      "highest": {
+        "lat": -85.98793,
+        "eLon": 2.06708,
+        "heightM": 5173.3,
+        "pixelsInside": 1090789,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "de Gerlache Rim 2",
+      "code": "G2",
+      "centroid": {
+        "lat": -88.22998,
+        "eLon": 295.37156
+      },
+      "centroidSpherical": {
+        "lat": -88.22998,
+        "eLon": 295.37156
+      },
+      "centroidPlanar": {
+        "lat": -88.19927,
+        "eLon": 295.30386
+      },
+      "highest": {
+        "lat": -88.58747,
+        "eLon": 292.09202,
+        "heightM": 1765.2,
+        "pixelsInside": 946602,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Mons Mouton Plateau",
+      "code": "MP",
+      "centroid": {
+        "lat": -84.3347,
+        "eLon": 30.59227
+      },
+      "centroidSpherical": {
+        "lat": -84.33456,
+        "eLon": 30.58961
+      },
+      "centroidPlanar": {
+        "lat": -84.21048,
+        "eLon": 29.98538
+      },
+      "highest": {
+        "lat": -84.6718,
+        "eLon": 39.38316,
+        "heightM": 7027.2,
+        "pixelsInside": 10284388,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Slater Plain",
+      "code": "SP",
+      "centroid": {
+        "lat": -87.16371,
+        "eLon": 125.53768
+      },
+      "centroidSpherical": {
+        "lat": -87.16371,
+        "eLon": 125.53768
+      },
+      "centroidPlanar": {
+        "lat": -87.14469,
+        "eLon": 125.53126
+      },
+      "highest": {
+        "lat": -87.25582,
+        "eLon": 127.59,
+        "heightM": 533.5,
+        "pixelsInside": 960489,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Peak Near Cabeus B",
+      "code": "CB",
+      "centroid": {
+        "lat": -83.63746,
+        "eLon": 291.25051
+      },
+      "centroidSpherical": {
+        "lat": -83.63746,
+        "eLon": 291.25051
+      },
+      "centroidPlanar": {
+        "lat": -83.629,
+        "eLon": 291.2501
+      },
+      "highest": {
+        "lat": -83.58292,
+        "eLon": 291.53759,
+        "heightM": 4601.8,
+        "pixelsInside": 986879,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Nobile Rim 1",
+      "code": "N1",
+      "centroid": {
+        "lat": -85.4364,
+        "eLon": 37.34704
+      },
+      "centroidSpherical": {
+        "lat": -85.4364,
+        "eLon": 37.34704
+      },
+      "centroidPlanar": {
+        "lat": -85.42457,
+        "eLon": 37.34625
+      },
+      "highest": {
+        "lat": -85.23271,
+        "eLon": 36.59499,
+        "heightM": 6800,
+        "pixelsInside": 977155,
+        "nanInside": 0
+      }
+    },
+    {
+      "region": "Haworth",
+      "code": "HW",
+      "centroid": {
+        "lat": -86.76394,
+        "eLon": 337.22298
+      },
+      "centroidSpherical": {
+        "lat": -86.76394,
+        "eLon": 337.22298
+      },
+      "centroidPlanar": {
+        "lat": -86.72664,
+        "eLon": 337.2534
+      },
+      "highest": {
+        "lat": -86.36376,
+        "eLon": 336.81232,
+        "heightM": 2842.2,
+        "pixelsInside": 2125910,
+        "nanInside": 0
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "projection round-trip, Nobile Rim 2",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Mons Mouton",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Malapert Massif",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Slater Plain",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Nobile Rim 1",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "projection round-trip, Haworth",
+      "pass": true,
+      "detail": "round-trip error 0.0000 m"
+    },
+    {
+      "name": "the independently sourced Nobile Rim 2 point falls inside its region outline",
+      "pass": true,
+      "detail": "point -84.20156, 60.69989"
+    },
+    {
+      "name": "centroid inside its outline, Nobile Rim 2",
+      "pass": true,
+      "detail": "centroid -83.95405, 58.82155"
+    },
+    {
+      "name": "area and spherical centroids agree, Nobile Rim 2",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Nobile Rim 2",
+      "pass": true,
+      "detail": "highest -84.07387, 54.86523"
+    },
+    {
+      "name": "highest pixel height is plausible, Nobile Rim 2",
+      "pass": true,
+      "detail": "1811.9 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Nobile Rim 2",
+      "pass": true,
+      "detail": "0 of 984741 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Mons Mouton",
+      "pass": true,
+      "detail": "centroid -85.42658, 31.74276"
+    },
+    {
+      "name": "area and spherical centroids agree, Mons Mouton",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Mons Mouton",
+      "pass": true,
+      "detail": "highest -85.40391, 31.70791"
+    },
+    {
+      "name": "highest pixel height is plausible, Mons Mouton",
+      "pass": true,
+      "detail": "6463.6 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Mons Mouton",
+      "pass": true,
+      "detail": "0 of 630622 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Malapert Massif",
+      "pass": true,
+      "detail": "centroid -85.99478, -0.23578"
+    },
+    {
+      "name": "area and spherical centroids agree, Malapert Massif",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Malapert Massif",
+      "pass": true,
+      "detail": "highest -85.98793, 2.06708"
+    },
+    {
+      "name": "highest pixel height is plausible, Malapert Massif",
+      "pass": true,
+      "detail": "5173.3 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Malapert Massif",
+      "pass": true,
+      "detail": "0 of 1090789 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "centroid -88.22998, -64.62844"
+    },
+    {
+      "name": "area and spherical centroids agree, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "highest -88.58747, -67.90798"
+    },
+    {
+      "name": "highest pixel height is plausible, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "1765.2 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, de Gerlache Rim 2",
+      "pass": true,
+      "detail": "0 of 946602 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "centroid -84.33470, 30.59227"
+    },
+    {
+      "name": "area and spherical centroids agree, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "differ by 9 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "highest -84.67180, 39.38316"
+    },
+    {
+      "name": "highest pixel height is plausible, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "7027.2 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Mons Mouton Plateau",
+      "pass": true,
+      "detail": "0 of 10284388 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Slater Plain",
+      "pass": true,
+      "detail": "centroid -87.16371, 125.53768"
+    },
+    {
+      "name": "area and spherical centroids agree, Slater Plain",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Slater Plain",
+      "pass": true,
+      "detail": "highest -87.25582, 127.59000"
+    },
+    {
+      "name": "highest pixel height is plausible, Slater Plain",
+      "pass": true,
+      "detail": "533.5 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Slater Plain",
+      "pass": true,
+      "detail": "0 of 960489 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "centroid -83.63746, -68.74949"
+    },
+    {
+      "name": "area and spherical centroids agree, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "highest -83.58292, -68.46241"
+    },
+    {
+      "name": "highest pixel height is plausible, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "4601.8 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Peak Near Cabeus B",
+      "pass": true,
+      "detail": "0 of 986879 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Nobile Rim 1",
+      "pass": true,
+      "detail": "centroid -85.43640, 37.34704"
+    },
+    {
+      "name": "area and spherical centroids agree, Nobile Rim 1",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Nobile Rim 1",
+      "pass": true,
+      "detail": "highest -85.23271, 36.59499"
+    },
+    {
+      "name": "highest pixel height is plausible, Nobile Rim 1",
+      "pass": true,
+      "detail": "6800.0 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Nobile Rim 1",
+      "pass": true,
+      "detail": "0 of 977155 pixels without data"
+    },
+    {
+      "name": "centroid inside its outline, Haworth",
+      "pass": true,
+      "detail": "centroid -86.76394, -22.77702"
+    },
+    {
+      "name": "area and spherical centroids agree, Haworth",
+      "pass": true,
+      "detail": "differ by 0 m"
+    },
+    {
+      "name": "highest pixel inside its outline, Haworth",
+      "pass": true,
+      "detail": "highest -86.36376, -23.18768"
+    },
+    {
+      "name": "highest pixel height is plausible, Haworth",
+      "pass": true,
+      "detail": "2842.2 m"
+    },
+    {
+      "name": "most pixels inside the outline hold data, Haworth",
+      "pass": true,
+      "detail": "0 of 2125910 pixels without data"
+    }
+  ]
+}

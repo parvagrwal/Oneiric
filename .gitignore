@@ -3,7 +3,9 @@ dist/
 .env
 .env.*
 # Raw elevation rasters are large; only derived skylines are shipped.
-data/
+# The Artemis region outlines are small source data for the site library, so they are tracked.
+data/*
+!data/A3_9regions-lonlat-simplified.geojson
 data-raw/
 # Derived ephemeris and validation data are shipped with the static app.
 !app/public/data/

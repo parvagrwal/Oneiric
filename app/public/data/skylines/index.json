@@ -2,6 +2,150 @@
   "generatedBy": "pipeline/build-skylines.ts",
   "skylines": [
     {
+      "siteId": "artemis-de-gerlache-rim-2-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -88.41293238085407,
+      "file": "artemis-de-gerlache-rim-2-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-de-gerlache-rim-2-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1765.1918508719357,
+      "file": "artemis-de-gerlache-rim-2-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1628.0178355384364,
+      "file": "artemis-haworth-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-haworth-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 2842.2043195759857,
+      "file": "artemis-haworth-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4784.1719677276415,
+      "file": "artemis-malapert-massif-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-malapert-massif-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5173.297416083579,
+      "file": "artemis-malapert-massif-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6398.637266753315,
+      "file": "artemis-mons-mouton-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6463.62366774368,
+      "file": "artemis-mons-mouton-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m",
+      "siteElevationM": 5248.701327686278,
+      "file": "artemis-mons-mouton-plateau-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-mons-mouton-plateau-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 7027.227248745103,
+      "file": "artemis-mons-mouton-plateau-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 5942.817698492581,
+      "file": "artemis-nobile-rim-1-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-1-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 6799.986271359264,
+      "file": "artemis-nobile-rim-1-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1009.4105505894513,
+      "file": "artemis-nobile-rim-2-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-nobile-rim-2-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 1811.94314078438,
+      "file": "artemis-nobile-rim-2-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4491.264262914803,
+      "file": "artemis-peak-near-cabeus-b-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-peak-near-cabeus-b-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 4601.772696352025,
+      "file": "artemis-peak-near-cabeus-b-highest-2m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-centroid",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": -30.876028302453907,
+      "file": "artemis-slater-plain-centroid-2m.bin"
+    },
+    {
+      "siteId": "artemis-slater-plain-highest",
+      "heightM": 2,
+      "grade": "B",
+      "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+      "siteElevationM": 533.4838843674008,
+      "file": "artemis-slater-plain-highest-2m.bin"
+    },
+    {
       "siteId": "chandrayaan-3",
       "heightM": 2,
       "grade": "C",

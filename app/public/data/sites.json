@@ -1,5 +1,5 @@
 {
-  "generatedBy": "draft site library of 9 sites; each entry names its source",
+  "generatedBy": "draft site library of 33 sites; each entry names its source",
   "frame": "MOON_ME, east-positive longitude",
   "sites": [
     {
@@ -8,7 +8,7 @@
       "label": "Connecting Ridge reference point",
       "lat": -89.45,
       "eLon": 222.69,
-      "source": "Mazarico et al. 2011, via Gläser et al. 2018 Table 1",
+      "source": "Mazarico et al. 2011, via Gl\u00e4ser et al. 2018 Table 1",
       "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
     },
     {
@@ -17,7 +17,7 @@
       "label": "Shackleton rim reference point",
       "lat": -89.78,
       "eLon": 204.27,
-      "source": "Mazarico et al. 2011, via Gläser et al. 2018 Table 1",
+      "source": "Mazarico et al. 2011, via Gl\u00e4ser et al. 2018 Table 1",
       "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
     },
     {
@@ -82,6 +82,222 @@
       "eLon": 61.8103,
       "source": "NASA LEAG 2025 slides",
       "sourceUrl": "https://quickmap.lroc.im-ldi.com/"
+    },
+    {
+      "id": "artemis-nobile-rim-2-centroid",
+      "name": "Nobile Rim 2 centroid",
+      "label": "Nobile Rim 2 centroid, illustrative point, not a NASA-selected site",
+      "lat": -83.95405,
+      "eLon": 58.82155,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-nobile-rim-2-highest",
+      "name": "Nobile Rim 2 highest point",
+      "label": "Nobile Rim 2 highest point, illustrative point, not a NASA-selected site",
+      "lat": -84.07387,
+      "eLon": 54.86523,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-mons-mouton-centroid",
+      "name": "Mons Mouton centroid",
+      "label": "Mons Mouton centroid, illustrative point, not a NASA-selected site",
+      "lat": -85.42658,
+      "eLon": 31.74276,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-mons-mouton-highest",
+      "name": "Mons Mouton highest point",
+      "label": "Mons Mouton highest point, illustrative point, not a NASA-selected site",
+      "lat": -85.40391,
+      "eLon": 31.70791,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-malapert-massif-centroid",
+      "name": "Malapert Massif centroid",
+      "label": "Malapert Massif centroid, illustrative point, not a NASA-selected site",
+      "lat": -85.99478,
+      "eLon": 359.76422,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-malapert-massif-highest",
+      "name": "Malapert Massif highest point",
+      "label": "Malapert Massif highest point, illustrative point, not a NASA-selected site",
+      "lat": -85.98793,
+      "eLon": 2.06708,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-centroid",
+      "name": "de Gerlache Rim 2 centroid",
+      "label": "de Gerlache Rim 2 centroid, illustrative point, not a NASA-selected site",
+      "lat": -88.22998,
+      "eLon": 295.37156,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-highest",
+      "name": "de Gerlache Rim 2 highest point",
+      "label": "de Gerlache Rim 2 highest point, illustrative point, not a NASA-selected site",
+      "lat": -88.58747,
+      "eLon": 292.09202,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-centroid",
+      "name": "Mons Mouton Plateau centroid",
+      "label": "Mons Mouton Plateau centroid, illustrative point, not a NASA-selected site",
+      "lat": -84.3347,
+      "eLon": 30.59227,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-highest",
+      "name": "Mons Mouton Plateau highest point",
+      "label": "Mons Mouton Plateau highest point, illustrative point, not a NASA-selected site",
+      "lat": -84.6718,
+      "eLon": 39.38316,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-slater-plain-centroid",
+      "name": "Slater Plain centroid",
+      "label": "Slater Plain centroid, illustrative point, not a NASA-selected site",
+      "lat": -87.16371,
+      "eLon": 125.53768,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-slater-plain-highest",
+      "name": "Slater Plain highest point",
+      "label": "Slater Plain highest point, illustrative point, not a NASA-selected site",
+      "lat": -87.25582,
+      "eLon": 127.59,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-centroid",
+      "name": "Peak Near Cabeus B centroid",
+      "label": "Peak Near Cabeus B centroid, illustrative point, not a NASA-selected site",
+      "lat": -83.63746,
+      "eLon": 291.25051,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-highest",
+      "name": "Peak Near Cabeus B highest point",
+      "label": "Peak Near Cabeus B highest point, illustrative point, not a NASA-selected site",
+      "lat": -83.58292,
+      "eLon": 291.53759,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-nobile-rim-1-centroid",
+      "name": "Nobile Rim 1 centroid",
+      "label": "Nobile Rim 1 centroid, illustrative point, not a NASA-selected site",
+      "lat": -85.4364,
+      "eLon": 37.34704,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-nobile-rim-1-highest",
+      "name": "Nobile Rim 1 highest point",
+      "label": "Nobile Rim 1 highest point, illustrative point, not a NASA-selected site",
+      "lat": -85.23271,
+      "eLon": 36.59499,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-haworth-centroid",
+      "name": "Haworth centroid",
+      "label": "Haworth centroid, illustrative point, not a NASA-selected site",
+      "lat": -86.76394,
+      "eLon": 337.22298,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), outline centroid",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "id": "artemis-haworth-highest",
+      "name": "Haworth highest point",
+      "label": "Haworth highest point, illustrative point, not a NASA-selected site",
+      "lat": -86.36376,
+      "eLon": 336.81232,
+      "source": "USGS Artemis III candidate regions (Oct 2024 list), highest 20 m pixel in the outline",
+      "sourceUrl": "https://www.usgs.gov/data/down-selected-artemis-iii-candidate-landing-site-navigational-grids"
+    },
+    {
+      "eLon": 23.47314,
+      "id": "apollo-11",
+      "label": "Apollo 11",
+      "lat": 0.67416,
+      "name": "Apollo 11",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+    },
+    {
+      "eLon": 336.5781,
+      "id": "apollo-12",
+      "label": "Apollo 12",
+      "lat": -3.0128,
+      "name": "Apollo 12",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+    },
+    {
+      "eLon": 342.52806,
+      "id": "apollo-14",
+      "label": "Apollo 14",
+      "lat": -3.64589,
+      "name": "Apollo 14",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+    },
+    {
+      "eLon": 3.6333,
+      "id": "apollo-15",
+      "label": "Apollo 15",
+      "lat": 26.13239,
+      "name": "Apollo 15",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+    },
+    {
+      "eLon": 15.5011,
+      "id": "apollo-16",
+      "label": "Apollo 16",
+      "lat": -8.9734,
+      "name": "Apollo 16",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
+    },
+    {
+      "eLon": 30.7723,
+      "id": "apollo-17",
+      "label": "Apollo 17",
+      "lat": 20.1911,
+      "name": "Apollo 17",
+      "source": "NASA NSSDC Apollo Landing Site Coordinates, Lunar Module (Wagner et al. 2017, LRO images)",
+      "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     }
   ]
 }

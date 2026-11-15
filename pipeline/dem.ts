@@ -56,10 +56,16 @@ export function checkHeader(image: Pick<GeoTIFFImage, 'getWidth' | 'getHeight' |
 
 export interface OpenRaster { product: Product; image: GeoTIFFImage; header: RasterHeader }
 
-/** Open a raster file or URL and check its georeferencing. */
+/** Open a raster file or URL and check its georeferencing. A remote open is retried: PGDA range requests
+ * time out under load, and one failed request must not drop the whole raster. The header check is not
+ * retried — a raster that fails it is wrong, not slow. */
 export async function openRasterAt(p: Product, source: string): Promise<OpenRaster> {
-  const tiff = /^https?:/.test(source) ? await fromUrl(source) : await fromFile(source);
-  const image = await tiff.getImage(0);
+  const remote = /^https?:/.test(source);
+  const load = async () => {
+    const tiff = remote ? await fromUrl(source) : await fromFile(source);
+    return tiff.getImage(0);
+  };
+  const image = remote ? await readWithRetry(load, `${p.name} open`) : await load();
   return { product: p, image, header: checkHeader(image, p.pixelM, source) };
 }
 
@@ -88,6 +94,41 @@ export function pixelWindow(h: RasterHeader, xM: number, yM: number, reachM: num
   return right - left >= 2 && bottom - top >= 2 ? [left, top, right, bottom] : null;
 }
 
+/**
+ * Turn an escaping network failure into a clean exit. A failed request inside the GeoTIFF reader can surface
+ * as an unhandled rejection, which crashes the process with a raw stack trace instead of reaching the caller's
+ * catch. Every script that reads a raster over the network calls this once at the top: nothing is lost, the
+ * work already done and the cached windows are kept, and re-running the same command continues where it stopped.
+ */
+export function failCleanlyOnNetworkError(): void {
+  process.on('unhandledRejection', (e) => {
+    console.error(`A network request failed (${(e as Error)?.message ?? e}). Nothing is lost: the work already done and the cached windows are kept. Re-run the same command to continue.`);
+    process.exit(1);
+  });
+}
+
+/**
+ * Run an async read, retrying failures with backoff. PGDA range requests time out under load — a retry a second
+ * later usually succeeds — so one failed fetch must not kill a build. After the last attempt the original error
+ * is thrown, so a genuinely broken read still fails loudly instead of silently returning nothing.
+ */
+export async function readWithRetry<T>(fn: () => Promise<T>, label: string, attempts = 3, baseDelayMs = 1000): Promise<T> {
+  let last: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      last = e;
+      if (i < attempts - 1) {
+        const waitMs = baseDelayMs * 2 ** i;
+        console.error(`${label}: attempt ${i + 1} of ${attempts} failed (${(e as Error).message}); retrying in ${waitMs} ms`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+    }
+  }
+  throw last;
+}
+
 /** Read one window as a DemGrid, from the cache if it is there. No-data pixels become NaN. */
 export async function readWindow(r: OpenRaster, win: [number, number, number, number], cacheDir: string | null = WINDOW_DIR): Promise<DemGrid> {
   const [left, top, right, bottom] = win;
@@ -98,7 +139,10 @@ export async function readWindow(r: OpenRaster, win: [number, number, number, nu
     const b = readFileSync(cache);
     z = new Float32Array(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength));
   } else {
-    const rasters = await r.image.readRasters({ window: win, samples: [0] });
+    const rasters = await readWithRetry(
+      () => r.image.readRasters({ window: win, samples: [0] }),
+      `${r.product.name} window ${left},${top}-${right},${bottom}`,
+    );
     z = Float32Array.from((rasters as unknown as ArrayLike<number>[])[0]);
     const { noData } = r.header;
     if (noData !== null) for (let i = 0; i < z.length; i++) if (z[i] === noData) z[i] = NaN;

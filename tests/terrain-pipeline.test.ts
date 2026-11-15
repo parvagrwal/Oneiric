@@ -4,7 +4,7 @@ import { writeArrayBuffer } from 'geotiff';
 import { describe, expect, it } from 'vitest';
 import { buildSkyline, demHeight, siteFrame, southPolarXY, TIER_LIMITS_M, type DemGrid, type Tier } from '../engine/index.ts';
 import { R_MOON_KM } from '../engine/constants.ts';
-import { checkHeader, openRasterAt, pixelWindow, PRODUCTS, siteWindow } from '../pipeline/dem.ts';
+import { checkHeader, openRasterAt, pixelWindow, PRODUCTS, readWithRetry, siteWindow } from '../pipeline/dem.ts';
 import { CRATERS, orientationCheck, type HeightAt } from '../pipeline/raster-orientation.ts';
 import { buildGraded, readRecords, verifySkylineFiles, writeIndex, writeSkyline } from '../pipeline/skyline-files.ts';
 import { surfaceDistM, syntheticDem } from '../pipeline/synthetic-terrain.ts';
@@ -144,5 +144,24 @@ describe('raster orientation check on two named craters', () => {
   });
   it('fails, rather than passes, when a point has no height', async () => {
     expect((await orientationCheck(() => NaN)).every((c) => !c.pass)).toBe(true);
+  });
+});
+
+describe('retrying a failed raster read', () => {
+  it('returns the value on the first try when nothing fails', async () => {
+    let calls = 0;
+    expect(await readWithRetry(async () => { calls++; return 7; }, 'test', 3, 1)).toBe(7);
+    expect(calls).toBe(1);
+  });
+  it('retries a failing read and returns the value when a later attempt succeeds', async () => {
+    let calls = 0;
+    const v = await readWithRetry(async () => { calls++; if (calls < 3) throw new Error('fetch failed'); return 'ok'; }, 'test', 3, 1);
+    expect(v).toBe('ok');
+    expect(calls).toBe(3);
+  });
+  it('throws the last error after the attempts run out, instead of returning nothing', async () => {
+    let calls = 0;
+    await expect(readWithRetry(async () => { calls++; throw new Error('still failing'); }, 'test', 3, 1)).rejects.toThrow('still failing');
+    expect(calls).toBe(3);
   });
 });
