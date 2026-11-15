@@ -62,7 +62,7 @@
       "receipt.json updated to the merged state; the agent's temporary-file proof numbers replaced with the real ones (see endToEndProof.corrected)",
       "README.md test counts corrected: 196 tests across 25 files (was 156 across 20)",
       "docs/observer-height.md: the 2 m to 10 m horizon shift is a fifth of the Sun's diameter, not two thirds",
-      "MethodDrawer.tsx: the observer-height comparison is now reported by npm run height-report; the resolution and shifted-skyline sensitivities are still not run"
+      "MethodDrawer.tsx: the observer-height comparison is now reported by npm run height-report; the resolution and shifted-skyline sensitivities are not available yet"
     ],
     "gatesReRun": "typecheck exit 0; tests 196 passed in 25 files; validate 6 PASS rows, 0 pending; mutation-check 45 killed, 0 survived; leak check 1 hit, DOI false positive, pre-existing; app lint 0 warnings, 0 errors; app build 1082 modules; markdownlint 0 issues",
     "reviewer": "Muse (review pack)"

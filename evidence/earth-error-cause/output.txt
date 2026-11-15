@@ -1,0 +1,7 @@
+Sun-Earth angle: engine table vs Horizons geometric VECTORS
+  2026-12-31T23:58:50.816Z engine 104.09049 geometric 104.08352 diff 0.00697 deg
+  2027-01-01T05:58:50.816Z engine 106.97883 geometric 106.97160 diff 0.00724 deg
+  2027-01-01T11:58:50.816Z engine 109.84931 geometric 109.84181 diff 0.00750 deg
+  2027-01-01T17:58:50.816Z engine 112.70296 geometric 112.69521 diff 0.00776 deg
+  2027-01-01T23:58:50.816Z engine 115.54084 geometric 115.53284 diff 0.00801 deg
+max |diff| 0.00801 deg (stellar aberration is ~0.0057 deg; light-time for Earth's motion ~0.0002 deg)

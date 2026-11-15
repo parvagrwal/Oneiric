@@ -1,11 +1,17 @@
 {
-  "status": "pass-unavailable-as-designed",
-  "verdict": "The static hillshade was not built, because the LOLA hillshade raster is not in this checkout. The command says so, writes no file, and leaves app/public/data/basemap/ absent. The map reports the static hillshade as unavailable and uses the online Moon Trek tiles, which are drawn from the same LOLA source data.",
-  "commandOutput": "No LDEM_80S_80MPP_ADJ_HILL.TIF in data/ or data-raw/. Nothing was written.",
-  "writtenFiles": [],
-  "absentDirectory": "app/public/data/basemap/",
-  "doesTheMapBreak": "No. The map renders the online tiles, the site markers, the region outlines and the pole marker. The note under the map states the static hillshade is unavailable and why.",
-  "whatWouldBuildIt": "Place LDEM_80S_80MPP_ADJ_HILL.TIF from the LOLA product page in data/ and run npm run build:basemap. The builder downsamples to at most 2048 px, tags the manifest as LOLA shaded relief, records the product, source, build date and command, and the app refuses to show any image whose manifest lacks those.",
+  "commandOutput": "wrote app/public/data/basemap/south-pole-hillshade.png (2948250 bytes) and app/public/data/basemap/basemap.json",
+  "doesTheMapBreak": "No. The map renders the static hillshade as its base picture, the online tiles over it, the site markers, the region outlines and the pole marker. With no manifest the map reports the static hillshade as unavailable and falls back to the vector layers over a plain background, as tests/basemap.test.ts checks.",
+  "files": [
+    "pipeline/build-basemap.ts",
+    "app/src/hillshade.ts",
+    "app/src/hillshade-types.ts"
+  ],
+  "status": "pass",
   "tests": "12 passed across tests/basemap.test.ts, including that no manifest is read as availability and that a manifest claiming a synthetic surface is rejected",
-  "files": ["pipeline/build-basemap.ts", "app/src/hillshade.ts", "app/src/hillshade-types.ts"]
+  "verdict": "The static hillshade is built and shipped: south-pole-hillshade.png (2,948,250 bytes) and basemap.json sit under app/public/data/basemap/, drawn from the LOLA 80 m hillshade raster (LDEM_80S_80MPP_ADJ_HILL.TIF) by npm run build:basemap on 2026-11-15. The map shows it as the base picture under the online Moon Trek tiles.",
+  "whatBuiltIt": "LDEM_80S_80MPP_ADJ_HILL.TIF from the LOLA product page, placed in data/, then npm run build:basemap. The builder downsamples to at most 2048 px, tags the manifest as LOLA shaded relief, records the product, source, build date and command, and the app refuses to show any image whose manifest lacks those.",
+  "writtenFiles": [
+    "app/public/data/basemap/south-pole-hillshade.png",
+    "app/public/data/basemap/basemap.json"
+  ]
 }

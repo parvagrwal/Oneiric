@@ -1,0 +1,22 @@
+site: shackleton-rim (Shackleton rim) lat -89.78 eLon 204.27
+height: 2 m  grade B  terrain: LOLA 20 m + LOLA 80 m + LOLA 240 m
+skyline file: shackleton-rim-2m.bin  site elevation: 1728.87 m
+series: 2023-01-01 + 6575 d, step 10 min, n=946800, built in 2.3 s
+window 2023-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2024-01-01 + 366 d (n=52704): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8784.00 h
+window 2025-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2026-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2027-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2028-01-01 + 366 d (n=52704): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8784.00 h
+window 2029-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2030-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2031-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2032-01-01 + 366 d (n=52704): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8784.00 h
+window 2033-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2034-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2035-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2036-01-01 + 366 d (n=52704): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8784.00 h
+window 2037-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2038-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2039-01-01 + 365 d (n=52560): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 8760.00 h
+window 2023-01-01 + 6575 d (n=946800): meanDisc 0.00%  anyDisc 0.00%  halfDisc 0.00%  centreAbove 0.00%  fullDisc 0.00%  darkGap 157800.00 h

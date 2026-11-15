@@ -1,0 +1,22 @@
+site: glaser-spot-4 (Gläser EPSC 2014 spot 4) lat -89.4544 eLon 222.8445
+height: 10 m  grade B  terrain: LOLA 20 m + LOLA 80 m + LOLA 240 m
+skyline file: glaser-spot-4-10m.bin  site elevation: 1955.39 m
+series: 2023-01-01 + 6575 d, step 10 min, n=946800, built in 4.2 s
+window 2023-01-01 + 365 d (n=52560): meanDisc 91.89%  anyDisc 95.63%  halfDisc 92.07%  centreAbove 92.05%  fullDisc 87.14%  darkGap 74.00 h  lightAny 150.55 d  lightHalf 149.28 d
+window 2024-01-01 + 366 d (n=52704): meanDisc 91.77%  anyDisc 95.43%  halfDisc 92.15%  centreAbove 92.09%  fullDisc 87.14%  darkGap 69.83 h  lightAny 139.59 d  lightHalf 107.58 d
+window 2025-01-01 + 365 d (n=52560): meanDisc 91.53%  anyDisc 95.14%  halfDisc 91.83%  centreAbove 91.85%  fullDisc 87.41%  darkGap 76.33 h  lightAny 115.20 d  lightHalf 115.17 d
+window 2026-01-01 + 365 d (n=52560): meanDisc 91.66%  anyDisc 95.12%  halfDisc 91.63%  centreAbove 91.66%  fullDisc 87.42%  darkGap 76.67 h  lightAny 125.76 d  lightHalf 125.74 d
+window 2027-01-01 + 365 d (n=52560): meanDisc 91.98%  anyDisc 95.55%  halfDisc 92.34%  centreAbove 92.27%  fullDisc 87.12%  darkGap 70.33 h  lightAny 195.69 d  lightHalf 166.77 d
+window 2028-01-01 + 366 d (n=52704): meanDisc 92.09%  anyDisc 95.67%  halfDisc 92.62%  centreAbove 92.64%  fullDisc 87.37%  darkGap 68.50 h  lightAny 207.01 d  lightHalf 203.31 d
+window 2029-01-01 + 365 d (n=52560): meanDisc 92.06%  anyDisc 95.89%  halfDisc 92.12%  centreAbove 92.15%  fullDisc 87.93%  darkGap 70.33 h  lightAny 177.72 d  lightHalf 177.67 d
+window 2030-01-01 + 365 d (n=52560): meanDisc 92.02%  anyDisc 95.64%  halfDisc 92.03%  centreAbove 92.02%  fullDisc 87.27%  darkGap 74.83 h  lightAny 199.18 d  lightHalf 198.40 d
+window 2031-01-01 + 365 d (n=52560): meanDisc 90.89%  anyDisc 94.87%  halfDisc 91.12%  centreAbove 91.07%  fullDisc 85.51%  darkGap 74.50 h  lightAny 261.98 d  lightHalf 178.97 d
+window 2032-01-01 + 366 d (n=52704): meanDisc 91.07%  anyDisc 95.21%  halfDisc 91.64%  centreAbove 91.68%  fullDisc 86.02%  darkGap 71.17 h  lightAny 176.07 d  lightHalf 176.02 d
+window 2033-01-01 + 365 d (n=52560): meanDisc 90.49%  anyDisc 94.75%  halfDisc 90.61%  centreAbove 90.60%  fullDisc 85.69%  darkGap 71.50 h  lightAny 176.55 d  lightHalf 176.51 d
+window 2034-01-01 + 365 d (n=52560): meanDisc 90.36%  anyDisc 94.64%  halfDisc 90.74%  centreAbove 90.68%  fullDisc 84.92%  darkGap 69.50 h  lightAny 258.61 d  lightHalf 201.96 d
+window 2035-01-01 + 365 d (n=52560): meanDisc 91.66%  anyDisc 95.56%  halfDisc 92.30%  centreAbove 92.25%  fullDisc 86.54%  darkGap 69.50 h  lightAny 206.88 d  lightHalf 180.31 d
+window 2036-01-01 + 366 d (n=52704): meanDisc 91.16%  anyDisc 95.06%  halfDisc 91.39%  centreAbove 91.40%  fullDisc 86.63%  darkGap 75.83 h  lightAny 177.10 d  lightHalf 177.06 d
+window 2037-01-01 + 365 d (n=52560): meanDisc 91.67%  anyDisc 95.34%  halfDisc 91.70%  centreAbove 91.72%  fullDisc 87.14%  darkGap 77.00 h  lightAny 203.10 d  lightHalf 176.47 d
+window 2038-01-01 + 365 d (n=52560): meanDisc 91.95%  anyDisc 95.44%  halfDisc 92.42%  centreAbove 92.40%  fullDisc 87.09%  darkGap 70.83 h  lightAny 222.81 d  lightHalf 197.81 d
+window 2039-01-01 + 365 d (n=52560): meanDisc 91.88%  anyDisc 95.64%  halfDisc 92.30%  centreAbove 92.33%  fullDisc 87.24%  darkGap 70.00 h  lightAny 156.74 d  lightHalf 156.72 d
+window 2023-01-01 + 6575 d (n=946800): meanDisc 91.56%  anyDisc 95.34%  halfDisc 91.83%  centreAbove 91.82%  fullDisc 86.85%  darkGap 77.00 h  lightAny 261.98 d  lightHalf 203.31 d

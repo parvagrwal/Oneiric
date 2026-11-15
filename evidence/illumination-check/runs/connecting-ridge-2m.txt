@@ -1,0 +1,22 @@
+site: connecting-ridge (Connecting Ridge) lat -89.45 eLon 222.69
+height: 2 m  grade B  terrain: LOLA 20 m + LOLA 80 m + LOLA 240 m
+skyline file: connecting-ridge-2m.bin  site elevation: 1955.01 m
+series: 2023-01-01 + 6575 d, step 10 min, n=946800, built in 4.6 s
+window 2023-01-01 + 365 d (n=52560): meanDisc 65.13%  anyDisc 70.91%  halfDisc 65.34%  centreAbove 65.27%  fullDisc 59.04%  darkGap 340.33 h
+window 2024-01-01 + 366 d (n=52704): meanDisc 65.03%  anyDisc 70.75%  halfDisc 64.55%  centreAbove 64.45%  fullDisc 60.57%  darkGap 343.83 h
+window 2025-01-01 + 365 d (n=52560): meanDisc 64.93%  anyDisc 69.98%  halfDisc 65.23%  centreAbove 65.16%  fullDisc 59.44%  darkGap 345.67 h
+window 2026-01-01 + 365 d (n=52560): meanDisc 64.76%  anyDisc 70.68%  halfDisc 64.95%  centreAbove 64.87%  fullDisc 57.99%  darkGap 344.33 h
+window 2027-01-01 + 365 d (n=52560): meanDisc 64.99%  anyDisc 70.96%  halfDisc 64.88%  centreAbove 64.80%  fullDisc 59.41%  darkGap 338.83 h
+window 2028-01-01 + 366 d (n=52704): meanDisc 64.12%  anyDisc 69.57%  halfDisc 64.14%  centreAbove 64.04%  fullDisc 59.18%  darkGap 345.00 h
+window 2029-01-01 + 365 d (n=52560): meanDisc 63.78%  anyDisc 69.47%  halfDisc 63.86%  centreAbove 63.79%  fullDisc 57.49%  darkGap 345.50 h
+window 2030-01-01 + 365 d (n=52560): meanDisc 64.41%  anyDisc 70.77%  halfDisc 64.78%  centreAbove 64.71%  fullDisc 57.82%  darkGap 341.17 h
+window 2031-01-01 + 365 d (n=52560): meanDisc 62.21%  anyDisc 68.50%  halfDisc 61.79%  centreAbove 61.72%  fullDisc 56.83%  darkGap 337.33 h
+window 2032-01-01 + 366 d (n=52704): meanDisc 61.55%  anyDisc 66.99%  halfDisc 61.89%  centreAbove 61.74%  fullDisc 55.97%  darkGap 346.17 h
+window 2033-01-01 + 365 d (n=52560): meanDisc 63.21%  anyDisc 69.36%  halfDisc 63.29%  centreAbove 63.22%  fullDisc 56.78%  darkGap 346.83 h
+window 2034-01-01 + 365 d (n=52560): meanDisc 61.77%  anyDisc 67.61%  halfDisc 61.86%  centreAbove 61.79%  fullDisc 56.05%  darkGap 332.50 h
+window 2035-01-01 + 365 d (n=52560): meanDisc 62.39%  anyDisc 68.56%  halfDisc 62.09%  centreAbove 61.97%  fullDisc 57.42%  darkGap 345.00 h
+window 2036-01-01 + 366 d (n=52704): meanDisc 63.53%  anyDisc 69.06%  halfDisc 63.90%  centreAbove 63.84%  fullDisc 57.38%  darkGap 345.33 h
+window 2037-01-01 + 365 d (n=52560): meanDisc 63.02%  anyDisc 69.15%  halfDisc 63.01%  centreAbove 62.95%  fullDisc 56.43%  darkGap 343.17 h
+window 2038-01-01 + 365 d (n=52560): meanDisc 64.52%  anyDisc 70.92%  halfDisc 64.20%  centreAbove 64.14%  fullDisc 58.92%  darkGap 338.00 h
+window 2039-01-01 + 365 d (n=52560): meanDisc 63.49%  anyDisc 68.85%  halfDisc 63.61%  centreAbove 63.51%  fullDisc 58.23%  darkGap 347.00 h
+window 2023-01-01 + 6575 d (n=946800): meanDisc 63.78%  anyDisc 69.61%  halfDisc 63.81%  centreAbove 63.73%  fullDisc 57.99%  darkGap 347.00 h

@@ -472,7 +472,7 @@ export function Hero(props: HeroProps) {
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-5">
             <StatCell value={stats.siteCount ? String(stats.siteCount) : '—'} label="sites" note="Each coordinate cites its published source." onClick={onOpenBoard} />
             <StatCell value={String(stats.lastYear - stats.firstYear + 1)} unit="yr" label="of Sun and Earth positions" note={`Hourly, ${stats.firstYear}–${stats.lastYear}, cached from JPL Horizons. Landing dates from ${stats.firstPickDate} to ${stats.lastPickDate}.`} />
-            <StatCell value={stats.skylineCount === null ? '—' : String(stats.skylineCount)} label="terrain skylines" note="Site horizons built from LOLA elevation data, grades B and C." />
+            <StatCell value={stats.skylineCount === null ? '—' : String(stats.skylineCount)} label="sites with terrain skylines" note="Site horizons built from LOLA elevation data, grades B and C." />
             <StatCell
               value={stats.directionMaxDeg === null ? '—' : stats.directionMaxDeg.toFixed(5)}
               unit="°"
