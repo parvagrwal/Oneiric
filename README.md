@@ -8,7 +8,11 @@ At de Gerlache Rim 2, a 21-day slip flips the verdict from GO to NO-GO — sunli
 
 ![The 3D Moon view: every site on the globe, Sun and Earth pointers, and the slip-tolerance headline](docs/screenshots/hero.png)
 
+&nbsp;
+
 ![One scenario card: the stay timeline, the six metrics, and the Window Finder matrix below](docs/screenshots/scenario.png)
+
+&nbsp;
 
 ![The south-polar map: the 33 library sites and the Artemis III candidate region outlines](docs/screenshots/map.png)
 
