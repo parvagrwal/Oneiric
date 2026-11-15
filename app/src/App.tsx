@@ -17,7 +17,7 @@ import {
 } from './blocking-ui.ts';
 import { STATION_CHOICES, earthLinkSentence, earthLinkSummary, stationById } from './earth-link-ui.ts';
 import { EXPLORER_SCENES, applyScene, nextScene, sceneAt } from './explorer.ts';
-import { hillshadeState } from './hillshade.ts';
+import { hillshadeLayer, hillshadeState } from './hillshade.ts';
 import type { HillshadeManifest, HillshadeState } from './hillshade.ts';
 import type { ChangeEvent, FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
@@ -636,8 +636,7 @@ function App() {
   }, [skylinesReady, skylineIndex, skylinePayloads]);
 
   // The static south-polar hillshade, when the build shipped one. The manifest loads from
-  // data/basemap/basemap.json; the picture itself is not drawn on the map yet, so the note under the
-  // map says what shipped and that the map still shows the online tiles.
+  // data/basemap/basemap.json; the picture is drawn under the online tiles and shows when they fail to load.
   const [basemap, setBasemap] = useState<HillshadeState>({ kind: 'unavailable', reason: 'loading' });
   useEffect(() => {
     let cancelled = false;
@@ -2314,11 +2313,12 @@ function App() {
                 skylineGrades={skylineGrades}
                 onPickSite={selectSiteIntoActiveCard}
                 blockingPoints={activeBlockingPoints}
+                hillshade={hillshadeLayer(basemap)}
               />
             </Suspense>
             <p className="map-note">
               {basemap.kind === 'available'
-                ? `Static hillshade shipped with this build: ${basemap.manifest.product}, ${basemap.manifest.sourcePixelM} m per pixel, built ${basemap.manifest.builtUtc.slice(0, 10)}. The map still shows the Moon Trek tiles; the shipped picture is not drawn yet.`
+                ? `Static hillshade under the Moon Trek tiles: ${basemap.manifest.product}, ${basemap.manifest.sourcePixelM} m per pixel, built ${basemap.manifest.builtUtc.slice(0, 10)}. The tiles cover it while they load; you see it when they fail.`
                 : basemap.reason}
             </p>
             </motion.div>

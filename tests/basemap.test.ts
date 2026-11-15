@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { basemapManifest, encodeGrayPng, BASEMAP_DIR, HILLSHADE, MANIFEST_FILE, IMAGE_EXTENT_M } from '../pipeline/build-basemap.ts';
-import { hillshadeCaption, hillshadeResolutionM, hillshadeState, hillshadeTiles, type HillshadeManifest } from '../app/src/hillshade.ts';
+import { hillshadeCaption, hillshadeLayer, hillshadeResolutionM, hillshadeState, hillshadeTiles, type HillshadeManifest } from '../app/src/hillshade.ts';
 
 const GOOD: HillshadeManifest = {
   image: 'south-pole-hillshade.png',
@@ -111,6 +111,18 @@ describe('the PNG encoder', () => {
 });
 
 describe('this checkout', () => {
+  it('gives the map the picture URL and extent when a manifest is shipped', () => {
+    const state = hillshadeState(GOOD, 'https://example.test/repo/');
+    expect(hillshadeLayer(state)).toEqual({
+      url: 'https://example.test/repo/data/basemap/south-pole-hillshade.png',
+      extent: IMAGE_EXTENT_M,
+    });
+  });
+
+  it('gives the map nothing to draw when no manifest is shipped', () => {
+    expect(hillshadeLayer(hillshadeState(null, 'https://example.test/'))).toBeNull();
+  });
+
   it('a shipped basemap manifest describes an available basemap with its image present', () => {
     // The hillshade raster is gitignored, so checkouts differ: this checkout may or may not
     // hold it, and the manifest may or may not be built yet. What must never happen is a

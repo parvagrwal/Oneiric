@@ -78,7 +78,7 @@ class GlobeBoundary extends Component<{ onError: () => void; children: ReactNode
 }
 
 const HUD_BUTTON =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-line-strong bg-raised px-3 font-mono text-xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-signal hover:bg-hover sm:min-h-9';
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-line-strong bg-raised px-3 font-sans text-xs uppercase tracking-[0.04em] text-ink transition-colors hover:border-signal hover:bg-hover sm:min-h-9';
 
 function SlipHook({ result, site, statusMessage }: { result: ScenarioResult | undefined; site: SiteDefinition | undefined; statusMessage: string | null }) {
   const where = site ? site.name : 'loading site';
@@ -146,15 +146,15 @@ function SlipHook({ result, site, statusMessage }: { result: ScenarioResult | un
 function StatCell({ value, unit, label, note, onClick, className = '' }: { value: string; unit?: string; label: string; note: string; onClick?: () => void; className?: string }) {
   const body = (
     <>
-      <span className="block font-mono text-xl font-semibold tabular-nums text-ink sm:text-[1.375rem]">
+      <span className="block font-sans text-xl font-semibold tabular-nums text-ink sm:text-[1.375rem]">
         {value}
         {unit && <span className="ml-1 text-xs font-medium text-dim">{unit}</span>}
       </span>
-      <span className="mt-0.5 block font-mono text-2xs uppercase tracking-[0.1em] text-dim">{label}</span>
+      <span className="mt-0.5 block font-sans text-2xs uppercase tracking-[0.1em] text-dim">{label}</span>
       <span className="mt-1 block text-xs leading-snug text-faint">{note}</span>
     </>
   );
-  const base = `min-h-11 bg-panel/90 px-3 py-2.5 text-left ${className}`;
+  const base = `min-h-11 bg-panel/90 px-4 py-3 text-left ${className}`;
   if (!onClick) return <div className={base}>{body}</div>;
   return (
     <motion.button type="button" className={`${base} transition-colors hover:bg-hover`} whileTap={{ scale: 0.98 }} onClick={onClick}>
@@ -258,7 +258,7 @@ export function Hero(props: HeroProps) {
     <section
       id="globe"
       aria-label="Moon view and current scenario"
-      className={`hero-backdrop relative isolate overflow-hidden border-b border-line ${is3d ? 'lg:h-[calc(100svh-var(--topbar-h))] lg:min-h-[680px]' : ''}`}
+      className={`hero-backdrop relative isolate overflow-hidden border-b border-line ${is3d ? 'lg:flex lg:min-h-[max(680px,calc(100svh-var(--topbar-h)))] lg:flex-col' : ''}`}
     >
       {/* Globe stage */}
       <div
@@ -313,10 +313,10 @@ export function Hero(props: HeroProps) {
       </div>
 
       {/* HUD */}
-      <div className={`pointer-events-none relative z-10 grid gap-3 p-3 sm:p-4 lg:grid-cols-[minmax(0,450px)_minmax(0,1fr)_minmax(0,340px)] lg:gap-4 lg:p-5 ${is3d ? 'lg:absolute lg:inset-0 lg:grid-rows-[minmax(0,1fr)_auto]' : ''}`}>
+      <div className={`pointer-events-none relative z-10 grid gap-4 p-4 sm:p-5 lg:grid-cols-[minmax(0,450px)_minmax(0,1fr)_minmax(0,340px)] lg:gap-5 lg:p-6 ${is3d ? 'lg:flex-1 lg:grid-rows-[minmax(0,1fr)_auto]' : ''}`}>
         {/* Hook */}
         <motion.div
-          className="pointer-events-auto self-start rounded-sm lg:border lg:border-line lg:bg-void/85 lg:p-4 lg:backdrop-blur-md"
+          className="pointer-events-auto self-start rounded-sm lg:border lg:border-line lg:bg-void/85 lg:p-5 lg:backdrop-blur-md"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -325,13 +325,13 @@ export function Hero(props: HeroProps) {
           <h1 className="mt-5 max-w-[26ch] font-display text-2xl font-semibold leading-tight tracking-tight text-ink">
             Compare lunar landing sites and dates before a slip flips the verdict.
           </h1>
-          <p className="mt-2 max-w-[52ch] text-base text-dim">
+          <p className="mt-2 max-w-[52ch] text-base leading-relaxed text-dim">
             Sunlight for power and a line of sight to Earth, from JPL Horizons positions measured against each site's horizon: LOLA terrain skylines at the south-polar sites, a smooth sphere elsewhere. Every figure names its source and its fidelity grade.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <motion.button
               type="button"
-              className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-ink px-4 font-mono text-sm font-semibold uppercase tracking-[0.06em] text-void hover:bg-white"
+              className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-ink px-4 font-sans text-sm font-semibold uppercase tracking-[0.03em] text-void hover:bg-white"
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.97 }}
               onClick={onOpenBoard}
@@ -340,7 +340,7 @@ export function Hero(props: HeroProps) {
             </motion.button>
             <motion.button
               type="button"
-              className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-line-strong bg-raised/90 px-4 font-mono text-sm uppercase tracking-[0.06em] text-ink hover:border-signal"
+              className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-line-strong bg-raised/90 px-4 font-sans text-sm uppercase tracking-[0.03em] text-ink hover:border-signal"
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.97 }}
               aria-pressed={tourRunning}
@@ -365,7 +365,7 @@ export function Hero(props: HeroProps) {
               <span>Scenario</span>
               <span>{result ? `${result.preset.name} · ${result.preset.stayDays} d` : 'computing'}</span>
             </div>
-            <div className="flex items-start justify-between gap-3 p-3">
+            <div className="flex items-start justify-between gap-3 p-4">
               <div className="min-w-0">
                 <p className="font-display text-lg font-semibold leading-tight text-ink">{activeSite?.name ?? 'Loading site…'}</p>
                 {activeSite && (
@@ -376,10 +376,10 @@ export function Hero(props: HeroProps) {
               {result && <VerdictBadge verdict={result.verdict.verdict} grade={result.verdict.grade} compact />}
             </div>
             {result ? (
-              <div className="border-t border-line p-3">
+              <div className="border-t border-line p-4">
                 <StatusLine result={result} scrubMinutes={clampedScrub} />
-                <p className="mt-2.5 text-base leading-snug text-ink sm:text-sm">{result.verdict.rule}</p>
-                <p className="mt-1.5 font-mono text-2xs leading-relaxed text-faint">
+                <p className="mt-2.5 text-base leading-normal text-ink sm:text-sm">{result.verdict.rule}</p>
+                <p className="mt-1.5 font-sans text-2xs leading-relaxed text-faint">
                   {result.verdict.presetLabel} · {provenanceFooter(result.verdict.grade, result.verdict.terrain)}
                 </p>
               </div>
@@ -395,7 +395,7 @@ export function Hero(props: HeroProps) {
               <span>View</span>
               <span>{is3d ? 'drag to rotate' : 'static chart'}</span>
             </div>
-            <div className="p-3">
+            <div className="p-4">
               {is3d ? (
                 <>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -414,7 +414,7 @@ export function Hero(props: HeroProps) {
                   The 3D Moon needs WebGL, which is not available here. The chart, the compare board, and every figure work without it.
                 </p>
               )}
-              <ul className="mt-2.5 grid gap-1 font-mono text-2xs text-dim">
+              <ul className="mt-2.5 grid gap-1 font-sans text-2xs text-dim">
                 {GRADE_LEGEND.map((entry) => (
                   <li key={entry.grade} className="flex items-center gap-2">
                     <i className="inline-block size-2 rounded-full" style={{ background: gradeColor(entry.grade) }} aria-hidden="true" />
@@ -440,12 +440,12 @@ export function Hero(props: HeroProps) {
 
         {/* Time and numbers */}
         <motion.div
-          className="pointer-events-auto flex flex-col gap-2 lg:col-span-3"
+          className="pointer-events-auto flex flex-col gap-3 lg:col-span-3"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="hud-panel flex flex-wrap items-center gap-x-3 gap-y-1 px-2 py-1.5">
+          <div className="hud-panel flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2">
             <button
               type="button"
               className={`${HUD_BUTTON} min-w-[5.5rem]`}

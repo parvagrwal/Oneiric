@@ -24,7 +24,7 @@ main > :not(#globe) {
 }
 
 main > .scenario-bar {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 #board,
@@ -68,11 +68,11 @@ main > .scenario-bar {
   color: var(--color-ink);
   cursor: pointer;
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 800;
   gap: 8px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   min-height: 44px;
   padding: 0 14px 0 4px;
 }
@@ -97,7 +97,7 @@ main > .scenario-bar {
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  padding: 4px 14px;
+  padding: 6px 16px;
 }
 
 .telemetry-cell:first-child {
@@ -106,10 +106,10 @@ main > .scenario-bar {
 
 .telemetry-label {
   color: var(--color-faint);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   line-height: 1.2;
   text-transform: uppercase;
 }
@@ -118,7 +118,7 @@ main > .scenario-bar {
   align-items: baseline;
   color: var(--color-ink);
   display: flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
@@ -163,11 +163,11 @@ main > .scenario-bar {
   border-radius: var(--radius-sm);
   color: var(--color-dim);
   cursor: pointer;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 12px;
   letter-spacing: 0.06em;
   min-height: 36px;
-  padding: 0 10px;
+  padding: 0 12px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -203,10 +203,10 @@ main > .scenario-bar {
 
 .hud-eyebrow {
   color: var(--color-signal);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   margin: 0 0 6px;
   text-transform: uppercase;
 }
@@ -222,13 +222,13 @@ main > .scenario-bar {
   border-bottom: 1px solid var(--color-line);
   color: var(--color-faint);
   display: flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 600;
   gap: 12px;
   justify-content: space-between;
-  letter-spacing: 0.14em;
-  padding: 6px 12px;
+  letter-spacing: 0.12em;
+  padding: 8px 14px;
   text-transform: uppercase;
 }
 
@@ -244,7 +244,7 @@ main > .scenario-bar {
   border-radius: var(--radius-sm);
   color: var(--color-dim);
   display: inline-flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
   gap: 8px;
   line-height: 1.4;
@@ -306,10 +306,11 @@ main > .scenario-bar {
   background: var(--color-raised);
   column-gap: 6px;
   display: grid;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
   grid-template-columns: auto auto 1fr;
   outline: 1px solid var(--color-line);
-  padding: 6px 9px;
+  padding: 8px 10px;
 }
 
 .status-item i {
@@ -395,7 +396,7 @@ main > .scenario-bar {
   color: var(--color-signal);
   display: flex;
   flex-wrap: wrap;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 11px;
   gap: 4px 16px;
   justify-content: space-between;
@@ -458,11 +459,14 @@ main > .scenario-bar {
 .metric dd,
 .clock-card strong,
 .slip-banner strong,
-.coordinates,
-.preset-note,
-.horizons-chip {
+.coordinates {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+}
+
+.preset-note,
+.horizons-chip {
+  font-family: var(--font-sans);
 }
 
 .decision-rule {

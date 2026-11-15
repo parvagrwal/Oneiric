@@ -7,7 +7,9 @@ import { useEffect, useRef, useState } from 'react';
 import OlMap from 'ol/Map.js';
 import View from 'ol/View.js';
 import TileLayer from 'ol/layer/Tile.js';
+import ImageLayer from 'ol/layer/Image.js';
 import VectorLayer from 'ol/layer/Vector.js';
+import Static from 'ol/source/ImageStatic.js';
 import VectorSource from 'ol/source/Vector.js';
 import WMTS from 'ol/source/WMTS.js';
 import WMTSTileGrid from 'ol/tilegrid/WMTS.js';
@@ -113,9 +115,15 @@ export interface MapViewProps {
   onPickSite: (siteId: string) => void;
   /** Ridges to mark, from the card's blocked spans. Empty when nothing is open. */
   blockingPoints?: MapPoint[];
+  /**
+   * The static hillshade picture to draw under the online tiles: its URL and its ground extent in the
+   * map's stereographic metres. Null when no picture shipped. The tiles are opaque, so the picture only
+   * shows when they fail to load — it is the outage fallback, not a second basemap.
+   */
+  hillshade?: { url: string; extent: [number, number, number, number] } | null;
 }
 
-export function MapView({ sites, skylineGrades, onPickSite, blockingPoints = [] }: MapViewProps) {
+export function MapView({ sites, skylineGrades, onPickSite, blockingPoints = [], hillshade = null }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<OlMap | null>(null);
   const [selected, setSelected] = useState<SiteDefinition | null>(null);
@@ -124,6 +132,24 @@ export function MapView({ sites, skylineGrades, onPickSite, blockingPoints = [] 
   // State, not a ref, so the drawing effect below re-runs once the map exists: on the first render the source is
   // null, and a ref would leave the first set of points undrawn until the next change.
   const [mapReady, setMapReady] = useState(false);
+  // The static hillshade under the online tiles. The manifest loads after the map is built, so the layer is
+  // added here, not at construction — inserted first, so it sits below the opaque tiles and only shows when
+  // they fail to load. The cleanup removes it when the picture changes or the map unmounts.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || !hillshade) return undefined;
+    const layer = new ImageLayer({
+      source: new Static({
+        url: hillshade.url,
+        imageExtent: hillshade.extent,
+        projection,
+      }),
+    });
+    map.getLayers().insertAt(0, layer);
+    return () => {
+      map.removeLayer(layer);
+    };
+  }, [hillshade, mapReady]);
   // The points are drawn after the map exists and again whenever the card's open span changes. A point with no
   // recorded terrain never reaches here, so a dashed ring always means a measured ridge.
   useEffect(() => {
@@ -283,7 +309,8 @@ export function MapView({ sites, skylineGrades, onPickSite, blockingPoints = [] 
         </div>
         <p className="map-caption">
           Stereographic projection of the south pole (R = 1,737.4 km). Basemap: NASA Moon Trek, LRO LOLA Shade,
-          75° S limit — online only, never used in a calculation. Region outlines: USGS Artemis III candidate
+          75° S limit — online only, never used in a calculation. Under the tiles, the static LOLA hillshade
+          (80 m, 80° S limit) shows when the tiles fail to load. Region outlines: USGS Artemis III candidate
           regions (simplified). Markers: library sites, fill = terrain grade (cyan B, yellow C, grey smooth sphere).
         </p>
       </div>

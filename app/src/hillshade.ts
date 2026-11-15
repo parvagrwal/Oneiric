@@ -62,6 +62,12 @@ export function hillshadeState(manifest: HillshadeManifest | null, baseUri: stri
   return { kind: 'available', manifest, url: new URL(`data/basemap/${manifest.image}`, baseUri).toString() };
 }
 
+/** The layer the map draws for a hillshade state: the picture URL and its ground extent, or null when there is no picture to draw. */
+export function hillshadeLayer(state: HillshadeState): { url: string; extent: [number, number, number, number] } | null {
+  if (state.kind !== 'available') return null;
+  return { url: state.url, extent: state.manifest.extentM };
+}
+
 /** Native ground resolution of the shipped image, metres per pixel. Printed next to the picture. */
 export function hillshadeResolutionM(manifest: HillshadeManifest): number {
   const [minX, , maxX] = manifest.extentM;
