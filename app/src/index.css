@@ -1,26 +1,177 @@
-:root {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #111b2c;
-  background: #f4f7fb;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*
+ * Tailwind's theme and utilities, without its global reset: the existing views keep the browser defaults they
+ * were laid out against, and the new mission-control regions get a scoped reset in the base layer below.
+ * Order: theme, base, the existing view styles plus the mission-control layer, then utilities on top.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import './App.css' layer(components);
+@import './hud.css' layer(components);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/*
+ * Design tokens. One dark, dense, terminal-style system for the whole interface.
+ * Verdict colours are the Okabe–Ito palette and always carry a text label.
+ */
+@theme {
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Surfaces, darkest first */
+  --color-void: #05070b;
+  --color-base: #090c12;
+  --color-panel: #0d1118;
+  --color-raised: #121821;
+  --color-hover: #18202b;
+
+  /* Lines */
+  --color-line: #1d2531;
+  --color-line-strong: #2d3948;
+
+  /* Text */
+  --color-ink: #e6edf3;
+  --color-dim: #a3afbc;
+  --color-faint: #7f8b98;
+
+  /* Signals */
+  --color-signal: #5fd4e6;
+  --color-sun: #f7c948;
+  --color-earth: #5fd4e6;
+  --color-ridge: #d9bf8c;
+  --color-alert: #ff8a5c;
+
+  /* Verdicts: exact Okabe–Ito values */
+  --color-go: #009e73;
+  --color-marginal: #e69f00;
+  --color-nogo: #d55e00;
+
+  /* Type scale */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-hero: clamp(3.5rem, 9vw, 7.5rem);
+
+  /* Spacing: 4 px grid (Tailwind's --spacing) */
+  --spacing: 0.25rem;
+
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html {
-  min-width: 320px;
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    background: var(--color-void);
+    min-width: 320px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 64px;
+  }
+
+  body {
+    background: var(--color-void);
+    color: var(--color-ink);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+    min-width: 320px;
+    overflow-x: clip;
+  }
+
+  #root {
+    min-height: 100svh;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-signal) 35%, transparent);
+    color: #fff;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  button,
+  select,
+  input[type='range'] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled),
+  select:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Scoped reset for the regions styled with utilities: the Moon view, the telemetry strip, the tour caption. */
+  :where(#globe, .topbar, .tour-overlay) :where(*, ::before, ::after) {
+    border: 0 solid;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :where(#globe, .topbar, .tour-overlay) :where(h1, h2, p) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  :where(#globe, .topbar, .tour-overlay) :where(button) {
+    background: transparent;
+    color: inherit;
+  }
+
+  :where(#globe, .topbar, .tour-overlay) :where(ul) {
+    list-style: none;
+  }
+
+  :where(#globe, .topbar, .tour-overlay) :where(svg, canvas) {
+    display: block;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
+/* Thin scrollbars that match the surfaces */
+* {
+  scrollbar-color: var(--color-line-strong) transparent;
+  scrollbar-width: thin;
 }
 
-#root {
-  min-height: 100svh;
-}
-
-::selection {
-  background: #c9f0f2;
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }

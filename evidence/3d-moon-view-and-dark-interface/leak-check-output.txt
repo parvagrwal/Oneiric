@@ -1,0 +1,12 @@
+Leak check over public files (README.md, app/src/, engine/, pipeline/, scripts/, docs/, evidence/).
+
+1 hit, false positive, reviewed by hand (same as before):
+- pipeline/find-artemis-points.ts:5 contains the published USGS ScienceBase DOI suffix for the Artemis III region navigational grids. It is part of the cited source identifier and stays.
+
+Zero other hits across README.md, app/src/, engine/, pipeline/, scripts/, docs/, and evidence/. No internal term leaks into any public file.
+Command: grep -rEn "B[0-9]+\.[0-9]+|S[0-9]+|V[0-9]+|P[0-9]+|G[0-9]+|D-2026|C-[0-9]+|F[0-9]+|ship point|Gate [0-9]|tracker|PRD|AGENT\.md|decision log|conflict register|kill gate|timebox|friction|ticked|unticked|not run|in chat" README.md app/src/ engine/ pipeline/ functions/ scripts/ docs/ evidence/ --include="*.md" --include="*.ts" --include="*.tsx" --include="*.sh"
+
+The same pattern was also run over the file types the command above does not cover: app/src/*.css, app/index.html, app/vite.config.ts, app/scripts/, the three new test files, and this folder's command.txt, receipt.json, and output.txt.
+4 hits, all false positives, reviewed by hand:
+- receipt.json: the last three characters of the Okabe-Ito colour value for MARGINAL.
+- output.txt: three build file names whose generated hash happens to contain a matching letter and digit.

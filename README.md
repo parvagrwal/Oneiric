@@ -60,11 +60,11 @@ The tool replays six recorded facts with the same engine the app uses. Tolerance
 | Folder | What it holds |
 |---|---|
 | `engine/` | Pure TypeScript calculation: site frame, interpolation of the hourly table, terrain skyline builder, skyline lookup, sunlit fraction, Earth visibility, time series, stay metrics, rolling prefix-sum window evaluation, verdict rules, and slip tolerance. It imports nothing from Node or the browser, so one copy runs in the pipeline and in the Web Worker. |
-| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only), and the Method and checks drawer that renders `validation.json`. |
+| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only), and the Method and checks drawer that renders `validation.json`. The first screen is a 3D Moon view (React Three Fiber) with a marker for each of the 33 sites, Sun and Earth pointers from the same cached table at the scrubbed time, a south-pole camera preset, and a 30-second scripted tour; it is navigation only and changes no verdict, metric, or grade. Without WebGL the app shows a static site chart and the Compare board instead. |
 | `pipeline/` | Node scripts that fetch Horizons responses, build the binary tables, read the elevation rasters, build the skylines, and run the checks. |
 | `docs/` | Engineering notes, including the worked example of a 21-day slip (`docs/worked-case.md`). |
 | `fixtures/` | Raw Horizons responses, saved as received. |
-| `tests/` | Automated unit and integration tests (136 tests across 17 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
+| `tests/` | Automated unit and integration tests (156 tests across 20 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
 | `evidence/` | For each finished step: the command, the raw output, and a saved receipt. |
 
 ## How do you run it locally?
@@ -74,7 +74,7 @@ You need Node 20 or later. The Horizons responses and the 24 polar skylines at 2
 ```bash
 npm ci
 npm run build:ephemeris   # raw responses -> app/public/data/ephem/<year>.bin
-npm test                  # 136 tests across 17 test files
+npm test                  # 156 tests across 20 test files
 npm run typecheck
 npm run validate          # direction, skyline, stored-skyline and hindcast checks -> app/public/data/validation.json
 npm run mutation-check    # changes 37 engine elements one at a time; every mutant must fail a test
@@ -134,6 +134,7 @@ npm run validate          # runs direction, synthetic terrain, orientation, and 
 | Artemis III candidate regions (Oct 2024 list) | Illustrative representative points | Each point is labelled **illustrative point, not a NASA-selected site** |
 | Verdict presets (sortie, lander, one-year stay) | Illustrative rules | Editable in the Scenario bar and labelled **illustrative, not agency requirements** |
 | Mission hindcasts | Replay of six recorded events | NASA catalogue, Firefly mission log, ISRO statements; all six pass, tolerances fixed before the run (`app/public/data/validation.json`) |
+| 3D Moon view picture | Online NASA imagery only | NASA Scientific Visualization Studio CGI Moon Kit colour map (2K), loaded at runtime; if it does not load, the globe is a plain shaded sphere. Shown for orientation and never used in any calculation |
 | South-polar map basemap | Online NASA imagery only | Moon Trek `LRO_LOLA_Shade_SPole75_30mp_v04` (south pole); loads only with network access and is never used in any calculation |
 | Multi-height skylines beyond 2 m | Not built yet | 2 m only; other heights run the smooth sphere at grade D, labelled as such |
 
@@ -145,12 +146,15 @@ npm run validate          # runs direction, synthetic terrain, orientation, and 
 - The static hillshade the map was planned to ship could not be produced in this build environment: the LOLA rasters stay gitignored and were not reachable. The map therefore shows the Moon Trek LOLA shaded-relief tiles in the south-pole stereographic projection — imagery from the same source rasters — and the basemap needs network access; the site markers, region outlines and pole marker render regardless.
 - The cached Horizons check shown on a card covers that one site only, from the cached site query (three sites use a 500-epoch query, the other thirty a 24-epoch query spread across 2023–2040); a site without a cached query would say it is not cached, and no number is invented for it.
 - Mission hindcasts replay recorded events; they do not predict future missions, and the presets are illustrative, not agency requirements.
+- The 3D Moon view is for orientation. Its picture is a 2K map that its source describes as made for appearance rather than measurement, so close to the pole it is blurred; sites a few kilometres apart sit almost on top of each other at globe scale, so use the site list or the south-polar map to pick between them. The Sun and Earth pointers show directions from the Moon's centre, not from a site. The 3D view has been checked only without a browser (a scene test with no graphics card, `evidence/3d-moon-view-and-dark-interface/`); how it looks and how smoothly it runs on a real device has not been recorded as evidence yet.
 
 ## Data, tools, and licences
 
 - JPL Horizons API (no key required); raw responses are in `fixtures/horizons/`.
 - LOLA south-pole elevation rasters from NASA's Planetary Geodesy Data Archive (product 90, "A New View of the Lunar South Pole from LOLA").
 - Artemis III 9 candidate region outlines from USGS Astrogeology ScienceBase (`data/A3_9regions-lonlat-simplified.geojson`).
+- Moon picture on the 3D view: NASA's Scientific Visualization Studio, CGI Moon Kit (<https://svs.gsfc.nasa.gov/4720/>), 2K colour map built from Lunar Reconnaissance Orbiter Camera mosaics, loaded at runtime from <https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg> (page read 2026-11-15). The file is not stored in this repository.
 - `geotiff` (npm) reads GeoTIFF windows in the offline Node pipeline; React, TypeScript, and Vite power the static browser client.
+- Interface libraries, all open source and free: Tailwind CSS, Framer Motion, three.js with React Three Fiber and drei (MIT); OpenLayers (BSD-2-Clause); Space Grotesk, Inter, and JetBrains Mono fonts (SIL Open Font License), bundled with the build through Fontsource so no font server is contacted.
 - AI tools were used for planning, code, and documentation; the full tool list will appear in the submission AI disclosure. No AI model runs in the calculation engine or browser application.
 - Licences: Apache-2.0 for code (`LICENSE`); CC0 for derived data files (`DATA-LICENSE`).

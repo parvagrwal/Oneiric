@@ -21,6 +21,7 @@ import { register } from 'ol/proj/proj4.js';
 import { get as getProjection, transform } from 'ol/proj.js';
 import 'ol/ol.css';
 import type { SiteDefinition } from './scenario.ts';
+import { gradeColor } from './grade-style.ts';
 import { formatCoordinates } from './sites.ts';
 import type { Grade } from '../../engine/index.ts';
 
@@ -32,12 +33,6 @@ projection.setExtent([-457440, -457440, 457440, 457440]);
 
 const TILE_RESOLUTIONS = [8562, 4281, 2140, 1070, 535.1, 267.6, 133.8];
 const MATRIX_IDS = ['0', '1', '2', '3', '4', '5', '6'];
-
-function gradeColor(grade: Grade | undefined): string {
-  if (grade === 'B') return '#42c7d7';
-  if (grade === 'C') return '#f7c948';
-  return '#b9c4d4';
-}
 
 function siteStyle(grade: Grade | undefined): Style[] {
   return [
@@ -64,8 +59,8 @@ const SITE_LABEL_STYLE = (label: string): Style =>
   });
 
 const REGION_STYLE = new Style({
-  stroke: new Stroke({ color: 'rgba(66, 199, 215, 0.9)', width: 1.6 }),
-  fill: new Fill({ color: 'rgba(66, 199, 215, 0.14)' }),
+  stroke: new Stroke({ color: 'rgba(95, 212, 230, 0.9)', width: 1.6 }),
+  fill: new Fill({ color: 'rgba(95, 212, 230, 0.14)' }),
 });
 
 const REGION_LABEL_STYLE = (label: string): Style =>
@@ -73,7 +68,7 @@ const REGION_LABEL_STYLE = (label: string): Style =>
     text: new Text({
       text: label,
       font: '700 9px ui-sans-serif, system-ui, sans-serif',
-      fill: new Fill({ color: 'rgba(66, 199, 215, 0.95)' }),
+      fill: new Fill({ color: 'rgba(95, 212, 230, 0.95)' }),
       stroke: new Stroke({ color: 'rgba(14, 24, 41, 0.9)', width: 2 }),
       overflow: true,
     }),

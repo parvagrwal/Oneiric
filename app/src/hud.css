@@ -1,0 +1,561 @@
+/* Mission-control layer: telemetry strip, hero HUD, status line, tour caption, and the dark-theme overrides
+   for the existing views. Everything here is presentation; no figure is computed in CSS or in the views. */
+
+:root {
+  --topbar-h: 52px;
+  --page-w: min(1480px, calc(100% - 32px));
+}
+
+/* ---------- Page frame ---------- */
+
+.topbar,
+main,
+.site-footer {
+  width: 100%;
+}
+
+main {
+  padding: 0 0 56px;
+}
+
+main > :not(#globe) {
+  margin-inline: auto;
+  width: var(--page-w);
+}
+
+main > .scenario-bar {
+  margin-top: 16px;
+}
+
+#board,
+#windows,
+#map {
+  scroll-margin-top: calc(var(--topbar-h) + 12px);
+}
+
+.app-shell h1,
+.app-shell h2,
+.app-shell h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.site-footer {
+  margin-inline: auto;
+  width: var(--page-w);
+}
+
+/* ---------- Telemetry strip ---------- */
+
+.topbar {
+  align-items: stretch;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--color-void) 86%, transparent);
+  border-bottom: 1px solid var(--color-line);
+  display: flex;
+  gap: 0;
+  min-height: var(--topbar-h);
+  padding-inline: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.wordmark {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--color-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 800;
+  gap: 8px;
+  letter-spacing: 0.14em;
+  min-height: 44px;
+  padding: 0 14px 0 4px;
+}
+
+.wordmark span {
+  color: var(--color-signal);
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+.telemetry {
+  border-left: 1px solid var(--color-line);
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.telemetry-cell {
+  border-right: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 4px 14px;
+}
+
+.telemetry-cell:first-child {
+  flex: 0 1 auto;
+}
+
+.telemetry-label {
+  color: var(--color-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.telemetry-value {
+  align-items: baseline;
+  color: var(--color-ink);
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  gap: 6px;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.telemetry-value em {
+  color: var(--color-dim);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.telemetry-value.is-sun {
+  color: var(--color-sun);
+}
+
+.telemetry-value.is-earth {
+  color: var(--color-earth);
+}
+
+.telemetry-verdict {
+  border-right: 0;
+  justify-content: center;
+}
+
+.topnav {
+  align-items: center;
+  border-left: 1px solid var(--color-line);
+  display: flex;
+  gap: 2px;
+  padding-left: 8px;
+}
+
+.topnav button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-dim);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  min-height: 36px;
+  padding: 0 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.topnav button:hover {
+  background: var(--color-raised);
+  color: var(--color-ink);
+}
+
+.topnav button.is-method {
+  border-color: var(--color-line-strong);
+  color: var(--color-ink);
+}
+
+/* ---------- Hero ---------- */
+
+.hero-backdrop {
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 31% 72%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 47% 9%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 63% 84%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 27%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 91% 61%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 22% 46%, rgba(255, 255, 255, 0.3) 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 91%, rgba(255, 255, 255, 0.3) 50%, transparent 51%),
+    radial-gradient(1px 1px at 5% 88%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 55% 38%, rgba(255, 255, 255, 0.25) 50%, transparent 51%),
+    linear-gradient(to right, rgba(95, 212, 230, 0.035) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(to bottom, rgba(95, 212, 230, 0.035) 1px, transparent 1px) 0 0 / 56px 56px,
+    radial-gradient(ellipse at 50% 45%, #0c121b 0%, var(--color-void) 68%);
+}
+
+.hud-eyebrow {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.hud-panel {
+  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--color-panel) 88%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+.hud-panel-head {
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-faint);
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  gap: 12px;
+  justify-content: space-between;
+  letter-spacing: 0.14em;
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+
+.hud-panel-head span:first-child {
+  color: var(--color-dim);
+}
+
+.hud-chip {
+  align-items: center;
+  backdrop-filter: blur(6px);
+  background: color-mix(in srgb, var(--color-void) 78%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-dim);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  gap: 8px;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 100%;
+  padding: 4px 10px;
+  text-align: center;
+}
+
+#globe .spinner,
+.topbar .spinner {
+  border-width: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+  height: 13px;
+  width: 13px;
+}
+
+.hud-chip .spinner {
+  border-width: 2px;
+  height: 12px;
+  width: 12px;
+}
+
+.hud-range {
+  accent-color: var(--color-signal);
+  min-height: 44px;
+}
+
+/* ---------- Verdict badge and status line ---------- */
+
+.verdict-badge.is-compact {
+  flex-direction: row;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 9px;
+}
+
+.verdict-badge.is-compact span {
+  font-size: 13px;
+}
+
+.verdict-badge.is-compact small {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.status-line {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.status-item {
+  align-items: baseline;
+  background: var(--color-raised);
+  column-gap: 6px;
+  display: grid;
+  font-family: var(--font-mono);
+  grid-template-columns: auto auto 1fr;
+  outline: 1px solid var(--color-line);
+  padding: 6px 9px;
+}
+
+.status-item i {
+  align-self: center;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+}
+
+.status-item.is-on i {
+  background: currentColor;
+}
+
+.status-item span {
+  color: var(--color-faint);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status-item strong {
+  color: var(--color-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-item em {
+  color: var(--color-faint);
+  font-size: 10px;
+  font-style: normal;
+  grid-column: 2 / -1;
+}
+
+.status-item.is-sun {
+  color: var(--color-sun);
+}
+
+.status-item.is-earth {
+  color: var(--color-earth);
+}
+
+.status-item.is-power {
+  color: var(--color-ridge);
+}
+
+.status-item.is-link {
+  color: var(--color-signal);
+}
+
+.status-item.is-off {
+  color: var(--color-faint);
+}
+
+.status-item.is-off strong {
+  color: var(--color-dim);
+}
+
+.scenario-card .status-line {
+  margin: 10px 0 2px;
+}
+
+/* ---------- Tour caption ---------- */
+
+.tour-overlay {
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--color-void) 90%, transparent);
+  border: 1px solid var(--color-signal);
+  border-radius: var(--radius-sm);
+  bottom: 16px;
+  left: 50%;
+  max-width: calc(100vw - 24px);
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  translate: -50% 0;
+  width: 640px;
+  z-index: 60;
+}
+
+.tour-head {
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-signal);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  gap: 4px 16px;
+  justify-content: space-between;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+
+.tour-head span:last-child {
+  color: var(--color-dim);
+}
+
+.tour-overlay p {
+  color: var(--color-ink);
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 10px 12px 12px;
+}
+
+.tour-track {
+  background: var(--color-line);
+  height: 2px;
+}
+
+.tour-track i {
+  background: var(--color-signal);
+  display: block;
+  height: 100%;
+  transform-origin: left;
+}
+
+/* ---------- Dark, dense overrides for the existing views ---------- */
+
+.scenario-bar,
+.site-panel,
+.compare-board-bar,
+.scenario-card,
+.window-finder,
+.method-panel {
+  border: 1px solid var(--color-line);
+}
+
+.scenario-card {
+  transition: border-color 0.15s ease;
+}
+
+.scenario-card:not(.is-active-slot):hover {
+  border-color: var(--color-line-strong);
+}
+
+/* The site list sticks below the telemetry strip while that strip is pinned. */
+@media (min-width: 921px) {
+  .site-panel {
+    max-height: calc(100svh - var(--topbar-h) - 24px);
+    top: calc(var(--topbar-h) + 12px);
+  }
+}
+
+.metric dd,
+.clock-card strong,
+.slip-banner strong,
+.coordinates,
+.preset-note,
+.horizons-chip {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.decision-rule {
+  border-left: 2px solid var(--color-signal);
+  font-size: 16px;
+  padding-left: 10px;
+}
+
+.play-button,
+.jump-window-btn,
+.wf-segmented button.is-active {
+  border: 1px solid var(--color-line-strong);
+}
+
+.play-button:hover,
+.jump-window-btn:hover {
+  border-color: var(--color-signal);
+}
+
+.scrub-controls input[type='range'] {
+  accent-color: var(--color-signal);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 1100px) {
+  .telemetry-cell:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .topbar {
+    flex-wrap: wrap;
+    position: static;
+  }
+
+  .topnav {
+    border-left: 0;
+    flex: 1;
+    min-width: 0;
+    justify-content: flex-end;
+    overflow-x: auto;
+    padding-left: 0;
+  }
+
+  .topnav button {
+    min-height: 44px;
+  }
+
+  .telemetry {
+    border-left: 0;
+    border-top: 1px solid var(--color-line);
+    display: grid;
+    flex: 0 0 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    order: 3;
+  }
+
+  .telemetry-cell {
+    border-bottom: 1px solid var(--color-line);
+    padding: 6px 10px;
+  }
+
+  .telemetry-cell:nth-child(2) {
+    display: flex;
+  }
+
+  .telemetry-cell:nth-child(even) {
+    border-right: 0;
+  }
+
+  .telemetry-verdict {
+    align-items: flex-start;
+    border-bottom: 0;
+    grid-column: 1 / -1;
+  }
+
+  :root {
+    --page-w: calc(100% - 20px);
+  }
+}
+
+@media (max-width: 600px) {
+  .topnav button:not(.is-method) {
+    padding: 0 8px;
+  }
+
+  .status-line {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tour-head span:last-child {
+    display: none;
+  }
+}

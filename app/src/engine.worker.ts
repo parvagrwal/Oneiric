@@ -1,4 +1,4 @@
-import { ROW, type EphemTable, tableFromBuffers } from '../../engine/index.ts';
+import { ROW, type EphemTable, ephemAt, tableFromBuffers, unit } from '../../engine/index.ts';
 import {
   SiteSeriesCache,
   calculateScenario,
@@ -138,6 +138,17 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       post({ type: 'export-series-error', requestId: request.requestId, message });
+    }
+    return;
+  }
+
+  if (request.type === 'directions') {
+    // Presentation only: the same ephemeris lookup the engine uses, returned as directions for the 3D view.
+    try {
+      const { sun, earth } = ephemAt(liveTable, request.tMs);
+      post({ type: 'directions-result', requestId: request.requestId, tMs: request.tMs, sun: unit(sun), earth: unit(earth) });
+    } catch {
+      post({ type: 'directions-result', requestId: request.requestId, tMs: request.tMs, sun: null, earth: null });
     }
     return;
   }

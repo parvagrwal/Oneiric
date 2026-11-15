@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { DEG, MIN_MS } from '../../engine/index.ts';
 import type { ScenarioResult, TrackPoint } from './scenario.ts';
-
-function nearestTrackPoint(track: TrackPoint[], targetMs: number): TrackPoint | undefined {
-  return track.reduce<TrackPoint | undefined>((nearest, point) => {
-    if (!nearest) return point;
-    return Math.abs(point.tMs - targetMs) < Math.abs(nearest.tMs - targetMs) ? point : nearest;
-  }, undefined);
-}
+import { nearestTrackPoint } from './status.ts';
 
 function centeredAzimuth(az: number, center: number): number {
   return ((az - center + 540) % 360) - 180;
@@ -64,9 +58,9 @@ export function SkylineCanvas({
       const toX = (az: number) => padding.left + ((centeredAzimuth(az, result.meanEarthAzimuth) + 180) / 360) * plotWidth;
       const toY = (el: number) => padding.top + ((yMax - el) / (yMax - yMin)) * plotHeight;
 
-      context.fillStyle = '#101c2f';
+      context.fillStyle = '#070a0f';
       context.fillRect(0, 0, width, height);
-      context.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
+      context.font = '11px "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace';
       context.textBaseline = 'middle';
 
       const rawStep = range <= 12 ? 1 : range <= 30 ? 5 : range <= 90 ? 15 : 30;
@@ -129,7 +123,7 @@ export function SkylineCanvas({
         if (index === 0 || Math.abs(x - toX(result.skyline[index - 1].az)) > plotWidth / 2) context.moveTo(x, y);
         else context.lineTo(x, y);
       });
-      context.strokeStyle = '#e7c98d';
+      context.strokeStyle = '#d9bf8c';
       context.lineWidth = hasTerrain ? 1.25 : 2;
       context.stroke();
 
@@ -177,7 +171,7 @@ export function SkylineCanvas({
       };
 
       drawBodyTrack((point) => point.sunAz, (point) => point.sunEl, (point) => point.sunF < 0.01, '#f7c948');
-      drawBodyTrack((point) => point.earthAz, (point) => point.earthEl, (point) => !point.earthVis, '#6ed6e8');
+      drawBodyTrack((point) => point.earthAz, (point) => point.earthEl, (point) => !point.earthVis, '#5fd4e6');
 
       const target = nearestTrackPoint(result.track, result.startMs + scrubMinutes * MIN_MS);
       if (target) {
@@ -195,16 +189,16 @@ export function SkylineCanvas({
           context.lineWidth = 2;
           context.stroke();
         };
-        drawScaledBody(target.earthAz, target.earthEl, earthR, '#6ed6e8', 'rgba(110, 214, 232, 0.35)');
+        drawScaledBody(target.earthAz, target.earthEl, earthR, '#5fd4e6', 'rgba(95, 212, 230, 0.35)');
         drawScaledBody(target.sunAz, target.sunEl, sunR, '#f7c948', 'rgba(247, 201, 72, 0.85)');
       }
 
       context.textAlign = 'left';
       context.fillStyle = '#f7c948';
       context.fillText('Sun', padding.left, 14);
-      context.fillStyle = '#6ed6e8';
+      context.fillStyle = '#5fd4e6';
       context.fillText('Earth', padding.left + 38, 14);
-      context.fillStyle = '#e7c98d';
+      context.fillStyle = '#d9bf8c';
       context.fillText(hasTerrain ? 'terrain horizon' : 'smooth horizon', padding.left + 84, 14);
     };
 

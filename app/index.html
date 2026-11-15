@@ -4,12 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b1220" />
-    <meta name="description" content="Oneiric compares lunar landing sites and dates against sunlight and Earth visibility." />
-    <title>Oneiric · lunar landing windows</title>
+    <meta name="theme-color" content="#05070b" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Oneiric compares lunar landing sites and dates against sunlight and Earth visibility over the terrain horizon." />
+    <title>Oneiric · lunar landing site × date navigator</title>
+    <style>
+      /* First paint: dark shell and a boot line, before any script or font arrives. */
+      html { background: #05070b; color: #e6edf3; }
+      body { margin: 0; }
+      .boot { align-items: center; display: flex; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; gap: 10px; letter-spacing: 0.08em; min-height: 100svh; justify-content: center; text-transform: uppercase; }
+      .boot i { animation: boot-blink 1s steps(2, start) infinite; background: #e6edf3; display: inline-block; height: 14px; width: 8px; }
+      @keyframes boot-blink { to { visibility: hidden; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="status">Oneiric · loading interface <i aria-hidden="true"></i></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

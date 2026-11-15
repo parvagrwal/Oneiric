@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   HOUR_MS,
@@ -7,14 +7,24 @@ import {
   provenanceFooter,
   type Clock,
   type Grade,
+  type Vec3,
 } from '../../engine/index.ts';
-import './App.css';
 import { SkylineCanvas } from './SkylineCanvas.tsx';
 import { WindowFinder } from './WindowFinder.tsx';
 import { MethodDrawer, type ValidationRowData, type PendingRow } from './MethodDrawer.tsx';
-import { MapView } from './MapView.tsx';
 import { shapeBUrl } from './horizons-url.ts';
 import { timeControlForKey } from './keyboard.ts';
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
+import { AUTOPILOT_SCENARIO, AUTOPILOT_STEPS, autopilotStepAt } from './autopilot-script.ts';
+import { EPHEMERIS_FIRST_YEAR, EPHEMERIS_LAST_YEAR } from './coverage.ts';
+import { formatHours, formatPercent, formatSlipDays, formatUtc } from './format.ts';
+import { NEAR_SIDE_POSE, SOUTH_POLE_POSE, poseForSite } from './globe-math.ts';
+import { Hero, type CameraPreset, type GlobeMode, type HeroStats } from './Hero.tsx';
+import type { PoseRequest } from './MoonGlobe.tsx';
+import { TopBar, type SectionId } from './TopBar.tsx';
+import { TourOverlay } from './TourOverlay.tsx';
+import { StatusLine, VerdictBadge } from './ui.tsx';
+import { webglAvailable } from './webgl.ts';
 import {
   DAILY_WINDOW_COLUMNS,
   DAY_MS,
@@ -89,34 +99,6 @@ function msToDateInput(tMs: number): string {
   return new Date(floorToUtcDay(tMs)).toISOString().slice(0, 10);
 }
 
-function formatUtc(tMs: number): string {
-  return new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'UTC',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(new Date(tMs));
-}
-
-function formatHours(hours: number): string {
-  if (hours <= 0) return '0 min';
-  if (hours < 1) return `${Math.max(1, Math.round(hours * 60))} min`;
-  if (hours < 48) return `${hours.toFixed(1)} h`;
-  return `${(hours / 24).toFixed(1)} d`;
-}
-
-function formatSlipDays(days: number): string {
-  const rounded = Math.round(days * 100) / 100;
-  return `${rounded} d`;
-}
-
-function formatPercent(value: number): string {
-  return `${value.toFixed(1)}%`;
-}
-
 function sanitizeFilenamePart(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'site';
 }
@@ -145,10 +127,6 @@ function clockLabel(clock: Clock, startMs: number): string {
   if (clock.status === 'none' || clock.tMs === undefined) return 'not during this stay';
   const deltaHours = (clock.tMs - startMs) / HOUR_MS;
   return `${formatHours(deltaHours)} · ${formatUtc(clock.tMs)} UTC`;
-}
-
-function verdictClass(verdict: ScenarioResult['verdict']['verdict']): string {
-  return verdict.toLowerCase().replace('-', '');
 }
 
 function eclipseSummary(result: ScenarioResult): { value: string; note?: string } {
@@ -209,6 +187,14 @@ function Metric({ label, value, note }: { label: string; value: string; note?: s
   );
 }
 
+// The map library is large, so it loads after the first screen is usable.
+const MapView = lazy(() => import('./MapView.tsx').then((module) => ({ default: module.MapView })));
+
+function scrollToSection(id: SectionId): void {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById(id)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+
 function clampDateString(dateTime: string): string {
   const ms = parseUtcInput(dateTime);
   const minMs = parseUtcInput(MIN_DATE_UTC);
@@ -244,6 +230,15 @@ function App() {
 
   const [scrubMinutes, setScrubMinutes] = useState(0);
   const [playing, setPlaying] = useState(false);
+  // 3D view and tour state. Presentation only: none of it reaches a verdict, a metric, or a grade.
+  const [globeMode, setGlobeMode] = useState<GlobeMode>(() => (webglAvailable() ? 'webgl' : 'static'));
+  const [poseRequest, setPoseRequest] = useState<PoseRequest>({ pose: NEAR_SIDE_POSE, nonce: 0 });
+  const [directions, setDirections] = useState<{ sun: Vec3 | null; earth: Vec3 | null }>({ sun: null, earth: null });
+  const directionsReqRef = useRef(0);
+  const [tourRunning, setTourRunning] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const tourAppliedRef = useRef(-1);
+  const tourSitePoseRef = useRef<PoseRequest['pose']>(SOUTH_POLE_POSE);
   const [rulesOpen, setRulesOpen] = useState(false);
   const exportReqRef = useRef(0);
   const pendingExportsRef = useRef(new Map<number, string>());
@@ -380,6 +375,9 @@ function App() {
       } else if (message.type === 'matrix-error') {
         if (message.requestId !== matrixReqRef.current) return;
         setMatrixProgress((prev) => ({ ...prev, computing: false, error: message.message }));
+      } else if (message.type === 'directions-result') {
+        if (message.requestId !== directionsReqRef.current) return;
+        setDirections({ sun: message.sun, earth: message.earth });
       } else if (message.type === 'export-series-result') {
         const filename = pendingExportsRef.current.get(message.requestId);
         if (!filename) return;
@@ -636,12 +634,14 @@ function App() {
   // Play time-lapse timer
   useEffect(() => {
     if (!playing) return undefined;
-    const step = stayMinutes > 60 * 1440 ? 360 : 10;
+    const step = tourRunning
+      ? Math.max(10, Math.round(stayMinutes / 600) * 10)
+      : stayMinutes > 60 * 1440 ? 360 : 10;
     const timer = window.setInterval(() => {
       setScrubMinutes((current) => (current + step > stayMinutes ? 0 : current + step));
     }, 200);
     return () => window.clearInterval(timer);
-  }, [playing, stayMinutes]);
+  }, [playing, stayMinutes, tourRunning]);
 
   const resetScrub = useCallback(() => {
     setPlaying(false);
@@ -1007,41 +1007,170 @@ function App() {
     || urlState.marginDeg !== 0
     || Object.keys(urlState.ruleOverrides).length > 0;
 
+  const activeSlot = resolvedSlots.find((slot) => slot.index === urlState.activeCardIndex) ?? resolvedSlots[0];
+  const activeResult = activeSlot ? cardResults.get(activeSlot.slotKey) : undefined;
+  const activeSite = activeSlot?.site ?? siteById.get(activeSiteId);
+  const clampedScrub = Math.min(scrubMinutes, stayMinutes);
+  const scrubStep = stayMinutes > 60 * 1440 ? 360 : 10;
+  const instantMs = activeSlot ? activeSlot.startMs + clampedScrub * MIN_MS : null;
+
+  // Ask the engine where the Sun and Earth are at the selected instant. Used by the Moon view only.
+  useEffect(() => {
+    if (ephemState.kind !== 'ready' || instantMs === null) return;
+    const worker = workerRef.current;
+    if (!worker) return;
+    directionsReqRef.current += 1;
+    worker.postMessage({ type: 'directions', requestId: directionsReqRef.current, tMs: instantMs });
+  }, [ephemState.kind, instantMs, neededYearsKey]);
+
+  const skylineCheck = validationRows.find((row) => row.id === 'skyline-synthetic') ?? null;
+  const heroStats: HeroStats = {
+    siteCount: librarySites.length,
+    skylineCount: skylineIndex ? skylineGrades.size : null,
+    firstYear: EPHEMERIS_FIRST_YEAR,
+    lastYear: EPHEMERIS_LAST_YEAR,
+    firstPickDate: MIN_DATE_UTC.slice(0, 10),
+    lastPickDate: MAX_DATE_UTC.slice(0, 10),
+    directionMaxDeg: validation?.maxDeg ?? null,
+    directionLimitDeg: validation?.thresholdDeg ?? null,
+    skylineMaxDeg: skylineCheck?.maxDeg ?? null,
+    skylineLimitDeg: skylineCheck?.thresholdDeg ?? null,
+  };
+
+  const flyTo = (pose: PoseRequest['pose']) => setPoseRequest((prev) => ({ pose, nonce: prev.nonce + 1 }));
+
+  const handleCameraPreset = (preset: CameraPreset) => {
+    if (preset === 'south-pole') flyTo(SOUTH_POLE_POSE);
+    else if (preset === 'near-side') flyTo(NEAR_SIDE_POSE);
+    else if (activeSite) flyTo(poseForSite(activeSite.lat, activeSite.eLon));
+  };
+
+  // A marker click loads that site into the active card through the same URL state as the site list.
+  const handleGlobePick = (siteId: string) => {
+    selectSiteIntoActiveCard(siteId);
+    const site = siteById.get(siteId);
+    if (site) flyTo(poseForSite(site.lat, site.eLon));
+  };
+
+  const stopTour = useCallback(() => {
+    setTourRunning(false);
+    setPlaying(false);
+  }, []);
+
+  // One tour step: camera, scroll position, time-lapse, and the 21-day slip at the end.
+  const applyTourStep = useCallback((index: number) => {
+    const step = AUTOPILOT_STEPS[index];
+    if (!step) return;
+    tourAppliedRef.current = index;
+    setTourStep(index);
+    const pose =
+      step.camera === 'near-side' ? NEAR_SIDE_POSE
+      : step.camera === 'south-pole' ? SOUTH_POLE_POSE
+      : step.camera === 'site' ? tourSitePoseRef.current
+      : null;
+    if (pose) setPoseRequest((prev) => ({ pose, nonce: prev.nonce + 1 }));
+    setPlaying(step.playTime);
+    if (!step.playTime) setScrubMinutes(0);
+    scrollToSection(step.scrollTo === 'hero' ? 'globe' : 'board');
+    const slipDays = step.slipDays;
+    if (slipDays) {
+      setUrlState((prev) => {
+        if (prev.cards.length !== 1) return prev;
+        const baseMs = parseUtcInput(prev.cards[0].dateTime ?? prev.dateTime);
+        if (!Number.isFinite(baseMs)) return prev;
+        const dateTime = clampDateString(msToDateTimeInput(baseMs + slipDays * DAY_MS));
+        return { ...prev, cards: [...prev.cards, { siteId: prev.cards[0].siteId, dateTime }], activeCardIndex: 1 };
+      });
+    }
+  }, []);
+
+  // The tour loads one sample scenario with the default rules, then moves the camera and the clock on a script.
+  const startTour = () => {
+    setUrlState((prev) => ({
+      ...prev,
+      dateTime: AUTOPILOT_SCENARIO.dateTime,
+      presetId: AUTOPILOT_SCENARIO.presetId,
+      stayDays: PRESETS[AUTOPILOT_SCENARIO.presetId].stayDays,
+      marginDeg: 0,
+      ruleOverrides: {},
+      cards: [{ siteId: AUTOPILOT_SCENARIO.siteId }],
+      activeCardIndex: 0,
+      windowStartDate: AUTOPILOT_SCENARIO.dateTime.slice(0, 10),
+    }));
+    const tourSite = siteById.get(AUTOPILOT_SCENARIO.siteId);
+    if (tourSite) tourSitePoseRef.current = poseForSite(tourSite.lat, tourSite.eLon);
+    setScrubMinutes(0);
+    applyTourStep(0);
+    setTourRunning(true);
+  };
+
+  // Tour clock. Any click, key press, scroll, or touch hands control back at once.
+  useEffect(() => {
+    if (!tourRunning) return undefined;
+    const startedAt = performance.now();
+    const timer = window.setInterval(() => {
+      const index = autopilotStepAt((performance.now() - startedAt) / 1000);
+      if (index < 0) stopTour();
+      else if (index !== tourAppliedRef.current) applyTourStep(index);
+    }, 200);
+    const passive = { capture: true, passive: true } as const;
+    window.addEventListener('pointerdown', stopTour, true);
+    window.addEventListener('keydown', stopTour, true);
+    window.addEventListener('wheel', stopTour, passive);
+    window.addEventListener('touchstart', stopTour, passive);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('pointerdown', stopTour, true);
+      window.removeEventListener('keydown', stopTour, true);
+      window.removeEventListener('wheel', stopTour, passive);
+      window.removeEventListener('touchstart', stopTour, passive);
+    };
+  }, [tourRunning, stopTour, applyTourStep]);
+
   return (
+    <MotionConfig reducedMotion="user">
     <div className="app-shell">
-      <header className="topbar">
-        <a className="wordmark" href="./" aria-label="Oneiric home">
-          ONEIRIC<span> / lunar landing site × date navigator</span>
-        </a>
-        <span className="topbar-note">UTC · cached JPL Horizons &amp; LOLA skylines · no login</span>
-        <button type="button" className="topbar-link" onClick={() => setMethodOpen(true)}>
-          Method and checks
-        </button>
-      </header>
+      <TopBar
+        site={activeSite}
+        result={activeResult}
+        scrubMinutes={clampedScrub}
+        instantMs={instantMs}
+        onNavigate={scrollToSection}
+        onOpenMethod={() => setMethodOpen(true)}
+      />
 
       <main>
-        <section className="intro">
-          <div>
-            <p className="eyebrow">Site × date navigator</p>
-            <h1>Compare landing windows before a slip flips the verdict.</h1>
-            <p className="intro-copy">
-              Pick up to four lunar sites and dates side by side, test how many days of schedule slip each option survives, and scan {allSites.length || 33} sites across months on the Window Finder.
-            </p>
-          </div>
-          <div className="proof-card" aria-live="polite">
-            <span className="proof-kicker">Direction check</span>
-            {validation && validation.maxDeg !== null ? (
-              <strong>
-                {validation.maxDeg.toFixed(4)}° max error <small>· {validation.n.toLocaleString()} comparisons</small>
-              </strong>
-            ) : (
-              <strong>Loading the recorded check</strong>
-            )}
-            <button type="button" className="proof-link" onClick={() => setMethodOpen(true)}>
-              JPL Horizons · limit {validation?.thresholdDeg ?? 0.02}° · Method and checks
-            </button>
-          </div>
-        </section>
+        <Hero
+          globeMode={globeMode}
+          onGlobeFailed={() => setGlobeMode('static')}
+          sites={allSites}
+          grades={skylineGrades}
+          activeSite={activeSite}
+          activeSiteId={activeSiteId}
+          comparedSiteIds={comparedSiteIds}
+          result={activeResult}
+          statusMessage={statusMessage}
+          scrubMinutes={clampedScrub}
+          stayMinutes={stayMinutes}
+          scrubStep={scrubStep}
+          playing={playing}
+          onScrub={(minutes) => {
+            setPlaying(false);
+            setScrubMinutes(minutes);
+          }}
+          onTogglePlay={() => setPlaying((current) => !current)}
+          sunDir={directions.sun}
+          earthDir={directions.earth}
+          stats={heroStats}
+          poseRequest={poseRequest}
+          onCameraPreset={handleCameraPreset}
+          tourRotates={tourRunning && tourStep === 0}
+          tourRunning={tourRunning}
+          onPickSite={handleGlobePick}
+          onOpenBoard={() => scrollToSection('board')}
+          onOpenMethod={() => setMethodOpen(true)}
+          onStartTour={startTour}
+        />
 
         <section className="scenario-bar" aria-label="Scenario controls">
           <div className="scenario-bar-row">
@@ -1341,7 +1470,7 @@ function App() {
           </aside>
 
           <div className="main-column">
-            <section className="compare-section" aria-label="Compare board" aria-live="polite">
+            <section id="board" className="compare-section" aria-label="Compare board" aria-live="polite">
               <div className="compare-board-bar">
                 <div>
                   <span className="compare-count-pill">
@@ -1396,9 +1525,13 @@ function App() {
                   const eclipses = result ? eclipseSummary(result) : null;
 
                   return (
-                    <article
+                    <motion.article
                       className={`scenario-card ${isActiveSlot ? 'is-active-slot' : ''}`}
                       key={`${slot.index}-${slot.site.id}`}
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       tabIndex={0}
                       aria-label={`${slot.site.name} scenario card. Focus and use arrow keys to step time by ten minutes, or Space to play and pause.`}
                       onKeyDown={handleViewKeyDown}
@@ -1496,12 +1629,10 @@ function App() {
                                 </a>
                               </p>
                             </div>
-                            <div className={`verdict-badge ${verdictClass(result.verdict.verdict)}`}>
-                              <span>{result.verdict.verdict === 'NONE' ? 'ANNUAL' : result.verdict.verdict}</span>
-                              <small>Grade {result.verdict.grade}</small>
-                            </div>
+                            <VerdictBadge verdict={result.verdict.verdict} grade={result.verdict.grade} />
                           </div>
 
+                          <StatusLine result={result} scrubMinutes={clampedScrub} />
                           <p className="decision-rule">{result.verdict.rule}</p>
                           <p className="preset-note">
                             {result.preset.name} ({result.preset.stayDays} d) · {result.verdict.presetLabel}
@@ -1651,12 +1782,19 @@ function App() {
                           </div>
                         </>
                       )}
-                    </article>
+                    </motion.article>
                   );
                 })}
               </div>
             </section>
 
+            <motion.div
+              id="windows"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.35 }}
+            >
             <WindowFinder
               sites={allSites}
               skylineGrades={skylineGrades}
@@ -1690,12 +1828,30 @@ function App() {
                 }))
               }
             />
+            </motion.div>
 
-            <MapView
-              sites={allSites}
-              skylineGrades={skylineGrades}
-              onPickSite={selectSiteIntoActiveCard}
-            />
+            <motion.div
+              id="map"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.35 }}
+            >
+            <Suspense
+              fallback={
+                <div className="status-card" role="status">
+                  <span className="spinner" aria-hidden="true" />
+                  <strong>Loading the south-polar map…</strong>
+                </div>
+              }
+            >
+              <MapView
+                sites={allSites}
+                skylineGrades={skylineGrades}
+                onPickSite={selectSiteIntoActiveCard}
+              />
+            </Suspense>
+            </motion.div>
           </div>
         </div>
       </main>
@@ -1703,6 +1859,7 @@ function App() {
       <footer className="site-footer">
         <span>Oneiric · lunar landing site × date comparison</span>
         <span>JPL Horizons ephemeris (MOON_ME) · LOLA polar skylines (Grades B, C) · Smooth sphere (Grade D, no terrain)</span>
+        <span>Moon picture on the globe: NASA SVS CGI Moon Kit · shown for orientation, never used in a calculation</span>
         <button type="button" className="footer-link" onClick={() => setMethodOpen(true)}>
           Method and checks
         </button>
@@ -1711,7 +1868,10 @@ function App() {
       {methodOpen && (
         <MethodDrawer rows={validationRows} pending={validationPending} onClose={() => setMethodOpen(false)} />
       )}
+
+      <AnimatePresence>{tourRunning && <TourOverlay stepIndex={tourStep} />}</AnimatePresence>
     </div>
+    </MotionConfig>
   );
 }
 

@@ -109,16 +109,16 @@ export function WindowFinder({
       if (!ctx) return;
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-      ctx.fillStyle = '#0e1829';
+      ctx.fillStyle = '#070a0f';
       ctx.fillRect(0, 0, width, height);
 
       const gridWidth = Math.max(240, width - LABEL_WIDTH - RIGHT_PAD);
       const cellW = gridWidth / colCount;
 
       // Column date ticks in header
-      ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
+      ctx.font = '11px "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#9eafc4';
+      ctx.fillStyle = '#a3afbc';
       ctx.textAlign = 'left';
       ctx.fillText('Site · grade', 12, HEADER_HEIGHT / 2);
 
@@ -144,10 +144,10 @@ export function WindowFinder({
         const isActive = site.id === activeSiteId;
 
         if (isActive) {
-          ctx.fillStyle = 'rgba(66, 199, 215, 0.16)';
+          ctx.fillStyle = 'rgba(95, 212, 230, 0.16)';
           ctx.fillRect(0, y, LABEL_WIDTH - 4, ROW_HEIGHT - 1);
         } else if (isCompared) {
-          ctx.fillStyle = 'rgba(66, 199, 215, 0.08)';
+          ctx.fillStyle = 'rgba(95, 212, 230, 0.08)';
           ctx.fillRect(0, y, LABEL_WIDTH - 4, ROW_HEIGHT - 1);
         } else if (r % 2 === 1) {
           ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
@@ -160,7 +160,7 @@ export function WindowFinder({
         ctx.fillStyle = grade === 'B' ? '#1e3a5f' : grade === 'C' ? '#3a3352' : '#2a3342';
         ctx.fillRect(8, y + 4, 18, ROW_HEIGHT - 9);
         ctx.fillStyle = '#eaf2fb';
-        ctx.font = 'bold 10px ui-monospace, SFMono-Regular, Menlo, monospace';
+        ctx.font = 'bold 10px "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace';
         ctx.textAlign = 'center';
         ctx.fillText(grade, 17, y + ROW_HEIGHT / 2);
 
@@ -197,7 +197,7 @@ export function WindowFinder({
             // Okabe-Ito amber block with dark top/center notch so shape distinguishes it from GO and NO-GO
             ctx.fillStyle = MARGINAL_HEX;
             ctx.fillRect(cx, cy, cw, ch);
-            ctx.fillStyle = '#0e1829';
+            ctx.fillStyle = '#070a0f';
             ctx.fillRect(cx + cw * 0.2, cy + ch * 0.42, Math.max(1.2, cw * 0.6), Math.max(2, ch * 0.18));
           } else if (cell.verdict === 'NO-GO') {
             // Okabe-Ito vermilion recessed lower bar + dark upper cap so greyscale luminance and shape differ

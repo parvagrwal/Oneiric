@@ -1,0 +1,24 @@
+{
+  "status": "pass for the checks listed; the browser checks under notObserved have not been made",
+  "date": "2026-11-15",
+  "summary": "Dark interface and a 3D Moon first screen added to app/ only. engine/, pipeline/, and app/public/data/ are unchanged, so every verdict, metric, grade, and validation row is the same as before. The 3D view is navigation and display: 33 site markers, Sun and Earth pointers from the cached table at the scrubbed time (from the Moon's centre), a south-pole camera preset, and a 30-second scripted tour that any key, click, wheel, or touch stops. Without WebGL the first screen is a static south-pole site chart.",
+  "checks": {
+    "typecheck": "clean (exit 0)",
+    "tests": "156 passed of 156 in 20 files (was 136 in 17); new files: tests/globe-math.test.ts 7, tests/status-line.test.ts 6, tests/autopilot-script.test.ts 7",
+    "validate": "4 PASS and 1 PENDING in this environment: the raster orientation check needs the LOLA rasters, which are gitignored and absent here. The committed validation.json was restored and is unchanged.",
+    "mutationCheck": "37 of 37 engine mutants killed, 0 survived (mutation-check-output.txt)",
+    "appLint": "0 warnings, 0 errors on 30 files",
+    "appBuild": "clean, 1080 modules. First-load script 453.09 kB (gzip 146.07); style sheet 58.66 kB (gzip 14.14); 3D view chunk 940.83 kB (gzip 249.56) and map chunk 476.90 kB (gzip 146.13), both loaded on demand. The build prints its over-500 kB chunk notice.",
+    "renderCheck": "app/scripts/render-check.mjs, exit 0. Server-rendered hero and top strip for de Gerlache Rim 2 centroid, 6.5-day sortie, 2 m: 2028-09-05 00:00 UTC GO, sunlit 100.0%, Earth 100.0%, late slip 3 days; 2028-09-26 00:00 UTC NO-GO, sunlit 28.3%, Earth 83.4%. Same figures as docs/worked-case.md.",
+    "sceneCheck": "app/scripts/scene-check.mjs under jsdom with no graphics card, exit 0. 115 scene objects, 71 meshes, 33 clickable markers for 33 sites; a click selects the clicked site; releasing a drag over a marker selects nothing; the south-pole flight, a zoom, missing Sun and Earth directions, and unmount ran without error. The nine console messages are jsdom's missing canvas context and a three.js deprecation notice.",
+    "contrast": "22 text-on-surface pairs computed from the colour tokens in app/src/index.css, all at or above 4.5:1; lowest 4.72 (faint text on the hover surface); badge text on GO 5.89, MARGINAL 8.95, NO-GO 5.21",
+    "readmeMarkdownlint": "0 errors"
+  },
+  "notObserved": [
+    "The page in a browser at 1280 px and 390 px width: no browser was available where this was built.",
+    "The 3D view on a real graphics card: appearance, frame rate, and touch gestures.",
+    "The Moon picture loading across origins from svs.gsfc.nasa.gov in a browser. If it fails, the globe falls back to a plain shaded sphere."
+  ],
+  "moonPicture": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg (NASA Scientific Visualization Studio CGI Moon Kit, https://svs.gsfc.nasa.gov/4720/, page read 2026-11-15); loaded at runtime, not stored in the repository, used in no calculation",
+  "verdictColours": "Okabe-Ito GO #009E73, MARGINAL #E69F00, NO-GO #D55E00, each always shown with its text label"
+}

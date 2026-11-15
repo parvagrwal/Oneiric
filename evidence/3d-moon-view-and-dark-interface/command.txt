@@ -1,0 +1,14 @@
+# From the repository root
+npm run typecheck
+npx vitest run
+npm run validate          # rewrites app/public/data/validation.json; restored afterwards with: git checkout -- app/public/data/validation.json
+python3 app/scripts/contrast-check.py
+npx markdownlint-cli README.md
+npm run mutation-check    # run on a copy of this tree (engine/ and tests/ identical), because the script edits engine/ in place
+
+# From app/
+npm run lint
+npm run build
+node scripts/render-check.mjs
+npm install --no-save @react-three/test-renderer@9 jsdom
+node scripts/scene-check.mjs

@@ -55,6 +55,12 @@ export type WorkerRequest =
     options?: ScenarioOptions;
   }
   | {
+    /** Read-only: where the Sun and Earth are, seen from the Moon's centre, for the 3D view. Feeds no verdict. */
+    type: 'directions';
+    requestId: number;
+    tMs: number;
+  }
+  | {
     type: 'calculate';
     requestId: number;
     tables: Array<{ year: number; buffer: ArrayBuffer }>;
@@ -102,6 +108,14 @@ export type WorkerResponse =
     type: 'export-series-error';
     requestId: number;
     message: string;
+  }
+  | {
+    /** Unit vectors in MOON_ME from the engine's ephemeris; null when the table does not cover tMs. */
+    type: 'directions-result';
+    requestId: number;
+    tMs: number;
+    sun: [number, number, number] | null;
+    earth: [number, number, number] | null;
   }
   | {
     type: 'result';
