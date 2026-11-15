@@ -17,7 +17,7 @@ import {
 } from './blocking-ui.ts';
 import { STATION_CHOICES, earthLinkSentence, earthLinkSummary, stationById } from './earth-link-ui.ts';
 import { EXPLORER_SCENES, applyScene, nextScene, sceneAt } from './explorer.ts';
-import { hillshadeResolutionM, hillshadeState } from './hillshade.ts';
+import { hillshadeState } from './hillshade.ts';
 import type { HillshadeManifest, HillshadeState } from './hillshade.ts';
 import type { ChangeEvent, FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
@@ -635,8 +635,9 @@ function App() {
       .map((entry) => entry.file);
   }, [skylinesReady, skylineIndex, skylinePayloads]);
 
-  // The static south-polar hillshade, when the build shipped one. Absent is the normal case in this checkout: the
-  // note under the map then says the map is using the online tiles and why, rather than showing a blank frame.
+  // The static south-polar hillshade, when the build shipped one. The manifest loads from
+  // data/basemap/basemap.json; the picture itself is not drawn on the map yet, so the note under the
+  // map says what shipped and that the map still shows the online tiles.
   const [basemap, setBasemap] = useState<HillshadeState>({ kind: 'unavailable', reason: 'loading' });
   useEffect(() => {
     let cancelled = false;
@@ -2317,7 +2318,7 @@ function App() {
             </Suspense>
             <p className="map-note">
               {basemap.kind === 'available'
-                ? `Static hillshade below the overlay: ${basemap.manifest.product}, ${hillshadeResolutionM(basemap.manifest).toFixed(0)} m per pixel, built ${basemap.manifest.builtUtc.slice(0, 10)}.`
+                ? `Static hillshade shipped with this build: ${basemap.manifest.product}, ${basemap.manifest.sourcePixelM} m per pixel, built ${basemap.manifest.builtUtc.slice(0, 10)}. The map still shows the Moon Trek tiles; the shipped picture is not drawn yet.`
                 : basemap.reason}
             </p>
             </motion.div>

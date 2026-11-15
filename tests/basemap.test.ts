@@ -4,14 +4,14 @@
 // can remake it, and an absent basemap drawing something that looks like terrain.
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { basemapManifest, encodeGrayPng, BASEMAP_DIR, HILLSHADE, MANIFEST_FILE, MAP_EXTENT_M } from '../pipeline/build-basemap.ts';
+import { basemapManifest, encodeGrayPng, BASEMAP_DIR, HILLSHADE, MANIFEST_FILE, IMAGE_EXTENT_M } from '../pipeline/build-basemap.ts';
 import { hillshadeCaption, hillshadeResolutionM, hillshadeState, hillshadeTiles, type HillshadeManifest } from '../app/src/hillshade.ts';
 
 const GOOD: HillshadeManifest = {
   image: 'south-pole-hillshade.png',
   width: 2048,
   height: 2048,
-  extentM: MAP_EXTENT_M,
+  extentM: IMAGE_EXTENT_M,
   sourcePixelM: 80,
   product: 'LOLA 80 m south-polar hillshade (product 90)',
   source: 'NASA PGDA product 90: LDEM_80S_80MPP_ADJ_HILL.TIF',
@@ -27,7 +27,7 @@ describe('the manifest a build writes', () => {
     expect(m.source).toMatch(/LDEM_80S_80MPP_ADJ_HILL\.TIF/);
     expect(m.command).toBe('npm run build:basemap');
     expect(m.derivation).toBe('LOLA shaded relief');
-    expect(m.extentM).toEqual(MAP_EXTENT_M);
+    expect(m.extentM).toEqual(IMAGE_EXTENT_M);
   });
 
   it('refuses dimensions, a pixel size or a date that cannot be true', () => {
@@ -61,7 +61,7 @@ describe('what the app can show', () => {
     expect(state.kind).toBe('available');
     if (state.kind === 'available') {
       expect(state.url).toBe('https://example.test/repo/data/basemap/south-pole-hillshade.png');
-      expect(hillshadeResolutionM(state.manifest)).toBeCloseTo(914_880 / 2048, 6);
+      expect(hillshadeResolutionM(state.manifest)).toBeCloseTo(608_000 / 2048, 6);
       expect(hillshadeCaption(state)).toMatch(/Static shaded relief of the south pole/);
       expect(hillshadeCaption(state)).toMatch(/Offline/);
       expect(hillshadeTiles(state.manifest)).toHaveLength(1);

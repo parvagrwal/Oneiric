@@ -27,11 +27,11 @@ export const HILLSHADE: Product = {
   url: 'https://pgda.gsfc.nasa.gov/products/90',
   pixelM: 80,
   maxDistM: Number.POSITIVE_INFINITY,
-  reachM: 457_440,
+  reachM: 304_000,
 };
 
-/** Extent the app draws, metres: south polar stereographic at R = 1,737,400 m, +/- 457.44 km. */
-export const MAP_EXTENT_M: [number, number, number, number] = [-457_440, -457_440, 457_440, 457_440];
+/** Extent the image covers, metres: south polar stereographic at R = 1,737,400 m, +/- 304 km (80S to the pole — the raster is 7600 x 7600 px at 80 m). This is NOT the map view extent, which is +/- 457.44 km (75S, the Moon Trek layer). */
+export const IMAGE_EXTENT_M: [number, number, number, number] = [-304_000, -304_000, 304_000, 304_000];
 
 export interface BasemapManifest {
   image: string;
@@ -116,7 +116,7 @@ export function basemapManifest(a: {
     image: a.image,
     width: a.width,
     height: a.height,
-    extentM: MAP_EXTENT_M,
+    extentM: IMAGE_EXTENT_M,
     sourcePixelM: a.sourcePixelM,
     product: HILLSHADE_PRODUCT,
     source: HILLSHADE_SOURCE,
