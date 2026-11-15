@@ -1,6 +1,7 @@
 {
   "status": "partial",
   "summary": "The skyline builder passes its checks on synthetic terrain. It has not been run on the LOLA rasters: they could not be downloaded on the build machine, so no skyline file exists and every site is still grade D.",
+  "laterUpdate": "2026-11-15: the skylines were built from the LOLA rasters. The repository now ships 96 terrain skylines (24 polar sites at 0, 2, 10 and 20 m; 22 grade B and 2 grade C at each height), and the orientation and stored-file checks pass. The summary above records the state at the time this receipt was written.",
   "rootTypecheck": "pass",
   "rootTests": { "testFiles": 15, "tests": 118, "status": "pass" },
   "directionCheck": { "comparisons": 8000, "maxErrorDeg": 0.00606, "rmsErrorDeg": 0.00284, "thresholdDeg": 0.02, "status": "pass" },

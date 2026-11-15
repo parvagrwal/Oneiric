@@ -65,7 +65,7 @@ export function runDirectionCheck(): ValidationRow {
     notes: [
       'Angle is measured between unit vectors in the local frame, not as separate azimuth and elevation differences.',
       'Measured: the Earth direction carries almost all of the residual (up to about 0.006 degrees); the Sun direction differs by under 0.0003 degrees.',
-      'Likely cause of the Earth residual, not yet verified: Horizons site queries use apparent (airless) positions, which include stellar aberration of up to about 0.006 degrees, and the hourly table does not.',
+      'Cause of the Earth residual, verified: Horizons site queries use apparent (airless) positions, which include stellar aberration of up to about 0.006 degrees, and the hourly table does not. A frame-free check against Horizons geometric vectors puts the Sun-Earth angle from the engine table 0.007-0.008 degrees from geometric over 2027-01-01, the aberration magnitude; see evidence/earth-error-cause/.',
     ],
   };
 }

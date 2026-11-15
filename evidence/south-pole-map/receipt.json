@@ -21,5 +21,6 @@
   },
   "basemapCrossOrigin": "confirmed 2026-11-14 (evidence/confirm/tile-headers.txt); basemap is online-only and optional",
   "hillshadeStatus": "not produced in this environment (raw LOLA rasters gitignored and absent); stated in README known limits",
+  "laterUpdate": "2026-11-15: the static hillshade was built from the LOLA 80 m hillshade raster on a machine with the rasters, and the map now draws it under the Trek tiles; see evidence/basemap/receipt.json. The summary above records the state at the time this receipt was written.",
   "regionOutlines": "data/A3_9regions-lonlat-simplified.geojson copied to app/public/data/artemis-regions.geojson; USGS ScienceBase, public domain"
 }

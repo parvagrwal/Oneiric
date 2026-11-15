@@ -1,5 +1,6 @@
 {
   "generatedBy": "pipeline/validate.ts",
+  "laterUpdate": "2026-11-15: the Earth-residual cause stated as not yet verified in the notes below is now verified - stellar aberration; see evidence/earth-error-cause/. The rows in this file record the run this receipt was written from.",
   "rows": [
     {
       "id": "sun-earth-direction",

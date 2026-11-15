@@ -148,12 +148,12 @@ A separate check compares the engine against published figures at their own coor
 | Folder | What it holds |
 |---|---|
 | `engine/` | Pure TypeScript calculation: site frame, interpolation of the hourly table, terrain skyline builder, skyline lookup, sunlit fraction, Earth visibility, time series, stay metrics, rolling prefix-sum window evaluation, verdict rules, and slip tolerance. It imports nothing from Node or the browser, so one copy runs in the pipeline and in the Web Worker. |
-| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only) that can mark the ridge a blocked span was traced to, an Explorer strip of five guided scenes, and the Method and checks drawer that renders `validation.json`. The first screen is a 3D Moon view (React Three Fiber) with a marker for each of the 33 sites, Sun and Earth pointers from the same cached table at the scrubbed time, a south-pole camera preset, and a 30-second scripted tour; it is navigation only and changes no verdict, metric, or grade. Without WebGL the app shows a static site chart and the Compare board instead. |
+| `app/` | React + TypeScript interface: Scenario bar with editable rule presets and URL sharing, grouped 33-site picker with custom Grade D coordinates, Compare board (up to four scenario cards side-by-side with CSV and JSON export), skyline and sky-track canvas, the Window Finder (`sites × landing dates` canvas matrix), a south-polar map (Moon Trek basemap, online only, over a shipped static hillshade) that can mark the ridge a blocked span was traced to, an Explorer strip of five guided scenes, and the Method and checks drawer that renders `validation.json`. The first screen is a 3D Moon view (React Three Fiber) with a marker for each of the 33 sites, Sun and Earth pointers from the same cached table at the scrubbed time, a south-pole camera preset, and a 30-second scripted tour; it is navigation only and changes no verdict, metric, or grade. Without WebGL the app shows a static site chart and the Compare board instead. |
 | `pipeline/` | Node scripts that fetch Horizons responses, build the binary tables, read the elevation rasters, build the skylines, draw the hillshade, and run the checks and the reported comparisons. |
 | `functions/` | The Cloudflare Pages Function behind the live Horizons check: it accepts one body and one instant, validates them against a fixed allow-list, and caches for 24 h. |
 | `docs/` | Engineering notes, including the worked example of a 21-day slip (`docs/worked-case.md`), and the screenshots in this README (`docs/screenshots/`). |
 | `fixtures/` | Raw Horizons responses, saved as received. |
-| `tests/` | Automated unit and integration tests (316 tests across 36 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
+| `tests/` | Automated unit and integration tests (318 tests across 36 files), including deliberate-sabotage tests and bare-VM Worker parity checks. |
 | `evidence/` | For each finished step: the command, the raw output, and a saved receipt. One folder per subject, named for what it proves. |
 | `DATA.md` | Every data file the application reads, with its source, its size, and — where something is missing — why it is missing and what the application does instead. |
 | `.github/workflows/` | Continuous integration (`ci.yml`: tests, typecheck, and the app build on every push and pull request) and the GitHub Pages mirror (`pages.yml`). |
@@ -165,7 +165,7 @@ You need Node 20 or later. The Horizons responses and the 96 polar skylines at f
 ```bash
 npm ci
 npm run build:ephemeris   # raw responses -> app/public/data/ephem/<year>.bin
-npm test                  # 316 tests across 36 test files
+npm test                  # 318 tests across 36 test files
 npm run typecheck
 npm run validate          # all six recorded checks -> app/public/data/validation.json
 npm run mutation-check    # changes 45 engine elements one at a time; every mutant must fail a test
@@ -253,7 +253,7 @@ The exact index fields, the grade meanings and the failure behaviour are in [`do
 | Verdict presets (sortie, lander, one-year stay) | Illustrative rules | Editable in the Scenario bar and labelled **illustrative, not agency requirements** |
 | Mission hindcasts | Replay of six recorded events | NASA catalogue, Firefly mission log, ISRO statements; all six pass, tolerances fixed before the run (`app/public/data/validation.json`) |
 | 3D Moon view picture | Online NASA imagery, with a shipped copy | NASA Scientific Visualization Studio CGI Moon Kit colour map (2K), tried from the SVS URL first, then from the copy shipped in `app/public/data/lroc_color_2k.jpg`. Shown for orientation and never used in any calculation |
-| South-polar map basemap | Online NASA imagery only | Moon Trek `LRO_LOLA_Shade_SPole75_30mp_v04` (south pole); loads only with network access and is never used in any calculation |
+| South-polar map basemap | Online NASA imagery, with a shipped static hillshade underneath | Moon Trek `LRO_LOLA_Shade_SPole75_30mp_v04` (south pole) loads only with network access; the static hillshade (`app/public/data/basemap/south-pole-hillshade.png`, drawn from the LOLA 80 m hillshade raster) ships with the build and is what you see when the tiles fail. Neither is used in any calculation |
 | Published illumination values | Reference only, unverified | Two published values at the Connecting Ridge reference point, each marked unverified in `data/published-illumination.json`; the comparison prints that label and claims no pass or fail (see below) |
 | Earth station coordinates and masks | Published coordinates; 10° planning mask | Four DSN and ESA stations, each row naming the operator page its coordinates come from; the 10° minimum elevation is a planning figure, editable through the custom station entry |
 | Observer heights | Skylines shipped at 0, 2, 10 and 20 m; the loader supports any height | A height with no stored skyline runs the smooth sphere at grade D, labelled as such, and is never filled in from another height. Adding a new height needs a build run and no code change: see [`docs/observer-height.md`](docs/observer-height.md) |

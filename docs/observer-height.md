@@ -73,6 +73,6 @@ npm run height-report
 - `tests/heights-ui.test.ts` — the selector's wording offers a missing height and calls the fallback a smooth sphere at grade D.
 - `npm run validate` — the shipped-skyline row re-hashes every `.bin` the index lists, at every height, against its record.
 
-## Not done here
+## Shipped heights
 
-The 0, 10 and 20 m skylines for the 24 polar sites are not in the repository. Building them needs the LOLA rasters, which were not reachable from the environment this change was built in. Every code path above is in place and tested against files in this layout, so adding them is a build run plus a review, not a code change.
+All four standard heights are in the repository: 0, 2, 10 and 20 m skylines for the 24 polar sites, 96 files in all, built from the LOLA rasters. The index lists every one, and `npm run validate` checks each file against its build record.

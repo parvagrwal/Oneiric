@@ -2,6 +2,11 @@
 
 Run from the build VM on 2026-11-14, about 22:53–23:00 IST. Raw outputs are in this folder.
 
+## Later updates (2026-11-15)
+
+- The live-check proxy is a **Cloudflare Pages Function** (`functions/api/horizons.ts`), not a Vercel function: the app deploys to Cloudflare Pages.
+- The USGS Artemis III region outlines were obtained: the simplified outlines are tracked at `data/A3_9regions-lonlat-simplified.geojson` and shipped to the app as `app/public/data/artemis-regions.geojson`.
+
 ## Horizons CORS — no header, proxy needed
 
 - A HEAD request (`curl -sI`) returns **HTTP 405 Method Not Allowed** — the Horizons API does not support HEAD, so that request cannot test CORS. Raw headers: `cors-headers.txt`.

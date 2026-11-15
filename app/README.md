@@ -18,7 +18,7 @@ The app reads its data from `public/data/` (Sun and Earth position tables, terra
 - `src/App.tsx` — the scenario bar, the Compare board (up to four site cards), the Window Finder matrix, and the wiring to the engine Worker.
 - `src/Hero.tsx` — the first screen: the slip-tolerance headline, the numbers strip, and the scenario summary.
 - `src/MoonGlobe.tsx` — the 3D Moon view (React Three Fiber): one marker per site, Sun and Earth pointers from the cached Horizons table, a south-pole camera preset, and the 30-second Autopilot tour (`src/autopilot-script.ts`, `src/TourOverlay.tsx`). Navigation only; it changes no verdict, metric, or grade. Without WebGL the app shows a static site chart (`src/MoonStatic.tsx`) instead.
-- `src/MapView.tsx` — the south-polar map (OpenLayers, stereographic projection): the 33 library sites, the nine USGS Artemis III candidate region outlines, and the Moon Trek LOLA shaded-relief basemap when online.
+- `src/MapView.tsx` — the south-polar map (OpenLayers, stereographic projection): the 33 library sites, the nine USGS Artemis III candidate region outlines, and the Moon Trek LOLA shaded-relief basemap when online, over the shipped static hillshade (`public/data/basemap/south-pole-hillshade.png`).
 - `src/WindowFinder.tsx` — the sites × landing dates matrix: one verdict cell per site and date, click to load, Shift-click to add a card, drag along a row to slip the date.
 - `src/MethodDrawer.tsx` — the Method and checks drawer: what each check does, the recorded pass/fail rows from `validation.json`, per-quantity sources, and the limits the tool states out loud.
 - `src/engine.worker.ts` — the calculation engine running in a Web Worker (the same `engine/` code the pipeline uses, so the app and the checks cannot drift apart).
