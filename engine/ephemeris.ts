@@ -55,3 +55,20 @@ export function tableFromBuffers(buffers: Map<number, ArrayBuffer>): EphemTable 
   }
   return { years };
 }
+
+/** Contiguous UTC millisecond span [minMs, maxMs] of loaded years in `table` that contains `nearMs`. */
+export function ephemSpan(table: EphemTable, nearMs: number): { minMs: number; maxMs: number } {
+  locate(table, nearMs);
+  const year = new Date(nearMs).getUTCFullYear();
+  const anchor = table.years.has(year) ? year : year - 1;
+  let minY = anchor;
+  let maxY = anchor;
+  while (table.years.has(minY - 1)) minY--;
+  while (table.years.has(maxY + 1)) maxY++;
+  const maxData = table.years.get(maxY)!;
+  const maxRows = maxData.length / ROW;
+  return {
+    minMs: Date.UTC(minY, 0, 1),
+    maxMs: Date.UTC(maxY, 0, 1) + (maxRows - 1) * HOUR_MS,
+  };
+}

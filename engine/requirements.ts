@@ -1,5 +1,5 @@
 import { HOUR_MS } from './constants.ts';
-import { metrics, type Metrics } from './metrics.ts';
+import { prepareRolling, type Metrics, type RollingSeries, type RuleSummary } from './metrics.ts';
 import type { Series } from './series.ts';
 import type { Grade } from './skyline.ts';
 
@@ -26,7 +26,7 @@ export const MARGINAL_SLIP_DAYS = 3;
 
 export interface RuleCheck { rule: string; met: boolean; value: number; limit: number }
 
-export function checkRules(m: Metrics, p: Preset): RuleCheck[] {
+export function checkRules(m: Metrics | RuleSummary, p: Preset): RuleCheck[] {
   if (!p.rules) return [];
   const r = p.rules;
   const f1 = (x: number) => (Math.round(x * 10) / 10).toString();
@@ -76,18 +76,31 @@ export function slip(viable: Uint8Array, firstStartMs: number, chosenMs: number,
   return { viableAtChosen: false, lateDays: null, earlyDays: null, lateCensored: false, earlyCensored: false, nextWindow };
 }
 
-/** viable[k] is 1 when a stay of p.stayDays starting at firstStartMs + k * 6 h meets every rule. */
-export function viableSeries(s: Series, p: Preset, firstStartMs: number, count: number, stepMs = SLIP_STEP_MS): Uint8Array {
+/** viable[k] is 1 when a stay of p.stayDays starting at firstStartMs + k * stepMs meets every rule, using prefix sums. */
+export function viableFromRolling(
+  rolling: RollingSeries,
+  p: Preset,
+  firstStartMs: number,
+  count: number,
+  stepMs = SLIP_STEP_MS,
+): Uint8Array {
   if (!p.rules) throw new Error('the one-year stay has no verdict, so no viable windows');
+  const s = rolling.series;
   const out = new Uint8Array(count);
-  const stayMs = p.stayDays * 86_400_000;
+  const stayMs = Math.round((p.stayDays * 86_400_000) / s.stepMs) * s.stepMs;
+  const seriesEndMs = s.t0Ms + s.n * s.stepMs;
   for (let k = 0; k < count; k++) {
     const a = firstStartMs + k * stepMs;
     const b = a + stayMs;
-    if (b > s.t0Ms + s.n * s.stepMs) throw new RangeError('series is too short for this stay');
-    out[k] = checkRules(metrics(s, a, b), p).every((c) => c.met) ? 1 : 0;
+    if (b > seriesEndMs) throw new RangeError('series is too short for this stay');
+    out[k] = checkRules(rolling.summary(a, b), p).every((c) => c.met) ? 1 : 0;
   }
   return out;
+}
+
+/** viable[k] is 1 when a stay of p.stayDays starting at firstStartMs + k * 6 h meets every rule. */
+export function viableSeries(s: Series, p: Preset, firstStartMs: number, count: number, stepMs = SLIP_STEP_MS): Uint8Array {
+  return viableFromRolling(prepareRolling(s), p, firstStartMs, count, stepMs);
 }
 
 export type VerdictName = 'GO' | 'MARGINAL' | 'NO-GO' | 'NONE';
@@ -103,7 +116,7 @@ export interface Verdict {
 
 /** GO: every rule is met. MARGINAL: rules met but days-late slip tolerance is under 3 days. NO-GO: a rule fails.
  *  A failed rule beats a passed rule. The slip argument is required so a GO is never given without it. */
-export function verdict(m: Metrics, p: Preset, sl: Slip): Verdict {
+export function verdict(m: Metrics | RuleSummary, p: Preset, sl: Slip): Verdict {
   if (!m.grade || !m.terrain) throw new Error('a verdict needs its fidelity grade and terrain source');
   const base = { grade: m.grade, terrain: m.terrain, presetLabel: p.label };
   if (!p.rules) return { ...base, verdict: 'NONE', rule: 'The one-year stay has annual figures and the longest night only, no verdict.', failed: [] };
@@ -115,4 +128,48 @@ export function verdict(m: Metrics, p: Preset, sl: Slip): Verdict {
     return { ...base, verdict: 'MARGINAL', rule: `Every rule is met, but the start can slip only ${late} days later (under ${MARGINAL_SLIP_DAYS} days).`, failed: [] };
   }
   return { ...base, verdict: 'GO', rule: `Every rule is met, and the start can slip ${sl.lateCensored ? 'at least ' : ''}${late} days later.`, failed: [] };
+}
+
+const EMPTY_SLIP: Slip = {
+  viableAtChosen: false,
+  lateDays: null,
+  earlyDays: null,
+  lateCensored: false,
+  earlyCensored: false,
+  nextWindow: null,
+};
+
+/** Verdicts for an array of landing start times (such as a row of the Window Finder), evaluated on one rolling series. */
+export function verdictSeries(
+  rolling: RollingSeries,
+  p: Preset,
+  firstStartMs: number,
+  colStartsMs: ArrayLike<number>,
+  viableStepMs = SLIP_STEP_MS,
+): Verdict[] {
+  const s = rolling.series;
+  const stayMs = Math.round((p.stayDays * 86_400_000) / s.stepMs) * s.stepMs;
+  const nCols = colStartsMs.length;
+  if (nCols === 0) return [];
+  if (!p.rules) {
+    const out: Verdict[] = [];
+    for (let c = 0; c < nCols; c++) {
+      const a = colStartsMs[c];
+      out.push(verdict(rolling.summary(a, a + stayMs), p, EMPTY_SLIP));
+    }
+    return out;
+  }
+  const seriesEndMs = s.t0Ms + s.n * s.stepMs;
+  const maxViableStartMs = Math.floor((seriesEndMs - stayMs - firstStartMs) / viableStepMs) * viableStepMs + firstStartMs;
+  let maxColMs = colStartsMs[0];
+  for (let c = 1; c < nCols; c++) if (colStartsMs[c] > maxColMs) maxColMs = colStartsMs[c];
+  if (maxColMs > maxViableStartMs) throw new RangeError('series is too short for this stay');
+  const viableCount = Math.floor((maxViableStartMs - firstStartMs) / viableStepMs) + 1;
+  const viable = viableFromRolling(rolling, p, firstStartMs, viableCount, viableStepMs);
+  const out: Verdict[] = [];
+  for (let c = 0; c < nCols; c++) {
+    const a = colStartsMs[c];
+    out.push(verdict(rolling.summary(a, a + stayMs), p, slip(viable, firstStartMs, a, viableStepMs)));
+  }
+  return out;
 }

@@ -1,0 +1,68 @@
+{
+  "status": "pass",
+  "summary": "Compare board (up to four cards), editable verdict presets with one-sentence deciding rules, 6-hour rolling prefix-sum slip tolerance, custom Grade D smooth-sphere coordinates, URL state sharing, and the Window Finder canvas matrix pass all type, unit, validation, mutation, lint, build, markdown, and public-term checks.",
+  "rootTypecheck": "pass",
+  "rootTests": {
+    "testFiles": 16,
+    "tests": 134,
+    "status": "pass"
+  },
+  "directionCheck": {
+    "comparisons": 8000,
+    "maxErrorDeg": 0.00606,
+    "rmsErrorDeg": 0.00284,
+    "thresholdDeg": 0.02,
+    "status": "pass"
+  },
+  "skylineMathsOnSyntheticTerrain": {
+    "comparisons": 10084,
+    "maxErrorDeg": 0.00293,
+    "rmsErrorDeg": 0.00055,
+    "thresholdDeg": 0.01,
+    "status": "pass"
+  },
+  "storedSkylineFileCheck": {
+    "skylinesChecked": 24,
+    "gradeB": 22,
+    "gradeC": 2,
+    "status": "pass"
+  },
+  "rasterOrientationCheck": {
+    "committedValidationJson": "pass (4 checks on LOLA 80 m and 240 m rasters)",
+    "localRerunWithoutGitignoredRasters": "pending (raw LOLA rasters stay gitignored; committed validation.json preserved)"
+  },
+  "mutationCheck": {
+    "mutants": 37,
+    "mutantsKilled": 37,
+    "status": "pass"
+  },
+  "windowFinderPerformanceBenchmark": {
+    "sites": 33,
+    "dailyColumns": 120,
+    "coldMs": 135.35,
+    "warmThresholdEditMs": 48.7,
+    "parityWithDirectMetrics": "exact"
+  },
+  "appLint": {
+    "warnings": 0,
+    "errors": 0,
+    "status": "pass"
+  },
+  "appBuild": {
+    "modulesTransformed": 35,
+    "mainBundleKb": 272.51,
+    "mainBundleGzipKb": 85.09,
+    "workerBundleKb": 19.01,
+    "cssBundleKb": 19.96,
+    "status": "pass"
+  },
+  "readmeMarkdownlint": "pass (0 errors)",
+  "publicTermLeakCheck": "0 leaks (1 false positive on USGS DOI suffix in pipeline/find-artemis-points.ts)",
+  "evidenceFiles": [
+    "command.txt",
+    "output.txt",
+    "readme-markdownlint.txt",
+    "leak-check-output.txt",
+    "receipt.json"
+  ]
+}

@@ -1,0 +1,10 @@
+# Compare board, verdicts, slip tolerance, custom coordinates, and Window Finder verification
+npm run typecheck
+npm test
+npm run validate
+git checkout -- app/public/data/validation.json
+npm run mutation-check
+(cd app && npm run lint)
+(cd app && npm run build)
+npx --yes markdownlint-cli README.md
+git diff --check

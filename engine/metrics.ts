@@ -124,6 +124,105 @@ export function metrics(s: Series, startMs: number, endMs: number): Metrics {
   };
 }
 
+export type RuleSummary = Pick<
+  Metrics,
+  'sunlitPct' | 'longestDarkGapH' | 'earthVisiblePct' | 'longestLinkGapH' | 'grade' | 'terrain' | 'heightM'
+>;
+
+interface CachedRun {
+  rStart: number;
+  rEnd: number;
+  refinedStartMs: number;
+  refinedEndMs: number;
+}
+
+export interface RollingSeries {
+  series: Series;
+  summary: (startMs: number, endMs: number) => RuleSummary;
+}
+
+function collectRuns(n: number, flag: (i: number) => boolean): CachedRun[] {
+  const runs: CachedRun[] = [];
+  let i = 0;
+  while (i < n) {
+    if (!flag(i)) { i++; continue; }
+    let j = i;
+    while (j < n && flag(j)) j++;
+    runs.push({ rStart: i, rEnd: j, refinedStartMs: -1, refinedEndMs: -1 });
+    i = j;
+  }
+  return runs;
+}
+
+function rollingLongestRun(
+  s: Series,
+  runs: CachedRun[],
+  winStart: number,
+  winEnd: number,
+  probeFlag: (p: Sample) => boolean,
+): number {
+  let lo = 0;
+  let hi = runs.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (runs[mid].rEnd <= winStart) lo = mid + 1;
+    else hi = mid;
+  }
+  let best = 0;
+  for (let m = lo; m < runs.length && runs[m].rStart < winEnd; m++) {
+    const r = runs[m];
+    const i = Math.max(r.rStart, winStart);
+    const j = Math.min(r.rEnd, winEnd);
+    let start = s.t0Ms + i * s.stepMs;
+    let end = s.t0Ms + j * s.stepMs;
+    if (i > winStart) {
+      if (r.refinedStartMs < 0) r.refinedStartMs = refine((t) => probeFlag(s.probe(t)), start - s.stepMs, start);
+      start = r.refinedStartMs;
+    }
+    if (j < winEnd) {
+      if (r.refinedEndMs < 0) r.refinedEndMs = refine((t) => !probeFlag(s.probe(t)), end - s.stepMs, end);
+      end = r.refinedEndMs;
+    }
+    if (end - start > best) best = end - start;
+  }
+  return best;
+}
+
+/** Prefix sums and cached run-edge refinements over a series, for evaluating rolling stay spans in constant time. */
+export function prepareRolling(s: Series): RollingSeries {
+  const prefixSunF = new Float64Array(s.n + 1);
+  const prefixEarthVis = new Int32Array(s.n + 1);
+  for (let i = 0; i < s.n; i++) {
+    prefixSunF[i + 1] = prefixSunF[i] + s.sunF[i];
+    prefixEarthVis[i + 1] = prefixEarthVis[i] + s.earthVis[i];
+  }
+  const darkRuns = collectRuns(s.n, (i) => isDark(s.sunF[i]));
+  const noLinkRuns = collectRuns(s.n, (i) => !s.earthVis[i]);
+
+  return {
+    series: s,
+    summary(startMs: number, endMs: number): RuleSummary {
+      const i0 = indexAt(s, startMs);
+      const i1 = indexAt(s, endMs);
+      if (i1 <= i0) throw new RangeError('empty window');
+      const count = i1 - i0;
+      const sumF = prefixSunF[i1] - prefixSunF[i0];
+      const vis = prefixEarthVis[i1] - prefixEarthVis[i0];
+      const dark = rollingLongestRun(s, darkRuns, i0, i1, (p) => isDark(p.sunF));
+      const noLink = rollingLongestRun(s, noLinkRuns, i0, i1, (p) => !p.earthVis);
+      return {
+        sunlitPct: (100 * sumF) / count,
+        longestDarkGapH: dark / HOUR_MS,
+        earthVisiblePct: (100 * vis) / count,
+        longestLinkGapH: noLink / HOUR_MS,
+        grade: s.grade,
+        terrain: s.terrain,
+        heightM: s.heightM,
+      };
+    },
+  };
+}
+
 export type ClockKind = 'sunset' | 'earthset';
 export interface Clock {
   /** 'already': the event has happened (the Sun is dark, or Earth is hidden) at fromMs. 'none': no event before the limit. */

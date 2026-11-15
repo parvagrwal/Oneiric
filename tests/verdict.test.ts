@@ -1,5 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { PRESETS, checkRules, slip, verdict, viableSeries, series, smoothSkyline, HOUR_MS, type Metrics, type Slip } from '../engine/index.ts';
+import {
+  PRESETS,
+  checkRules,
+  metrics,
+  prepareRolling,
+  slip,
+  verdict,
+  verdictSeries,
+  viableFromRolling,
+  viableSeries,
+  series,
+  smoothSiteFrame,
+  smoothSkyline,
+  HOUR_MS,
+  type Metrics,
+  type Slip,
+} from '../engine/index.ts';
+import { loadTable } from '../pipeline/direction-check.ts';
 import { T2030, spinSite, spinningTable } from './helpers.ts';
 
 const good: Metrics = {
@@ -134,5 +151,63 @@ describe('viable windows from a real series', () => {
     const ser = series(spinningTable(), site, T2030, T2030 + 100 * HOUR_MS, 10);
     expect(() => viableSeries(ser, PRESETS.sortie, T2030, 4)).toThrow(RangeError);
     expect(() => viableSeries(ser, PRESETS.year, T2030, 1)).toThrow();
+  });
+  it('rolling prefix-sum summaries match direct window metrics exactly across boundary, interior and grazing windows', () => {
+    const table = loadTable();
+    const site = { frame: smoothSiteFrame(-89.45, 222.69, 2), sky: smoothSkyline(2) };
+    const startMs = Date.UTC(2027, 1, 1);
+    const ser = series(table, site, startMs, startMs + 45 * 24 * HOUR_MS, 10);
+    const rolling = prepareRolling(ser);
+    const stayMs = 6.5 * 24 * HOUR_MS;
+    for (let k = 0; k < 120; k++) {
+      const a = startMs + k * 6 * HOUR_MS;
+      const b = a + stayMs;
+      const direct = metrics(ser, a, b);
+      const fast = rolling.summary(a, b);
+      expect(fast.sunlitPct).toBe(direct.sunlitPct);
+      expect(fast.earthVisiblePct).toBe(direct.earthVisiblePct);
+      expect(fast.longestDarkGapH).toBe(direct.longestDarkGapH);
+      expect(fast.longestLinkGapH).toBe(direct.longestLinkGapH);
+      expect(fast.grade).toBe(direct.grade);
+      expect(fast.terrain).toBe(direct.terrain);
+    }
+    // Synthetic cycle where dark and link-gap runs start before, inside, and after window boundaries.
+    const spinSer = series(spinningTable(), { frame: spinSite(), sky: smoothSkyline(2) }, T2030 - 360 * HOUR_MS, T2030 + 1000 * HOUR_MS, 10);
+    const spinRoll = prepareRolling(spinSer);
+    for (let k = 0; k < 160; k++) {
+      const a = T2030 - 360 * HOUR_MS + k * 6 * HOUR_MS;
+      const b = a + 14 * 24 * HOUR_MS;
+      const direct = metrics(spinSer, a, b);
+      const fast = spinRoll.summary(a, b);
+      expect(fast.sunlitPct).toBe(direct.sunlitPct);
+      expect(fast.earthVisiblePct).toBe(direct.earthVisiblePct);
+      expect(fast.longestDarkGapH).toBe(direct.longestDarkGapH);
+      expect(fast.longestLinkGapH).toBe(direct.longestLinkGapH);
+    }
+  });
+  it('verdictSeries gives the exact same verdict and deciding rule as per-date metrics + slip + verdict', () => {
+    const relaxed = {
+      ...PRESETS.sortie,
+      rules: { sunlitMinPct: 95, darkGapMaxH: 6, earthVisibleMinPct: 50, linkGapMaxH: 120 },
+    };
+    const spinSer = series(spinningTable(), { frame: spinSite(), sky: smoothSkyline(2) }, T2030 - 120 * HOUR_MS, T2030 + 1200 * HOUR_MS, 10);
+    const rolling = prepareRolling(spinSer);
+    const first = T2030 - 96 * HOUR_MS;
+    const cols = Array.from({ length: 30 }, (_, d) => T2030 - 72 * HOUR_MS + d * 24 * HOUR_MS);
+    const batch = verdictSeries(rolling, relaxed, first, cols);
+    const maxStart = spinSer.t0Ms + spinSer.n * spinSer.stepMs - relaxed.stayDays * 86_400_000;
+    const viableCount = Math.floor((maxStart - first) / (6 * HOUR_MS)) + 1;
+    const viable = viableFromRolling(rolling, relaxed, first, viableCount);
+    cols.forEach((colMs, index) => {
+      const expected = verdict(
+        metrics(spinSer, colMs, colMs + relaxed.stayDays * 86_400_000),
+        relaxed,
+        slip(viable, first, colMs),
+      );
+      expect(batch[index]).toEqual(expected);
+    });
+    expect(batch.some((v) => v.verdict === 'GO')).toBe(true);
+    expect(batch.some((v) => v.verdict === 'MARGINAL')).toBe(true);
+    expect(batch.some((v) => v.verdict === 'NO-GO')).toBe(true);
   });
 });

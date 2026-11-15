@@ -1,65 +1,88 @@
-import { useEffect, useRef, useState } from 'react'
-import type { ChangeEvent, KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent, FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   HOUR_MS,
   MIN_MS,
+  PRESETS,
   provenanceFooter,
-} from '../../engine/index.ts'
-import type { Clock, Grade } from '../../engine/index.ts'
-import './App.css'
-import type { ScenarioResult, SiteDefinition, TerrainPayload, TrackPoint } from './scenario.ts'
-import { floorToTenMinutes } from './scenario.ts'
-import { timeControlForKey } from './keyboard.ts'
+  type Clock,
+  type Grade,
+} from '../../engine/index.ts';
+import './App.css';
+import { SkylineCanvas } from './SkylineCanvas.tsx';
+import { WindowFinder } from './WindowFinder.tsx';
+import { timeControlForKey } from './keyboard.ts';
+import {
+  DAILY_WINDOW_COLUMNS,
+  DAY_MS,
+  WEEKLY_WINDOW_COLUMNS,
+  floorToTenMinutes,
+  floorToUtcDay,
+  resolvePreset,
+  type ScenarioOptions,
+  type ScenarioResult,
+  type SiteDefinition,
+  type TerrainPayload,
+  type WindowFinderRow,
+} from './scenario.ts';
+import { formatCoordinates, groupSites, parseCustomSite } from './sites.ts';
+import {
+  DEFAULT_HEIGHT_M,
+  MAX_COMPARE_CARDS,
+  MAX_DATE_UTC,
+  MIN_DATE_UTC,
+  parseUrlState,
+  serializeUrlState,
+  type AppUrlState,
+  type PresetId,
+  type WindowFinderSpan,
+} from './url-state.ts';
+import type { WorkerResponse } from './worker-protocol.ts';
 
 type SitesFile = {
-  sites: SiteDefinition[]
-}
+  sites: SiteDefinition[];
+};
 
 type ValidationRow = {
-  id: string
-  name: string
-  n: number
-  maxDeg: number | null
-  thresholdDeg: number | null
-}
+  id: string;
+  name: string;
+  n: number;
+  maxDeg: number | null;
+  thresholdDeg: number | null;
+};
 
-/** One line of the skyline list written by the pipeline: which site and height has a terrain skyline. */
 type SkylineEntry = {
-  siteId: string
-  heightM: number
-  grade: Grade
-  terrain: string
-  siteElevationM: number
-  file: string
-}
-
-type WorkerResponse =
-  | { type: 'result'; requestId: number; result: ScenarioResult }
-  | { type: 'error'; requestId: number; message: string }
-
-type TableBuffer = { year: number; buffer: ArrayBuffer }
+  siteId: string;
+  heightM: number;
+  grade: Grade;
+  terrain: string;
+  siteElevationM: number;
+  file: string;
+};
 
 type DataState =
   | { kind: 'idle' }
   | { kind: 'loading' }
   | { kind: 'ready' }
-  | { kind: 'error'; message: string }
-
-const DEFAULT_DATE = '2027-03-01T00:00'
-const MIN_DATE = '2024-01-15T00:00'
-const MAX_DATE = '2039-12-15T00:00'
-const DEFAULT_PRESET = 'sortie'
-const HEIGHT_M = 2
+  | { kind: 'error'; message: string };
 
 function dataUrl(path: string): string {
-  return `${import.meta.env.BASE_URL}${path}`
+  return `${import.meta.env.BASE_URL}${path}`;
 }
 
 function parseUtcInput(value: string): number {
-  if (!value) return NaN
-  const withSeconds = value.length === 16 ? `${value}:00` : value
-  const parsed = Date.parse(`${withSeconds}Z`)
-  return Number.isFinite(parsed) ? floorToTenMinutes(parsed) : NaN
+  if (!value) return NaN;
+  const withSeconds = value.length === 16 ? `${value}:00` : value;
+  const parsed = Date.parse(`${withSeconds}Z`);
+  return Number.isFinite(parsed) ? floorToTenMinutes(parsed) : NaN;
+}
+
+function msToDateTimeInput(tMs: number): string {
+  return new Date(floorToTenMinutes(tMs)).toISOString().slice(0, 16);
+}
+
+function msToDateInput(tMs: number): string {
+  return new Date(floorToUtcDay(tMs)).toISOString().slice(0, 10);
 }
 
 function formatUtc(tMs: number): string {
@@ -71,230 +94,76 @@ function formatUtc(tMs: number): string {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-  }).format(new Date(tMs))
+  }).format(new Date(tMs));
 }
 
 function formatHours(hours: number): string {
-  if (hours < 1) return `${Math.max(1, Math.round(hours * 60))} min`
-  if (hours < 24) return `${hours.toFixed(1)} h`
-  return `${(hours / 24).toFixed(1)} d`
+  if (hours <= 0) return '0 min';
+  if (hours < 1) return `${Math.max(1, Math.round(hours * 60))} min`;
+  if (hours < 48) return `${hours.toFixed(1)} h`;
+  return `${(hours / 24).toFixed(1)} d`;
+}
+
+function formatSlipDays(days: number): string {
+  const rounded = Math.round(days * 100) / 100;
+  return `${rounded} d`;
 }
 
 function formatPercent(value: number): string {
-  return `${value.toFixed(1)}%`
+  return `${value.toFixed(1)}%`;
+}
+
+function formatEnergy(value: number): string {
+  return `${value.toFixed(1)} kWh/m²`;
 }
 
 function clockLabel(clock: Clock, startMs: number): string {
-  if (clock.status === 'already') return 'already below the horizon'
-  if (clock.status === 'none' || clock.tMs === undefined) return 'not during this stay'
-  const deltaHours = (clock.tMs - startMs) / HOUR_MS
-  return `${formatHours(deltaHours)} · ${formatUtc(clock.tMs)} UTC`
+  if (clock.status === 'already') return 'already below the horizon';
+  if (clock.status === 'none' || clock.tMs === undefined) return 'not during this stay';
+  const deltaHours = (clock.tMs - startMs) / HOUR_MS;
+  return `${formatHours(deltaHours)} · ${formatUtc(clock.tMs)} UTC`;
 }
 
 function verdictClass(verdict: ScenarioResult['verdict']['verdict']): string {
-  return verdict.toLowerCase().replace('-', '')
+  return verdict.toLowerCase().replace('-', '');
 }
 
-function nearestTrackPoint(track: TrackPoint[], targetMs: number): TrackPoint | undefined {
-  return track.reduce<TrackPoint | undefined>((nearest, point) => {
-    if (!nearest) return point
-    return Math.abs(point.tMs - targetMs) < Math.abs(nearest.tMs - targetMs) ? point : nearest
-  }, undefined)
-}
-
-function centeredAzimuth(az: number, center: number): number {
-  return ((az - center + 540) % 360) - 180
-}
-
-function SkylineCanvas({ result, scrubMinutes }: { result: ScenarioResult; scrubMinutes: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return undefined
-
-    const draw = () => {
-      const bounds = canvas.getBoundingClientRect()
-      const width = Math.max(320, bounds.width)
-      const height = Math.max(300, bounds.height)
-      const ratio = window.devicePixelRatio || 1
-      canvas.width = Math.floor(width * ratio)
-      canvas.height = Math.floor(height * ratio)
-      const context = canvas.getContext('2d')
-      if (!context) return
-      context.setTransform(ratio, 0, 0, ratio, 0, 0)
-      context.clearRect(0, 0, width, height)
-
-      const padding = { top: 30, right: 22, bottom: 36, left: 48 }
-      const plotWidth = width - padding.left - padding.right
-      const plotHeight = height - padding.top - padding.bottom
-      const allElevations = [
-        ...result.skyline.map((point) => point.elevation),
-        ...result.track.flatMap((point) => [point.sunEl, point.earthEl]),
-      ]
-      const minimum = Math.min(...allElevations) - 0.5
-      const maximum = Math.max(...allElevations) + 0.5
-      const range = Math.max(3, maximum - minimum)
-      const yMin = Math.floor(minimum * 2) / 2
-      const yMax = yMin + range
-      const toX = (az: number) => padding.left + ((centeredAzimuth(az, result.meanEarthAzimuth) + 180) / 360) * plotWidth
-      const toY = (el: number) => padding.top + ((yMax - el) / (yMax - yMin)) * plotHeight
-
-      context.fillStyle = '#101c2f'
-      context.fillRect(0, 0, width, height)
-      context.font = '12px ui-monospace, SFMono-Regular, Menlo, monospace'
-      context.textBaseline = 'middle'
-
-      for (let elevation = Math.ceil(yMin); elevation <= yMax; elevation++) {
-        const y = toY(elevation)
-        context.strokeStyle = elevation === 0 ? 'rgba(236, 242, 248, 0.3)' : 'rgba(236, 242, 248, 0.1)'
-        context.lineWidth = elevation === 0 ? 1.5 : 1
-        context.beginPath()
-        context.moveTo(padding.left, y)
-        context.lineTo(width - padding.right, y)
-        context.stroke()
-        context.fillStyle = 'rgba(236, 242, 248, 0.68)'
-        context.fillText(`${elevation}°`, 10, y)
-      }
-
-      context.strokeStyle = 'rgba(236, 242, 248, 0.18)'
-      context.lineWidth = 1
-      for (const azimuth of [-180, -90, 0, 90, 180]) {
-        const x = padding.left + ((azimuth + 180) / 360) * plotWidth
-        context.beginPath()
-        context.moveTo(x, padding.top)
-        context.lineTo(x, height - padding.bottom)
-        context.stroke()
-        context.fillStyle = 'rgba(236, 242, 248, 0.68)'
-        context.textAlign = azimuth === -180 ? 'left' : azimuth === 180 ? 'right' : 'center'
-        context.fillText(azimuth === 0 ? 'Earth mean direction' : `${azimuth > 0 ? '+' : ''}${azimuth}°`, x, height - 16)
-      }
-
-      const hasTerrain = result.verdict.grade !== 'D'
-      if (hasTerrain) {
-        // Terrain: one strip per azimuth bin, shaded by the distance to the terrain that sets the horizon.
-        const stripWidth = plotWidth / result.skyline.length
-        const floorY = height - padding.bottom
-        for (const point of result.skyline) {
-          const nearness = 1 - Math.min(1, Math.sqrt((point.distanceKm ?? 0) / 150))
-          const y = Math.max(padding.top, Math.min(floorY, toY(point.elevation)))
-          context.fillStyle = `rgba(208, 185, 137, ${(0.14 + 0.46 * nearness).toFixed(3)})`
-          context.fillRect(toX(point.az) - stripWidth / 2, y, stripWidth + 0.5, floorY - y)
-        }
-      } else {
-        context.beginPath()
-        result.skyline.forEach((point, index) => {
-          const x = toX(point.az)
-          const y = toY(point.elevation)
-          if (index === 0 || Math.abs(x - toX(result.skyline[index - 1].az)) > plotWidth / 2) context.moveTo(x, y)
-          else context.lineTo(x, y)
-        })
-        context.lineTo(width - padding.right, height - padding.bottom)
-        context.lineTo(padding.left, height - padding.bottom)
-        context.closePath()
-        context.fillStyle = 'rgba(208, 185, 137, 0.17)'
-        context.fill()
-      }
-
-      context.beginPath()
-      result.skyline.forEach((point, index) => {
-        const x = toX(point.az)
-        const y = toY(point.elevation)
-        if (index === 0 || Math.abs(x - toX(result.skyline[index - 1].az)) > plotWidth / 2) context.moveTo(x, y)
-        else context.lineTo(x, y)
-      })
-      context.strokeStyle = '#e7c98d'
-      context.lineWidth = hasTerrain ? 1.25 : 2
-      context.stroke()
-
-      const drawBodyTrack = (
-        getAz: (point: TrackPoint) => number,
-        getEl: (point: TrackPoint) => number,
-        hidden: (point: TrackPoint) => boolean,
-        colour: string,
-      ) => {
-        for (let index = 1; index < result.track.length; index++) {
-          const previous = result.track[index - 1]
-          const point = result.track[index]
-          const previousX = toX(getAz(previous))
-          const x = toX(getAz(point))
-          if (Math.abs(x - previousX) > plotWidth / 2) continue
-          context.beginPath()
-          context.moveTo(previousX, toY(getEl(previous)))
-          context.lineTo(x, toY(getEl(point)))
-          context.strokeStyle = colour
-          context.lineWidth = 2
-          context.setLineDash(hidden(point) ? [5, 5] : [])
-          context.stroke()
-        }
-        context.setLineDash([])
-      }
-
-      drawBodyTrack((point) => point.sunAz, (point) => point.sunEl, (point) => point.sunF < 0.01, '#f7c948')
-      drawBodyTrack((point) => point.earthAz, (point) => point.earthEl, (point) => !point.earthVis, '#6ed6e8')
-
-      const target = nearestTrackPoint(result.track, result.startMs + scrubMinutes * MIN_MS)
-      if (target) {
-        const marker = (az: number, elevation: number, colour: string) => {
-          context.beginPath()
-          context.arc(toX(az), toY(elevation), 5, 0, Math.PI * 2)
-          context.fillStyle = colour
-          context.fill()
-          context.strokeStyle = '#101c2f'
-          context.lineWidth = 2
-          context.stroke()
-        }
-        marker(target.sunAz, target.sunEl, '#f7c948')
-        marker(target.earthAz, target.earthEl, '#6ed6e8')
-      }
-
-      context.textAlign = 'left'
-      context.fillStyle = '#f7c948'
-      context.fillText('Sun', padding.left, 14)
-      context.fillStyle = '#6ed6e8'
-      context.fillText('Earth', padding.left + 42, 14)
-      context.fillStyle = '#e7c98d'
-      context.fillText(hasTerrain ? 'terrain horizon' : 'smooth horizon', padding.left + 92, 14)
-    }
-
-    draw()
-    const observer = new ResizeObserver(draw)
-    observer.observe(canvas)
-    return () => observer.disconnect()
-  }, [result, scrubMinutes])
-
-  const hasTerrain = result.verdict.grade !== 'D'
-  return (
-    <div className="skyline-frame">
-      <canvas ref={canvasRef} role="img" aria-label={`Skyline view showing the ${hasTerrain ? 'terrain' : 'smooth'} horizon with the Sun and Earth tracks`} />
-      <div className="skyline-caption">
-        <span>Skyline view · azimuth centered on mean Earth direction</span>
-        <span>Exaggeration 1× · hidden portions dashed{hasTerrain ? ' · terrain shaded by distance, nearer is lighter' : ''}</span>
-      </div>
-    </div>
-  )
+function eclipseSummary(result: ScenarioResult): { value: string; note?: string } {
+  const list = result.metrics.eclipses;
+  if (list.length === 0) return { value: 'None', note: 'during this stay' };
+  const first = list[0];
+  const peak = `${Math.round(first.maxObscuration * 100)}% max cover`;
+  const span = `${formatUtc(first.startMs)} – ${formatUtc(first.endMs)} UTC`;
+  return {
+    value: list.length === 1 ? `1 (${peak})` : `${list.length} (up to ${peak})`,
+    note: list.length === 1 ? span : `First: ${span}`,
+  };
 }
 
 function Timeline({ result, scrubMinutes }: { result: ScenarioResult; scrubMinutes: number }) {
-  const targetMs = result.startMs + scrubMinutes * MIN_MS
+  const targetMs = result.startMs + scrubMinutes * MIN_MS;
+  const halfCellMs = (result.timelineStepHours * HOUR_MS) / 2;
+  const stepLabel = result.timelineStepHours >= 24
+    ? `every ${result.timelineStepHours / 24} days`
+    : `every ${result.timelineStepHours} hours`;
   return (
     <div className="timeline-wrap">
       <div className="timeline-head">
         <span>Stay timeline</span>
-        <span>Sunlight and Earth link, sampled every 6 hours</span>
+        <span>Sunlight and Earth link, sampled {stepLabel}</span>
       </div>
       <div className="timeline" role="img" aria-label="Timeline of sunlight and Earth visibility during the selected stay">
         {result.timeline.map((point) => {
-          const dark = point.sunF < 0.01
-          const noLink = !point.earthVis
-          const active = Math.abs(point.tMs - targetMs) < 3 * HOUR_MS
+          const dark = point.sunF < 0.01;
+          const noLink = !point.earthVis;
+          const active = Math.abs(point.tMs - targetMs) <= halfCellMs;
           return (
             <div
               className={`timeline-cell ${dark ? 'is-dark' : 'is-lit'} ${noLink ? 'is-hidden' : 'is-linked'} ${active ? 'is-active' : ''}`}
               key={point.tMs}
               title={`${formatUtc(point.tMs)} UTC · Sun ${formatPercent(point.sunF * 100)} · Earth ${point.earthVis ? 'visible' : 'hidden'}`}
             />
-          )
+          );
         })}
       </div>
       <div className="timeline-legend" aria-hidden="true">
@@ -304,7 +173,7 @@ function Timeline({ result, scrubMinutes }: { result: ScenarioResult; scrubMinut
         <span><i className="legend-swatch no-link" /> Earth hidden</span>
       </div>
     </div>
-  )
+  );
 }
 
 function Metric({ label, value, note }: { label: string; value: string; note?: string }) {
@@ -314,264 +183,678 @@ function Metric({ label, value, note }: { label: string; value: string; note?: s
       <dd>{value}</dd>
       {note && <small>{note}</small>}
     </div>
-  )
+  );
+}
+
+function clampDateString(dateTime: string): string {
+  const ms = parseUtcInput(dateTime);
+  const minMs = parseUtcInput(MIN_DATE_UTC);
+  const maxMs = parseUtcInput(MAX_DATE_UTC);
+  if (!Number.isFinite(ms)) return dateTime;
+  return msToDateTimeInput(Math.max(minMs, Math.min(maxMs, ms)));
 }
 
 function App() {
-  const [sites, setSites] = useState<SiteDefinition[]>([])
-  const [selectedSiteId, setSelectedSiteId] = useState('connecting-ridge')
-  const [dateTime, setDateTime] = useState(DEFAULT_DATE)
-  const [presetId, setPresetId] = useState(DEFAULT_PRESET)
-  const [sitesState, setSitesState] = useState<DataState>({ kind: 'loading' })
-  const [ephemState, setEphemState] = useState<DataState>({ kind: 'idle' })
-  const [tables, setTables] = useState<TableBuffer[]>([])
-  const [validation, setValidation] = useState<ValidationRow | null>(null)
-  const [skylineIndex, setSkylineIndex] = useState<Map<string, SkylineEntry> | null>(null)
-  const [loadedTerrain, setLoadedTerrain] = useState<{ siteId: string; payload: TerrainPayload | null } | null>(null)
-  const [result, setResult] = useState<ScenarioResult | null>(null)
-  const [calculationState, setCalculationState] = useState<DataState>({ kind: 'idle' })
-  const [scrubMinutes, setScrubMinutes] = useState(0)
-  const [playing, setPlaying] = useState(false)
-  const workerRef = useRef<Worker | null>(null)
-  const requestRef = useRef(0)
-  const bufferCache = useRef(new Map<number, ArrayBuffer>())
+  const [urlState, setUrlState] = useState<AppUrlState>(() =>
+    parseUrlState(typeof window !== 'undefined' ? window.location.search : ''),
+  );
+  const [librarySites, setLibrarySites] = useState<SiteDefinition[]>([]);
+  const [sitesState, setSitesState] = useState<DataState>({ kind: 'loading' });
+  const [ephemState, setEphemState] = useState<DataState>({ kind: 'idle' });
+  const [validation, setValidation] = useState<ValidationRow | null>(null);
+  const [skylineIndex, setSkylineIndex] = useState<Map<string, SkylineEntry> | null>(null);
+  const [skylinesReady, setSkylinesReady] = useState(false);
 
+  const [cardResults, setCardResults] = useState<Map<string, ScenarioResult>>(new Map());
+  const [compareState, setCompareState] = useState<DataState>({ kind: 'idle' });
+  const [matrixRows, setMatrixRows] = useState<Map<string, WindowFinderRow>>(new Map());
+  const [matrixProgress, setMatrixProgress] = useState<{
+    done: number;
+    total: number;
+    computing: boolean;
+    error: string | null;
+  }>({ done: 0, total: 0, computing: false, error: null });
+
+  const [scrubMinutes, setScrubMinutes] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const [shareNote, setShareNote] = useState<string | null>(null);
+  const [siteFilter, setSiteFilter] = useState('');
+
+  // Custom coordinate form state
+  const [customOpen, setCustomOpen] = useState(false);
+  const [customLat, setCustomLat] = useState('');
+  const [customLon, setCustomLon] = useState('');
+  const [customName, setCustomName] = useState('');
+  const [customError, setCustomError] = useState<string | null>(null);
+
+  const workerRef = useRef<Worker | null>(null);
+  const compareReqRef = useRef(0);
+  const matrixReqRef = useRef(0);
+  const loadedYearsRef = useRef(new Set<number>());
+  const bufferCacheRef = useRef(new Map<number, ArrayBuffer>());
+
+  // Sync URL on state change
   useEffect(() => {
-    let active = true
+    const query = serializeUrlState(urlState);
+    const nextUrl = `${window.location.pathname}${query}${window.location.hash}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (nextUrl !== currentUrl) {
+      window.history.replaceState(null, '', nextUrl);
+    }
+  }, [urlState]);
+
+  // Listen to browser Back/Forward
+  useEffect(() => {
+    const onPopState = () => setUrlState(parseUrlState(window.location.search));
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Load site library
+  useEffect(() => {
+    let active = true;
     fetch(dataUrl('data/sites.json'))
       .then((response) => {
-        if (!response.ok) throw new Error(`site list returned ${response.status}`)
-        return response.json() as Promise<SitesFile>
+        if (!response.ok) throw new Error(`site list returned ${response.status}`);
+        return response.json() as Promise<SitesFile>;
       })
       .then((payload) => {
-        if (!active) return
-        setSites(payload.sites)
-        setSitesState({ kind: 'ready' })
+        if (!active) return;
+        setLibrarySites(payload.sites);
+        const loadedIds = new Set(payload.sites.map((s) => s.id));
+        setUrlState((prev) => {
+          const customIds = new Set(prev.customSites.map((s) => s.id));
+          const validCards = prev.cards.filter((c) => loadedIds.has(c.siteId) || customIds.has(c.siteId));
+          if (validCards.length === prev.cards.length) return prev;
+          return {
+            ...prev,
+            cards: validCards.length > 0 ? validCards : [{ siteId: payload.sites[0]?.id ?? 'connecting-ridge' }],
+            activeCardIndex: 0,
+          };
+        });
+        setSitesState({ kind: 'ready' });
       })
       .catch((error: unknown) => {
-        if (!active) return
-        setSitesState({ kind: 'error', message: error instanceof Error ? error.message : String(error) })
-      })
+        if (!active) return;
+        setSitesState({ kind: 'error', message: error instanceof Error ? error.message : String(error) });
+      });
     return () => {
-      active = false
-    }
-  }, [])
+      active = false;
+    };
+  }, []);
 
+  // Load validation summary
   useEffect(() => {
     fetch(dataUrl('data/validation.json'))
       .then((response) => {
-        if (!response.ok) throw new Error(`validation data returned ${response.status}`)
-        return response.json() as Promise<{ rows: ValidationRow[] }>
+        if (!response.ok) throw new Error(`validation data returned ${response.status}`);
+        return response.json() as Promise<{ rows: ValidationRow[] }>;
       })
       .then((payload) => setValidation(payload.rows.find((row) => row.id === 'sun-earth-direction') ?? null))
-      .catch(() => setValidation(null))
-  }, [])
+      .catch(() => setValidation(null));
+  }, []);
 
-  // Which sites have a terrain skyline. A missing or unreadable list means none: every site is then grade D.
+  // Start Web Worker
   useEffect(() => {
+    const worker = new Worker(new URL('./engine.worker.ts', import.meta.url), { type: 'module' });
+    workerRef.current = worker;
+    const workerYears = loadedYearsRef.current;
+    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+      const message = event.data;
+      if (message.type === 'compare-result') {
+        if (message.requestId !== compareReqRef.current) return;
+        setCardResults(new Map(message.cards.map((item) => [item.slotKey, item.result])));
+        setCompareState({ kind: 'ready' });
+      } else if (message.type === 'compare-error') {
+        if (message.requestId !== compareReqRef.current) return;
+        setCompareState({ kind: 'error', message: message.message });
+      } else if (message.type === 'matrix-chunk') {
+        if (message.requestId !== matrixReqRef.current) return;
+        setMatrixRows((prev) => {
+          const next = new Map(prev);
+          for (const row of message.rows) next.set(row.siteId, row);
+          return next;
+        });
+        setMatrixProgress({
+          done: message.done,
+          total: message.total,
+          computing: message.done < message.total,
+          error: null,
+        });
+      } else if (message.type === 'matrix-done') {
+        if (message.requestId !== matrixReqRef.current) return;
+        setMatrixProgress((prev) => ({ ...prev, computing: false }));
+      } else if (message.type === 'matrix-error') {
+        if (message.requestId !== matrixReqRef.current) return;
+        setMatrixProgress((prev) => ({ ...prev, computing: false, error: message.message }));
+      }
+    };
+    return () => {
+      worker.terminate();
+      workerRef.current = null;
+      workerYears.clear();
+    };
+  }, []);
+
+  // Load skyline index and send precomputed skylines to the Worker once
+  useEffect(() => {
+    let active = true;
     fetch(dataUrl('data/skylines/index.json'))
       .then((response) => {
-        if (!response.ok) return { skylines: [] }
-        return response.json() as Promise<{ skylines: SkylineEntry[] }>
+        if (!response.ok) return { skylines: [] as SkylineEntry[] };
+        return response.json() as Promise<{ skylines: SkylineEntry[] }>;
       })
-      .then((payload) => setSkylineIndex(new Map(
-        payload.skylines.filter((entry) => entry.heightM === HEIGHT_M).map((entry) => [entry.siteId, entry]),
-      )))
-      .catch(() => setSkylineIndex(new Map()))
-  }, [])
-
-  const selectedSite = sites.find((site) => site.id === selectedSiteId) ?? sites[0]
-
-  // Load the selected site's terrain skyline. If there is none, or it cannot be loaded, the scenario uses the
-  // smooth sphere and says grade D.
-  useEffect(() => {
-    const entry = selectedSite && skylineIndex?.get(selectedSite.id)
-    if (!selectedSite || !entry) return undefined
-    const siteId = selectedSite.id
-    let active = true
-    fetch(dataUrl(`data/skylines/${entry.file}`))
-      .then((response) => {
-        if (!response.ok) throw new Error(`skyline returned ${response.status}`)
-        return response.arrayBuffer()
-      })
-      .then((buffer) => {
-        if (!active) return
-        setLoadedTerrain({ siteId, payload: { buffer, grade: entry.grade, terrain: entry.terrain, siteElevationM: entry.siteElevationM, heightM: entry.heightM } })
+      .then(async (payload) => {
+        if (!active) return;
+        const entries = payload.skylines.filter((entry) => entry.heightM === DEFAULT_HEIGHT_M);
+        setSkylineIndex(new Map(entries.map((entry) => [entry.siteId, entry])));
+        const loaded = await Promise.all(
+          entries.map(async (entry) => {
+            try {
+              const resp = await fetch(dataUrl(`data/skylines/${entry.file}`));
+              if (!resp.ok) return null;
+              const buffer = await resp.arrayBuffer();
+              const terrainPayload: TerrainPayload = {
+                buffer,
+                grade: entry.grade,
+                terrain: entry.terrain,
+                siteElevationM: entry.siteElevationM,
+                heightM: entry.heightM,
+              };
+              return { siteId: entry.siteId, payload: terrainPayload };
+            } catch {
+              return null;
+            }
+          }),
+        );
+        if (!active) return;
+        const valid = loaded.filter((item): item is { siteId: string; payload: TerrainPayload } => item !== null);
+        workerRef.current?.postMessage({ type: 'set-skylines', skylines: valid });
+        setSkylinesReady(true);
       })
       .catch(() => {
-        if (active) setLoadedTerrain({ siteId, payload: null })
-      })
+        if (!active) return;
+        setSkylineIndex(new Map());
+        setSkylinesReady(true);
+      });
     return () => {
-      active = false
+      active = false;
+    };
+  }, []);
+
+  const allSites = useMemo(() => {
+    const map = new Map<string, SiteDefinition>();
+    for (const custom of urlState.customSites) map.set(custom.id, custom);
+    for (const site of librarySites) map.set(site.id, site);
+    return Array.from(map.values());
+  }, [librarySites, urlState.customSites]);
+
+  const siteById = useMemo(() => new Map(allSites.map((s) => [s.id, s])), [allSites]);
+
+  const skylineGrades = useMemo(() => {
+    const grades = new Map<string, Grade>();
+    if (skylineIndex) {
+      for (const [siteId, entry] of skylineIndex) grades.set(siteId, entry.grade);
     }
-  }, [selectedSite, skylineIndex])
+    return grades;
+  }, [skylineIndex]);
 
-  const selectedHasSkyline = Boolean(selectedSite && skylineIndex?.has(selectedSite.id))
-  const terrainLoaded = selectedHasSkyline && loadedTerrain?.siteId === selectedSite?.id
-  const terrainReady = Boolean(selectedSite && skylineIndex) && (!selectedHasSkyline || terrainLoaded)
-  const terrainPayload = terrainLoaded ? loadedTerrain.payload : null
-  const selectedYear = Number(dateTime.slice(0, 4))
-  const dateRangeError = !Number.isInteger(selectedYear) || selectedYear < 2024 || selectedYear > 2039
-    ? 'Choose a date from January 2024 through December 2039 so the surrounding cached years are available.'
-    : null
+  const effectivePreset = useMemo(
+    () =>
+      resolvePreset(urlState.presetId, {
+        stayDays: urlState.stayDays,
+        rules: urlState.ruleOverrides,
+        marginDeg: urlState.marginDeg,
+      }),
+    [urlState.marginDeg, urlState.presetId, urlState.ruleOverrides, urlState.stayDays],
+  );
 
-  useEffect(() => {
-    if (!Number.isInteger(selectedYear) || selectedYear < 2024 || selectedYear > 2039) return
-    let active = true
-    const years = [selectedYear - 1, selectedYear, selectedYear + 1]
-    Promise.all(years.map(async (year) => {
-      const cached = bufferCache.current.get(year)
-      if (cached) return { year, buffer: cached }
-      const response = await fetch(dataUrl(`data/ephem/${year}.bin`))
-      if (!response.ok) throw new Error(`ephemeris ${year} returned ${response.status}`)
-      const buffer = await response.arrayBuffer()
-      bufferCache.current.set(year, buffer)
-      return { year, buffer }
-    }))
-      .then((loaded) => {
-        if (!active) return
-        setTables(loaded)
-        setEphemState({ kind: 'ready' })
-      })
-      .catch((error: unknown) => {
-        if (!active) return
-        setTables([])
-        setEphemState({ kind: 'error', message: error instanceof Error ? error.message : String(error) })
-      })
-    return () => {
-      active = false
-    }
-  }, [selectedYear])
+  const scenarioOptions: ScenarioOptions = useMemo(
+    () => ({
+      stayDays: urlState.stayDays,
+      rules: urlState.ruleOverrides,
+      marginDeg: urlState.marginDeg,
+    }),
+    [urlState.marginDeg, urlState.ruleOverrides, urlState.stayDays],
+  );
 
-  useEffect(() => {
-    const worker = new Worker(new URL('./engine.worker.ts', import.meta.url), { type: 'module' })
-    workerRef.current = worker
-    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-      const message = event.data
-      if (message.requestId !== requestRef.current) return
-      if (message.type === 'error') {
-        setResult(null)
-        setCalculationState({ kind: 'error', message: message.message })
-      } else {
-        setResult(message.result)
-        setCalculationState({ kind: 'ready' })
+  const globalStartMs = parseUtcInput(urlState.dateTime);
+  const matrixStartDayMs = useMemo(() => {
+    const parsed = Date.parse(`${urlState.windowStartDate}T00:00:00Z`);
+    return Number.isFinite(parsed) ? floorToUtcDay(parsed) : floorToUtcDay(globalStartMs || Date.UTC(2027, 2, 1));
+  }, [globalStartMs, urlState.windowStartDate]);
+
+  // Determine all ephemeris years needed across compare cards + Window Finder
+  const neededYearsKey = useMemo(() => {
+    const times: number[] = [];
+    if (Number.isFinite(globalStartMs)) times.push(globalStartMs);
+    for (const card of urlState.cards) {
+      if (card.dateTime) {
+        const ms = parseUtcInput(card.dateTime);
+        if (Number.isFinite(ms)) times.push(ms);
       }
     }
+    if (Number.isFinite(matrixStartDayMs)) times.push(matrixStartDayMs);
+    if (times.length === 0) return '';
+    const stayBufferMs = Math.max(urlState.stayDays, 14) * DAY_MS;
+    const wfSpanMs = (urlState.windowSpan === 'weekly' ? WEEKLY_WINDOW_COLUMNS * 7 : DAILY_WINDOW_COLUMNS) * DAY_MS;
+    const minMs = Math.min(...times) - 35 * DAY_MS;
+    const maxMs = Math.max(...times, matrixStartDayMs + wfSpanMs) + stayBufferMs + 130 * DAY_MS;
+    const minY = Math.max(2023, new Date(minMs).getUTCFullYear());
+    const maxY = Math.min(2040, new Date(maxMs).getUTCFullYear());
+    const years: number[] = [];
+    for (let y = minY; y <= maxY; y++) years.push(y);
+    return years.join(',');
+  }, [globalStartMs, matrixStartDayMs, urlState.cards, urlState.stayDays, urlState.windowSpan]);
+
+  useEffect(() => {
+    if (!neededYearsKey) return undefined;
+    const years = neededYearsKey.split(',').map(Number);
+    const missing = years.filter((y) => !loadedYearsRef.current.has(y));
+    if (missing.length === 0) {
+      setEphemState({ kind: 'ready' });
+      return undefined;
+    }
+    let active = true;
+    setEphemState({ kind: 'loading' });
+    Promise.all(
+      missing.map(async (year) => {
+        const cached = bufferCacheRef.current.get(year);
+        if (cached) return { year, buffer: cached };
+        const response = await fetch(dataUrl(`data/ephem/${year}.bin`));
+        if (!response.ok) throw new Error(`ephemeris ${year} returned ${response.status}`);
+        const buffer = await response.arrayBuffer();
+        bufferCacheRef.current.set(year, buffer);
+        return { year, buffer };
+      }),
+    )
+      .then((loaded) => {
+        if (!active) return;
+        workerRef.current?.postMessage({ type: 'set-ephem', tables: loaded });
+        for (const item of loaded) loadedYearsRef.current.add(item.year);
+        setEphemState({ kind: 'ready' });
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setEphemState({ kind: 'error', message: error instanceof Error ? error.message : String(error) });
+      });
     return () => {
-      worker.terminate()
-      workerRef.current = null
-    }
-  }, [])
+      active = false;
+    };
+  }, [neededYearsKey]);
 
+  const resolvedSlots = useMemo(() => {
+    return urlState.cards.flatMap((card, idx) => {
+      const site = siteById.get(card.siteId);
+      const effectiveDate = card.dateTime ?? urlState.dateTime;
+      const startMs = parseUtcInput(effectiveDate);
+      if (!site || !Number.isFinite(startMs)) return [];
+      const year = Number(effectiveDate.slice(0, 4));
+      if (!Number.isInteger(year) || year < 2024 || year > 2039) return [];
+      return [{ index: idx, slotKey: `${idx}:${site.id}:${startMs}`, card, site, startMs, effectiveDate }];
+    });
+  }, [siteById, urlState.cards, urlState.dateTime]);
+
+  // Dispatch Compare board calculation
   useEffect(() => {
-    if (!selectedSite || tables.length === 0 || ephemState.kind !== 'ready') return
-    if (!terrainReady) return
-    const startMs = parseUtcInput(dateTime)
-    if (!Number.isFinite(startMs)) return
-    const worker = workerRef.current
-    if (!worker) return
-    const requestId = requestRef.current + 1
-    requestRef.current = requestId
-    setCalculationState({ kind: 'loading' })
-    setResult(null)
+    if (ephemState.kind !== 'ready' || !skylinesReady || resolvedSlots.length === 0) return;
+    const worker = workerRef.current;
+    if (!worker) return;
+    const requestId = compareReqRef.current + 1;
+    compareReqRef.current = requestId;
+    setCompareState({ kind: 'loading' });
     worker.postMessage({
-      type: 'calculate',
+      type: 'compare',
       requestId,
-      tables,
-      site: selectedSite,
-      startMs,
-      presetId,
-      heightM: HEIGHT_M,
-      terrain: terrainPayload,
-    })
-  }, [dateTime, ephemState.kind, presetId, selectedSite, tables, terrainReady, terrainPayload])
+      slots: resolvedSlots.map((s) => ({ slotKey: s.slotKey, site: s.site, startMs: s.startMs })),
+      presetId: urlState.presetId,
+      heightM: urlState.heightM,
+      options: scenarioOptions,
+    });
+  }, [ephemState.kind, neededYearsKey, resolvedSlots, scenarioOptions, skylinesReady, urlState.heightM, urlState.presetId]);
 
+  // Dispatch Window Finder calculation (does NOT re-run when only a card's date changes inside the visible range)
   useEffect(() => {
-    if (!playing || !result) return undefined
-    const stayMinutes = result.stayMs / MIN_MS
-    const timer = window.setInterval(() => {
-      setScrubMinutes((current) => (current + 10 > stayMinutes ? 0 : current + 10))
-    }, 220)
-    return () => window.clearInterval(timer)
-  }, [playing, result])
-
-  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPlaying(false)
-    setScrubMinutes(0)
-    invalidateCalculation()
-    const nextValue = event.target.value
-    const nextYear = Number(nextValue.slice(0, 4))
-    if (nextYear !== selectedYear) {
-      setTables([])
-      setEphemState({ kind: 'loading' })
+    if (ephemState.kind !== 'ready' || !skylinesReady || allSites.length === 0) return;
+    if (!effectivePreset.rules) {
+      matrixReqRef.current += 1;
+      return;
     }
-    setResult(null)
-    setDateTime(nextValue)
-  }
+    const worker = workerRef.current;
+    if (!worker) return;
+    const requestId = matrixReqRef.current + 1;
+    matrixReqRef.current = requestId;
+    setMatrixRows(new Map());
+    setMatrixProgress({ done: 0, total: allSites.length, computing: true, error: null });
+    worker.postMessage({
+      type: 'matrix',
+      requestId,
+      sites: allSites,
+      matrixStartDayMs,
+      span: urlState.windowSpan,
+      presetId: urlState.presetId,
+      heightM: urlState.heightM,
+      options: scenarioOptions,
+    });
+  }, [
+    allSites,
+    effectivePreset.rules,
+    ephemState.kind,
+    matrixStartDayMs,
+    neededYearsKey,
+    scenarioOptions,
+    skylinesReady,
+    urlState.heightM,
+    urlState.presetId,
+    urlState.windowSpan,
+  ]);
+
+  const stayMinutes = Math.round(urlState.stayDays * 1440);
+
+  // Play time-lapse timer
+  useEffect(() => {
+    if (!playing) return undefined;
+    const step = stayMinutes > 60 * 1440 ? 360 : 10;
+    const timer = window.setInterval(() => {
+      setScrubMinutes((current) => (current + step > stayMinutes ? 0 : current + step));
+    }, 200);
+    return () => window.clearInterval(timer);
+  }, [playing, stayMinutes]);
+
+  const resetScrub = useCallback(() => {
+    setPlaying(false);
+    setScrubMinutes(0);
+  }, []);
+
+  const ensureWindowCoversDate = useCallback(
+    (nextDateTime: string, currentWindowStart: string, span: WindowFinderSpan): string => {
+      const nextMs = parseUtcInput(nextDateTime);
+      const winMs = Date.parse(`${currentWindowStart}T00:00:00Z`);
+      if (!Number.isFinite(nextMs) || !Number.isFinite(winMs)) return nextDateTime.slice(0, 10);
+      const spanMs = (span === 'weekly' ? WEEKLY_WINDOW_COLUMNS * 7 : DAILY_WINDOW_COLUMNS) * DAY_MS;
+      const dayMs = floorToUtcDay(nextMs);
+      if (dayMs < winMs || dayMs >= winMs + spanMs) {
+        return msToDateInput(dayMs);
+      }
+      return currentWindowStart;
+    },
+    [],
+  );
+
+  const handleGlobalDateChange = (nextValue: string) => {
+    resetScrub();
+    setUrlState((prev) => ({
+      ...prev,
+      dateTime: nextValue,
+      windowStartDate: ensureWindowCoversDate(nextValue, prev.windowStartDate, prev.windowSpan),
+    }));
+  };
+
+  const shiftGlobalDateDays = (deltaDays: number) => {
+    const baseMs = Number.isFinite(globalStartMs) ? globalStartMs : Date.UTC(2027, 2, 1);
+    const shifted = clampDateString(msToDateTimeInput(baseMs + deltaDays * DAY_MS));
+    handleGlobalDateChange(shifted);
+  };
 
   const handlePresetChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPlaying(false)
-    setScrubMinutes(0)
-    invalidateCalculation()
-    setPresetId(event.target.value)
-  }
+    const nextPreset = event.target.value as PresetId;
+    resetScrub();
+    setUrlState((prev) => ({
+      ...prev,
+      presetId: nextPreset,
+      stayDays: PRESETS[nextPreset].stayDays,
+      ruleOverrides: {},
+    }));
+  };
 
-  const resetScrub = () => {
-    setPlaying(false)
-    setScrubMinutes(0)
-  }
+  const handleStayChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const val = Number(event.target.value);
+    if (!Number.isFinite(val) || val < 0.5 || val > 365) return;
+    resetScrub();
+    setUrlState((prev) => ({ ...prev, stayDays: Math.round(val * 2) / 2 }));
+  };
 
-  const invalidateCalculation = () => {
-    requestRef.current += 1
-    setResult(null)
-  }
+  const updateRuleOverride = (
+    key: keyof AppUrlState['ruleOverrides'],
+    raw: string,
+    min: number,
+    max: number,
+  ) => {
+    const val = Number(raw);
+    if (!Number.isFinite(val) || val < min || val > max) return;
+    setUrlState((prev) => ({
+      ...prev,
+      ruleOverrides: { ...prev.ruleOverrides, [key]: Math.round(val * 10) / 10 },
+    }));
+  };
+
+  const resetRulesToDefault = () => {
+    setUrlState((prev) => ({
+      ...prev,
+      stayDays: PRESETS[prev.presetId].stayDays,
+      marginDeg: 0,
+      ruleOverrides: {},
+    }));
+  };
+
+  const selectSiteIntoActiveCard = (siteId: string) => {
+    resetScrub();
+    setUrlState((prev) => {
+      const existingIdx = prev.cards.findIndex((c) => c.siteId === siteId && !c.dateTime);
+      if (existingIdx >= 0) {
+        return { ...prev, activeCardIndex: existingIdx };
+      }
+      const nextCards = prev.cards.map((card, i) =>
+        i === prev.activeCardIndex ? { ...card, siteId } : card,
+      );
+      return { ...prev, cards: nextCards };
+    });
+  };
+
+  const toggleCompareSite = (siteId: string) => {
+    resetScrub();
+    setUrlState((prev) => {
+      const existingIdx = prev.cards.findIndex((c) => c.siteId === siteId);
+      if (existingIdx >= 0) {
+        if (prev.cards.length <= 1) return prev;
+        const nextCards = prev.cards.filter((_, i) => i !== existingIdx);
+        return {
+          ...prev,
+          cards: nextCards,
+          activeCardIndex: Math.min(nextCards.length - 1, prev.activeCardIndex),
+        };
+      }
+      if (prev.cards.length >= MAX_COMPARE_CARDS) {
+        const nextCards = prev.cards.map((c, i) => (i === prev.activeCardIndex ? { siteId } : c));
+        return { ...prev, cards: nextCards };
+      }
+      const nextCards = [...prev.cards, { siteId }];
+      return { ...prev, cards: nextCards, activeCardIndex: nextCards.length - 1 };
+    });
+  };
+
+  const duplicateCardWithSlip = (cardIndex: number, slipDays = 21) => {
+    setUrlState((prev) => {
+      if (prev.cards.length >= MAX_COMPARE_CARDS) return prev;
+      const source = prev.cards[cardIndex];
+      const baseMs = parseUtcInput(source.dateTime ?? prev.dateTime);
+      const nextDate = Number.isFinite(baseMs)
+        ? clampDateString(msToDateTimeInput(baseMs + slipDays * DAY_MS))
+        : prev.dateTime;
+      const nextCards = [...prev.cards, { siteId: source.siteId, dateTime: nextDate }];
+      return { ...prev, cards: nextCards, activeCardIndex: nextCards.length - 1 };
+    });
+  };
+
+  const setCardDateOverride = (cardIndex: number, dateTime: string | undefined) => {
+    setUrlState((prev) => ({
+      ...prev,
+      cards: prev.cards.map((card, i) => (i === cardIndex ? { siteId: card.siteId, dateTime } : card)),
+    }));
+  };
+
+  const removeCard = (cardIndex: number) => {
+    setUrlState((prev) => {
+      if (prev.cards.length <= 1) return prev;
+      const nextCards = prev.cards.filter((_, i) => i !== cardIndex);
+      return {
+        ...prev,
+        cards: nextCards,
+        activeCardIndex: Math.min(nextCards.length - 1, prev.activeCardIndex),
+      };
+    });
+  };
+
+  const handleAddCustomCoordinate = (event: FormEvent) => {
+    event.preventDefault();
+    const parsed = parseCustomSite(customLat, customLon, customName);
+    if (!parsed.ok) {
+      setCustomError(parsed.error);
+      return;
+    }
+    setCustomError(null);
+    setCustomLat('');
+    setCustomLon('');
+    setCustomName('');
+    resetScrub();
+    setUrlState((prev) => {
+      const nextCustom = prev.customSites.some((s) => s.id === parsed.site.id)
+        ? prev.customSites.map((s) => (s.id === parsed.site.id ? parsed.site : s))
+        : [...prev.customSites, parsed.site];
+      const canAppend = prev.cards.length < MAX_COMPARE_CARDS && !prev.cards.some((c) => c.siteId === parsed.site.id);
+      const nextCards = canAppend
+        ? [...prev.cards, { siteId: parsed.site.id }]
+        : prev.cards.map((c, i) => (i === prev.activeCardIndex ? { siteId: parsed.site.id } : c));
+      const nextActive = canAppend ? nextCards.length - 1 : prev.activeCardIndex;
+      return {
+        ...prev,
+        customSites: nextCustom,
+        cards: nextCards,
+        activeCardIndex: nextActive,
+      };
+    });
+  };
+
+  const handleSelectWindowScenario = useCallback(
+    (siteId: string, dayStartMs: number, addCard: boolean) => {
+      resetScrub();
+      const nextDate = clampDateString(msToDateTimeInput(dayStartMs));
+      setUrlState((prev) => {
+        if (addCard && prev.cards.length < MAX_COMPARE_CARDS) {
+          const nextCards = [...prev.cards, { siteId, dateTime: nextDate }];
+          return { ...prev, cards: nextCards, activeCardIndex: nextCards.length - 1 };
+        }
+        const existingIdx = prev.cards.findIndex((c) => c.siteId === siteId && !c.dateTime);
+        const targetIdx = existingIdx >= 0 ? existingIdx : prev.activeCardIndex;
+        const nextCards = prev.cards.map((card, i) =>
+          i === targetIdx ? { siteId } : card,
+        );
+        return {
+          ...prev,
+          dateTime: nextDate,
+          cards: nextCards,
+          activeCardIndex: targetIdx,
+        };
+      });
+    },
+    [resetScrub],
+  );
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareNote('Scenario link copied');
+    } catch {
+      window.prompt('Copy scenario link:', shareUrl);
+      setShareNote('Scenario link ready');
+    }
+    window.setTimeout(() => setShareNote(null), 2600);
+  };
 
   const applyTimeControl = (key: string): boolean => {
-    if (!result) return false
-    const action = timeControlForKey(key, scrubMinutes, result.stayMs / MIN_MS)
-    if (!action) return false
+    const action = timeControlForKey(key, scrubMinutes, stayMinutes);
+    if (!action) return false;
     if (action.type === 'toggle-play') {
-      setPlaying((current) => !current)
+      setPlaying((current) => !current);
     } else {
-      setPlaying(false)
-      setScrubMinutes(action.minutes)
+      setPlaying(false);
+      setScrubMinutes(action.minutes);
     }
-    return true
-  }
+    return true;
+  };
 
   const handleViewKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.target !== event.currentTarget) return
-    if (applyTimeControl(event.key)) event.preventDefault()
-  }
+    if (event.target !== event.currentTarget) return;
+    if (applyTimeControl(event.key)) event.preventDefault();
+  };
 
   const handleScrubKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (applyTimeControl(event.key)) event.preventDefault()
-  }
+    if (applyTimeControl(event.key)) event.preventDefault();
+  };
 
-  const dateInputError = Number.isFinite(parseUtcInput(dateTime)) ? null : 'Choose a valid UTC date and time.'
+  const filteredSites = useMemo(() => {
+    const q = siteFilter.trim().toLowerCase();
+    if (!q) return allSites;
+    return allSites.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q)
+        || s.label.toLowerCase().includes(q)
+        || s.id.toLowerCase().includes(q),
+    );
+  }, [allSites, siteFilter]);
+
+  const siteGroups = useMemo(() => groupSites(filteredSites), [filteredSites]);
+
+  const comparedSiteIds = useMemo(
+    () => new Set(urlState.cards.map((c) => c.siteId)),
+    [urlState.cards],
+  );
+
+  const activeCard = urlState.cards[urlState.activeCardIndex] ?? urlState.cards[0];
+  const activeSiteId = activeCard?.siteId ?? 'connecting-ridge';
+
+  const selectedYear = Number(urlState.dateTime.slice(0, 4));
+  const dateRangeError = !Number.isInteger(selectedYear) || selectedYear < 2024 || selectedYear > 2039
+    ? 'Choose a date from January 2024 through December 2039 so the surrounding cached years are available.'
+    : null;
+  const dateInputError = Number.isFinite(globalStartMs) ? null : 'Choose a valid UTC date and time.';
+
   const statusMessage = dateRangeError
     ?? dateInputError
     ?? (ephemState.kind === 'error' ? ephemState.message : null)
-    ?? (calculationState.kind === 'error' ? calculationState.message : null)
+    ?? (compareState.kind === 'error' ? compareState.message : null);
+
+  const isRulesCustomized =
+    urlState.stayDays !== PRESETS[urlState.presetId].stayDays
+    || urlState.marginDeg !== 0
+    || Object.keys(urlState.ruleOverrides).length > 0;
 
   return (
     <div className="app-shell">
       <header className="topbar">
-        <a className="wordmark" href="./" aria-label="Oneiric home">ONEIRIC<span> / lunar windows</span></a>
-        <span className="topbar-note">UTC · cached ephemeris · no login</span>
+        <a className="wordmark" href="./" aria-label="Oneiric home">
+          ONEIRIC<span> / lunar landing site × date navigator</span>
+        </a>
+        <span className="topbar-note">UTC · cached JPL Horizons &amp; LOLA skylines · no login</span>
       </header>
 
       <main>
         <section className="intro">
           <div>
             <p className="eyebrow">Site × date navigator</p>
-            <h1>Find the window before the landing date moves.</h1>
-            <p className="intro-copy">Compare one lunar landing window at a time. JPL Horizons supplies the cached Sun and Earth positions; the calculation engine turns them into a sunlight and Earth-link view.</p>
+            <h1>Compare landing windows before a slip flips the verdict.</h1>
+            <p className="intro-copy">
+              Pick up to four lunar sites and dates side by side, test how many days of schedule slip each option survives, and scan {allSites.length || 33} sites across months on the Window Finder.
+            </p>
           </div>
           <div className="proof-card" aria-live="polite">
             <span className="proof-kicker">Direction check</span>
             {validation && validation.maxDeg !== null ? (
-              <strong>{validation.maxDeg.toFixed(4)}° max error <small>· {validation.n.toLocaleString()} comparisons</small></strong>
+              <strong>
+                {validation.maxDeg.toFixed(4)}° max error <small>· {validation.n.toLocaleString()} comparisons</small>
+              </strong>
             ) : (
               <strong>Loading the recorded check</strong>
             )}
@@ -580,158 +863,652 @@ function App() {
         </section>
 
         <section className="scenario-bar" aria-label="Scenario controls">
-          <label>
-            <span>Landing date and time</span>
-            <input type="datetime-local" value={dateTime} min={MIN_DATE} max={MAX_DATE} step={600} onChange={handleDateChange} />
-            <small>UTC</small>
-          </label>
-          <label>
-            <span>Stay length</span>
-            <select value={presetId} onChange={handlePresetChange}>
-              <option value="sortie">6.5-day sortie</option>
-              <option value="lander">One-lunar-day lander · 14 days</option>
-            </select>
-            <small>Illustrative preset, not an agency requirement</small>
-          </label>
-          <div className="control-readout">
-            <span>Observer height</span>
-            <strong>{HEIGHT_M} m</strong>
-            <small>{result && result.verdict.grade !== 'D' ? `Above the terrain · grade ${result.verdict.grade}` : 'Smooth sphere, no terrain · grade D'}</small>
+          <div className="scenario-bar-row">
+            <div className="bar-field">
+              <label htmlFor="landing-utc-input">Landing date and time (UTC)</label>
+              <input
+                id="landing-utc-input"
+                type="datetime-local"
+                value={urlState.dateTime}
+                min={MIN_DATE_UTC}
+                max={MAX_DATE_UTC}
+                step={600}
+                onChange={(e) => handleGlobalDateChange(e.target.value)}
+              />
+              <div className="quick-slip-row" role="group" aria-label="Quick date shift">
+                <button type="button" onClick={() => shiftGlobalDateDays(-7)}>−7 d</button>
+                <button type="button" onClick={() => shiftGlobalDateDays(7)}>+7 d</button>
+                <button type="button" onClick={() => shiftGlobalDateDays(21)}>+21 d slip</button>
+              </div>
+            </div>
+
+            <div className="bar-field">
+              <label htmlFor="preset-select">Requirements preset</label>
+              <select id="preset-select" value={urlState.presetId} onChange={handlePresetChange}>
+                <option value="sortie">6.5-day sortie</option>
+                <option value="lander">One-lunar-day lander · 14 days</option>
+                <option value="year">One-year stay · annual figures</option>
+              </select>
+              <small>Illustrative, not agency requirements</small>
+            </div>
+
+            <div className="bar-field bar-field-compact">
+              <label htmlFor="stay-days-input">Stay (days)</label>
+              <input
+                id="stay-days-input"
+                type="number"
+                min={0.5}
+                max={365}
+                step={0.5}
+                value={urlState.stayDays}
+                onChange={handleStayChange}
+              />
+              <small>0.5 d steps</small>
+            </div>
+
+            <div className="control-readout">
+              <span>Observer height</span>
+              <strong>{urlState.heightM} m</strong>
+              <small>LOLA skylines at 2 m</small>
+            </div>
+
+            <div className="bar-actions">
+              <button
+                type="button"
+                className={`secondary-bar-btn ${rulesOpen || isRulesCustomized ? 'is-highlighted' : ''}`}
+                aria-expanded={rulesOpen}
+                onClick={() => setRulesOpen((open) => !open)}
+              >
+                {isRulesCustomized ? 'Rules (edited)' : 'Edit rules'}
+              </button>
+              <button type="button" className="share-btn" onClick={handleShare}>
+                {shareNote ?? 'Share link'}
+              </button>
+            </div>
           </div>
+
+          {rulesOpen && (
+            <div className="rules-editor" aria-label="Editable requirement thresholds">
+              <div className="rules-editor-head">
+                <span>
+                  Editable thresholds · <strong>illustrative, not agency requirements</strong> · MARGINAL when rules pass with under 3 days of late slip
+                </span>
+                <button
+                  type="button"
+                  className="reset-rules-btn"
+                  disabled={!isRulesCustomized}
+                  onClick={resetRulesToDefault}
+                >
+                  Reset preset defaults
+                </button>
+              </div>
+              {effectivePreset.rules ? (
+                <div className="rules-grid">
+                  <label>
+                    <span>Min sunlit (%)</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={effectivePreset.rules.sunlitMinPct}
+                      onChange={(e) => updateRuleOverride('sunlitMinPct', e.target.value, 0, 100)}
+                    />
+                  </label>
+                  <label>
+                    <span>Max dark gap (h)</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={1000}
+                      step={0.5}
+                      value={effectivePreset.rules.darkGapMaxH}
+                      onChange={(e) => updateRuleOverride('darkGapMaxH', e.target.value, 0, 1000)}
+                    />
+                  </label>
+                  <label>
+                    <span>Min Earth visible (%)</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={effectivePreset.rules.earthVisibleMinPct}
+                      onChange={(e) => updateRuleOverride('earthVisibleMinPct', e.target.value, 0, 100)}
+                    />
+                  </label>
+                  <label>
+                    <span>Max link gap (h)</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={1000}
+                      step={0.5}
+                      value={effectivePreset.rules.linkGapMaxH}
+                      onChange={(e) => updateRuleOverride('linkGapMaxH', e.target.value, 0, 1000)}
+                    />
+                  </label>
+                  <label>
+                    <span>Earth horizon margin (°)</span>
+                    <input
+                      type="number"
+                      min={-5}
+                      max={45}
+                      step={0.5}
+                      value={urlState.marginDeg}
+                      onChange={(e) => {
+                        const v = Number(e.target.value);
+                        if (Number.isFinite(v) && v >= -5 && v <= 45) {
+                          setUrlState((prev) => ({ ...prev, marginDeg: Math.round(v * 10) / 10 }));
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              ) : (
+                <div className="rules-grid">
+                  <p className="rules-year-note">
+                    The one-year stay reports annual illumination, energy, link availability, and the longest dark period without pass/fail thresholds.
+                  </p>
+                  <label>
+                    <span>Earth horizon margin (°)</span>
+                    <input
+                      type="number"
+                      min={-5}
+                      max={45}
+                      step={0.5}
+                      value={urlState.marginDeg}
+                      onChange={(e) => {
+                        const v = Number(e.target.value);
+                        if (Number.isFinite(v) && v >= -5 && v <= 45) {
+                          setUrlState((prev) => ({ ...prev, marginDeg: Math.round(v * 10) / 10 }));
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         <div className="workspace-grid">
-          <aside className="site-panel" aria-label="Site list">
+          <aside className="site-panel" aria-label="Site library and custom coordinates">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Choose a site</p>
-                <h2>Draft site library</h2>
+                <p className="eyebrow">Site library</p>
+                <h2>{allSites.length || '—'} sites</h2>
               </div>
-              <span className="site-count">{sites.length || '—'}</span>
+              <button
+                type="button"
+                className="custom-toggle-btn"
+                aria-expanded={customOpen}
+                onClick={() => setCustomOpen((open) => !open)}
+              >
+                {customOpen ? 'Close' : '+ Custom lat/lon'}
+              </button>
             </div>
+
+            {customOpen && (
+              <form className="custom-coord-form" onSubmit={handleAddCustomCoordinate}>
+                <p className="custom-form-note">
+                  Custom coordinates use a smooth-sphere horizon (no terrain) and are always labelled <strong>Grade D</strong>.
+                </p>
+                <div className="custom-coord-row">
+                  <label>
+                    <span>Latitude (°N, −S)</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="e.g. -85.5"
+                      value={customLat}
+                      onChange={(e) => setCustomLat(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <span>Longitude (°E, −W)</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="e.g. 31.2"
+                      value={customLon}
+                      onChange={(e) => setCustomLon(e.target.value)}
+                    />
+                  </label>
+                </div>
+                <label>
+                  <span>Label (optional)</span>
+                  <input
+                    type="text"
+                    placeholder="e.g. Candidate ridge point"
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                  />
+                </label>
+                {customError && <p className="error-text custom-error">{customError}</p>}
+                <button type="submit" className="play-button custom-submit-btn">
+                  Add Grade D point
+                </button>
+              </form>
+            )}
+
+            <div className="site-filter-box">
+              <label htmlFor="site-search-input" className="sr-only">Filter sites by name</label>
+              <input
+                id="site-search-input"
+                type="search"
+                placeholder="Filter sites…"
+                value={siteFilter}
+                onChange={(e) => setSiteFilter(e.target.value)}
+              />
+            </div>
+
             {sitesState.kind === 'loading' && <p className="muted">Loading coordinates…</p>}
             {sitesState.kind === 'error' && <p className="error-text">{sitesState.message}</p>}
-            <div className="site-list">
-              {sites.map((site) => (
-                <button
-                  className={`site-button ${site.id === selectedSite?.id ? 'selected' : ''}`}
-                  key={site.id}
-                  type="button"
-                  aria-pressed={site.id === selectedSite?.id}
-                  onClick={() => {
-                    invalidateCalculation()
-                    setSelectedSiteId(site.id)
-                    resetScrub()
-                  }}
-                >
-                  <span>
-                    <strong>{site.name}</strong>
-                    <small>{site.lat.toFixed(2)}° {site.lat < 0 ? 'S' : 'N'} · {site.eLon.toFixed(2)}° E</small>
-                  </span>
-                  <b title={skylineIndex?.get(site.id)?.terrain ?? 'Smooth sphere, no terrain'}> {skylineIndex?.get(site.id)?.grade ?? 'D'} </b>
-                </button>
+
+            <div className="site-groups">
+              {siteGroups.map((group) => (
+                <div className="site-group" key={group.key}>
+                  <div className="site-group-head">
+                    <h3>{group.title}</h3>
+                    {group.note && <p>{group.note}</p>}
+                  </div>
+                  <div className="site-list">
+                    {group.sites.map((site) => {
+                      const inCompareIdx = urlState.cards.findIndex((c) => c.siteId === site.id);
+                      const inCompare = inCompareIdx >= 0;
+                      const isActive = site.id === activeSiteId;
+                      const grade = site.isCustom ? 'D' : (skylineIndex?.get(site.id)?.grade ?? 'D');
+                      const terrainTitle = site.isCustom
+                        ? 'Smooth sphere, no terrain (Grade D)'
+                        : (skylineIndex?.get(site.id)?.terrain ?? 'Smooth sphere, no terrain (Grade D)');
+                      return (
+                        <div className={`site-row ${isActive ? 'is-active' : ''} ${inCompare ? 'is-compared' : ''}`} key={site.id}>
+                          <button
+                            className="site-button"
+                            type="button"
+                            aria-pressed={isActive}
+                            onClick={() => selectSiteIntoActiveCard(site.id)}
+                          >
+                            <span>
+                              <strong>{site.name}</strong>
+                              <small>{formatCoordinates(site.lat, site.eLon, 2)}</small>
+                            </span>
+                            <b title={terrainTitle}>{grade}</b>
+                          </button>
+                          <button
+                            type="button"
+                            className={`compare-slot-btn ${inCompare ? 'is-in' : ''}`}
+                            aria-label={inCompare ? `Remove ${site.name} from compare board` : `Add ${site.name} to compare board`}
+                            title={inCompare ? (urlState.cards.length > 1 ? 'Remove from compare board' : 'At least one card stays open') : 'Compare side by side (up to 4)'}
+                            disabled={inCompare && urlState.cards.length <= 1}
+                            onClick={() => toggleCompareSite(site.id)}
+                          >
+                            {inCompare ? `#${inCompareIdx + 1}` : '+'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
             </div>
-            <p className="panel-note">Coordinates are the supplied draft library. <a href={selectedSite?.sourceUrl} target="_blank" rel="noreferrer">Open map hand-off ↗</a></p>
+
+            <p className="panel-note">
+              Every library coordinate cites its published source. Grades B and C use LOLA south-pole rasters; Grade D uses the smooth sphere.
+            </p>
           </aside>
 
-          <section className="scenario-area" aria-live="polite">
-            {statusMessage && <div className="status-banner error-text">{statusMessage}</div>}
-            {!statusMessage && !result && (
-              <div className="status-card">
-                <span className="spinner" aria-hidden="true" />
-                <strong>{calculationState.kind === 'loading' ? 'Calculating the selected window…' : 'Preparing the scenario…'}</strong>
-                <span>Sun and Earth positions stay in the worker, away from the interface.</span>
+          <div className="main-column">
+            <section className="compare-section" aria-label="Compare board" aria-live="polite">
+              <div className="compare-board-bar">
+                <div>
+                  <span className="compare-count-pill">
+                    Compare board · {urlState.cards.length} of {MAX_COMPARE_CARDS} cards
+                  </span>
+                  <span className="compare-hint">
+                    Click a card to make it the target for site-list and Window Finder clicks, or press <strong>+</strong> beside any site to add up to four cards.
+                  </span>
+                </div>
+                <div className="scrub-controls global-scrub">
+                  <button
+                    type="button"
+                    className="play-button"
+                    onClick={() => setPlaying((current) => !current)}
+                    aria-label={playing ? 'Pause skyline time-lapse' : 'Play skyline time-lapse'}
+                  >
+                    {playing ? 'Pause' : 'Play'}
+                  </button>
+                  <input
+                    aria-label="Scrub through the stay across compared cards"
+                    aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End Space"
+                    type="range"
+                    min="0"
+                    max={stayMinutes}
+                    step={stayMinutes > 60 * 1440 ? 360 : 10}
+                    value={Math.min(scrubMinutes, stayMinutes)}
+                    onKeyDown={handleScrubKeyDown}
+                    onChange={(event) => {
+                      setPlaying(false);
+                      setScrubMinutes(Number(event.target.value));
+                    }}
+                  />
+                  <span>{formatHours(Math.min(scrubMinutes, stayMinutes) / 60)} into stay</span>
+                </div>
               </div>
-            )}
-            {result && selectedSite && (
-              <>
-                <article className="scenario-card">
-                  <div className="scenario-card-head">
-                    <div>
-                      <p className="eyebrow">Selected scenario</p>
-                      <h2>{selectedSite.name}</h2>
-                      <p className="coordinates">{selectedSite.lat.toFixed(4)}° {selectedSite.lat < 0 ? 'S' : 'N'} · {selectedSite.eLon.toFixed(4)}° E · {formatUtc(result.startMs)} UTC</p>
-                    </div>
-                    <div className={`verdict-badge ${verdictClass(result.verdict.verdict)}`}>
-                      <span>{result.verdict.verdict}</span>
-                      <small>Grade {result.verdict.grade}</small>
-                    </div>
-                  </div>
-                  <p className="decision-rule">{result.verdict.rule}</p>
-                  <p className="preset-note">{result.verdict.presetLabel}</p>
-                  <div className="clock-grid">
-                    <div className="clock-card">
-                      <span>Next sunset</span>
-                      <strong>{clockLabel(result.sunset, result.startMs)}</strong>
-                    </div>
-                    <div className="clock-card">
-                      <span>Next Earthset</span>
-                      <strong>{clockLabel(result.earthset, result.startMs)}</strong>
-                    </div>
-                  </div>
-                  <dl className="metric-grid">
-                    <Metric label="Sunlit" value={formatPercent(result.metrics.sunlitPct)} note="visible disc average" />
-                    <Metric label="Longest dark gap" value={formatHours(result.metrics.longestDarkGapH)} />
-                    <Metric label="Earth visible" value={formatPercent(result.metrics.earthVisiblePct)} />
-                    <Metric label="Longest link gap" value={formatHours(result.metrics.longestLinkGapH)} />
-                    <Metric label="Sun + Earth overlap" value={formatPercent(result.metrics.overlapPct)} />
-                    <Metric label="Slip later" value={result.slip.viableAtChosen && result.slip.lateDays !== null ? `${result.slip.lateDays.toFixed(1)} d` : 'next window below'} note="6-hour start grid" />
-                  </dl>
-                  <p className="provenance">{provenanceFooter(result.verdict.grade, result.verdict.terrain)}</p>
-                </article>
 
-                <section
-                  className="view-card"
-                  tabIndex={0}
-                  aria-label="Skyline time controls. Use arrow keys to step by ten minutes, Home and End to jump, or Space to play and pause."
-                  aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End Space"
-                  onKeyDown={handleViewKeyDown}
-                >
-                  <div className="view-card-head">
-                    <div>
-                      <p className="eyebrow">Skyline view</p>
-                      <h2>Where the bodies meet the horizon</h2>
-                    </div>
-                    <div className="view-time">{formatUtc(result.startMs + scrubMinutes * MIN_MS)} UTC</div>
-                  </div>
-                  <SkylineCanvas result={result} scrubMinutes={scrubMinutes} />
-                  <Timeline result={result} scrubMinutes={scrubMinutes} />
-                  <div className="scrub-controls">
-                    <button type="button" className="play-button" onClick={() => setPlaying((current) => !current)} aria-label={playing ? 'Pause time-lapse' : 'Play time-lapse'}>
-                      {playing ? 'Pause' : 'Play'}
-                    </button>
-                    <input
-                      aria-label="Scrub through the selected stay"
-                      aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End Space"
-                      type="range"
-                      min="0"
-                      max={result.stayMs / MIN_MS}
-                      step="10"
-                      value={scrubMinutes}
-                      onKeyDown={handleScrubKeyDown}
-                      onChange={(event) => {
-                        setPlaying(false)
-                        setScrubMinutes(Number(event.target.value))
+              {statusMessage && <div className="status-banner error-text">{statusMessage}</div>}
+
+              {!statusMessage && resolvedSlots.length === 0 && (
+                <div className="status-card">
+                  <span className="spinner" aria-hidden="true" />
+                  <strong>Preparing the compare board…</strong>
+                  <span>Loading site library and cached JPL Horizons tables.</span>
+                </div>
+              )}
+
+              <div className={`compare-grid cards-${Math.min(4, Math.max(1, resolvedSlots.length))}`}>
+                {resolvedSlots.map((slot) => {
+                  const result = cardResults.get(slot.slotKey);
+                  const isActiveSlot = slot.index === urlState.activeCardIndex;
+                  const compact = resolvedSlots.length > 1;
+                  const eclipses = result ? eclipseSummary(result) : null;
+
+                  return (
+                    <article
+                      className={`scenario-card ${isActiveSlot ? 'is-active-slot' : ''}`}
+                      key={`${slot.index}-${slot.site.id}`}
+                      tabIndex={0}
+                      aria-label={`${slot.site.name} scenario card. Focus and use arrow keys to step time by ten minutes, or Space to play and pause.`}
+                      onKeyDown={handleViewKeyDown}
+                      onClick={() => {
+                        if (urlState.activeCardIndex !== slot.index) {
+                          setUrlState((prev) => ({ ...prev, activeCardIndex: slot.index }));
+                        }
                       }}
-                    />
-                    <span>{formatHours(scrubMinutes / 60)} into stay</span>
-                    <small className="keyboard-hint">Keys: ← / → 10 min · Home / End jump · Space play</small>
-                  </div>
-                  <p className="provenance">{provenanceFooter(result.verdict.grade, result.verdict.terrain)}</p>
-                </section>
-              </>
-            )}
-          </section>
+                    >
+                      <div className="card-slot-toolbar" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className={`slot-focus-btn ${isActiveSlot ? 'is-active' : ''}`}
+                          onClick={() => setUrlState((prev) => ({ ...prev, activeCardIndex: slot.index }))}
+                        >
+                          {isActiveSlot ? `Card ${slot.index + 1} · Active` : `Card ${slot.index + 1} · Target`}
+                        </button>
+                        <div className="slot-actions">
+                          {slot.card.dateTime ? (
+                            <>
+                              <input
+                                type="datetime-local"
+                                aria-label={`Custom UTC landing date for card ${slot.index + 1}`}
+                                className="card-date-input"
+                                value={slot.card.dateTime}
+                                min={MIN_DATE_UTC}
+                                max={MAX_DATE_UTC}
+                                step={600}
+                                onChange={(e) => setCardDateOverride(slot.index, e.target.value)}
+                              />
+                              <button
+                                type="button"
+                                className="card-mini-btn"
+                                onClick={() => setCardDateOverride(slot.index, undefined)}
+                              >
+                                Sync to bar
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              className="card-mini-btn"
+                              onClick={() => setCardDateOverride(slot.index, urlState.dateTime)}
+                              title="Give this card its own landing date while keeping other cards at the bar date"
+                            >
+                              Pin date
+                            </button>
+                          )}
+                          {urlState.cards.length < MAX_COMPARE_CARDS && (
+                            <button
+                              type="button"
+                              className="card-mini-btn"
+                              onClick={() => duplicateCardWithSlip(slot.index, 21)}
+                              title="Duplicate this site onto a new card shifted 21 days later"
+                            >
+                              +21 d card
+                            </button>
+                          )}
+                          {urlState.cards.length > 1 && (
+                            <button
+                              type="button"
+                              className="card-mini-btn is-remove"
+                              aria-label={`Remove card ${slot.index + 1}`}
+                              onClick={() => removeCard(slot.index)}
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {!result ? (
+                        <div className="card-loading">
+                          <span className="spinner" aria-hidden="true" />
+                          <strong>Calculating {slot.site.name}…</strong>
+                          <span>Running pure engine in Web Worker</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="scenario-card-head">
+                            <div>
+                              <h2>{slot.site.name}</h2>
+                              {slot.site.label !== slot.site.name && (
+                                <p className="site-sub-label">{slot.site.label}</p>
+                              )}
+                              <p className="coordinates">
+                                {formatCoordinates(slot.site.lat, slot.site.eLon, 4)} · {formatUtc(result.startMs)} UTC ·{' '}
+                                <a
+                                  href={slot.site.sourceUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {slot.site.source} ↗
+                                </a>
+                              </p>
+                            </div>
+                            <div className={`verdict-badge ${verdictClass(result.verdict.verdict)}`}>
+                              <span>{result.verdict.verdict === 'NONE' ? 'ANNUAL' : result.verdict.verdict}</span>
+                              <small>Grade {result.verdict.grade}</small>
+                            </div>
+                          </div>
+
+                          <p className="decision-rule">{result.verdict.rule}</p>
+                          <p className="preset-note">
+                            {result.preset.name} ({result.preset.stayDays} d) · {result.verdict.presetLabel}
+                          </p>
+
+                          <div className="slip-banner">
+                            {!result.preset.rules ? (
+                              <div className="slip-annual">
+                                <span>Slip tolerance</span>
+                                <strong>One-year summary — no pass/fail window</strong>
+                              </div>
+                            ) : result.slip.viableAtChosen ? (
+                              <div className="slip-viable-grid">
+                                <div>
+                                  <span>Slip later</span>
+                                  <strong>
+                                    {result.slip.lateCensored ? '≥ ' : '+'}
+                                    {formatSlipDays(result.slip.lateDays ?? 0)}
+                                  </strong>
+                                  <small>unbroken viable starts (6 h grid)</small>
+                                </div>
+                                <div>
+                                  <span>Slip earlier</span>
+                                  <strong>
+                                    {result.slip.earlyCensored ? '≥ ' : '−'}
+                                    {formatSlipDays(result.slip.earlyDays ?? 0)}
+                                  </strong>
+                                  <small>earlier viable starts (6 h grid)</small>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="slip-next-window" onClick={(e) => e.stopPropagation()}>
+                                <div>
+                                  <span>Not viable at chosen start · Next viable window</span>
+                                  {result.slip.nextWindow ? (
+                                    <strong>
+                                      Opens {formatUtc(result.slip.nextWindow.startMs)} UTC (in{' '}
+                                      {formatSlipDays((result.slip.nextWindow.startMs - result.startMs) / DAY_MS)}) · lasts{' '}
+                                      {result.slip.nextWindow.censored ? 'at least ' : ''}
+                                      {formatSlipDays(result.slip.nextWindow.lengthDays)}
+                                    </strong>
+                                  ) : (
+                                    <strong>No viable window in the next 120 days</strong>
+                                  )}
+                                </div>
+                                {result.slip.nextWindow && (
+                                  <button
+                                    type="button"
+                                    className="jump-window-btn"
+                                    onClick={() => {
+                                      const nextStr = clampDateString(msToDateTimeInput(result.slip.nextWindow!.startMs));
+                                      if (slot.card.dateTime) setCardDateOverride(slot.index, nextStr);
+                                      else handleGlobalDateChange(nextStr);
+                                    }}
+                                  >
+                                    Load window
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="clock-grid">
+                            <div className="clock-card">
+                              <span>Next sunset</span>
+                              <strong>{clockLabel(result.sunset, result.startMs)}</strong>
+                            </div>
+                            <div className="clock-card">
+                              <span>Next Earthset</span>
+                              <strong>{clockLabel(result.earthset, result.startMs)}</strong>
+                            </div>
+                          </div>
+
+                          <div className="card-skyline-head">
+                            <span>Scrubbed instant</span>
+                            <span>
+                              {formatUtc(result.startMs + Math.min(scrubMinutes, stayMinutes) * MIN_MS)} UTC
+                            </span>
+                          </div>
+                          <SkylineCanvas
+                            result={result}
+                            scrubMinutes={Math.min(scrubMinutes, stayMinutes)}
+                            compact={compact}
+                          />
+                          <Timeline result={result} scrubMinutes={Math.min(scrubMinutes, stayMinutes)} />
+
+                          <dl className="metric-grid">
+                            <Metric
+                              label="Sunlit"
+                              value={formatPercent(result.metrics.sunlitPct)}
+                              note="64-point solar disc"
+                            />
+                            <Metric
+                              label={result.preset.id === 'year' ? 'Longest night' : 'Longest dark gap'}
+                              value={formatHours(result.metrics.longestDarkGapH)}
+                              note="bisected to 1 min"
+                            />
+                            <Metric
+                              label="Earth visible"
+                              value={formatPercent(result.metrics.earthVisiblePct)}
+                              note={`margin ${result.marginDeg >= 0 ? '+' : ''}${result.marginDeg}°`}
+                            />
+                            <Metric
+                              label="Longest link gap"
+                              value={formatHours(result.metrics.longestLinkGapH)}
+                              note="bisected to 1 min"
+                            />
+                            <Metric
+                              label="Sun + Earth overlap"
+                              value={formatPercent(result.metrics.overlapPct)}
+                              note="lit and linked"
+                            />
+                            <Metric
+                              label="Eclipses by Earth"
+                              value={eclipses?.value ?? 'None'}
+                              note={eclipses?.note}
+                            />
+                            <Metric
+                              label="Energy · tracking vertical"
+                              value={formatEnergy(result.metrics.energyKWhM2.sunTrackingVertical)}
+                              note="follows Sun azimuth"
+                            />
+                            <Metric
+                              label="Energy · fixed vertical"
+                              value={formatEnergy(result.metrics.energyKWhM2.fixedVertical)}
+                              note={`best facing ${result.metrics.fixedVerticalBestFacingDeg}°`}
+                            />
+                            <Metric
+                              label="Energy · horizontal deck"
+                              value={formatEnergy(result.metrics.energyKWhM2.horizontalDeck)}
+                              note="flat deck"
+                            />
+                          </dl>
+
+                          <p className="provenance">
+                            {provenanceFooter(result.verdict.grade, result.verdict.terrain)}
+                          </p>
+                        </>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+
+            <WindowFinder
+              sites={allSites}
+              skylineGrades={skylineGrades}
+              rowsBySiteId={matrixRows}
+              matrixStartDayMs={matrixStartDayMs}
+              selectedDateMs={Number.isFinite(globalStartMs) ? globalStartMs : matrixStartDayMs}
+              comparedSiteIds={comparedSiteIds}
+              activeSiteId={activeSiteId}
+              span={urlState.windowSpan}
+              stayDays={urlState.stayDays}
+              hasRules={Boolean(effectivePreset.rules)}
+              progress={matrixProgress}
+              onChangeSpan={(nextSpan) => setUrlState((prev) => ({ ...prev, windowSpan: nextSpan }))}
+              onShiftWindowStart={(deltaDays) => {
+                const shiftedMs = matrixStartDayMs + deltaDays * DAY_MS;
+                const minMs = Date.parse(`${MIN_DATE_UTC}:00Z`);
+                const maxMs = Date.parse(`${MAX_DATE_UTC}:00Z`);
+                const clampedMs = Math.max(minMs, Math.min(maxMs, shiftedMs));
+                setUrlState((prev) => ({ ...prev, windowStartDate: msToDateInput(clampedMs) }));
+              }}
+              onAlignWindowStart={() =>
+                setUrlState((prev) => ({ ...prev, windowStartDate: prev.dateTime.slice(0, 10) }))
+              }
+              onSelectScenario={handleSelectWindowScenario}
+              onSwitchToSortie={() =>
+                setUrlState((prev) => ({
+                  ...prev,
+                  presetId: 'sortie',
+                  stayDays: PRESETS.sortie.stayDays,
+                  ruleOverrides: {},
+                }))
+              }
+            />
+          </div>
         </div>
       </main>
 
       <footer className="site-footer">
-        <span>Oneiric · a working preview</span>
-        <span>JPL Horizons ephemeris · no terrain is used in Grade D</span>
+        <span>Oneiric · lunar landing site × date comparison</span>
+        <span>JPL Horizons ephemeris (MOON_ME) · LOLA polar skylines (Grades B, C) · Smooth sphere (Grade D, no terrain)</span>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { calculateScenario, type TerrainPayload } from '../app/src/scenario.ts';
+import {
+  SiteSeriesCache,
+  calculateScenario,
+  calculateScenarioWithCache,
+  calculateWindowFinderRow,
+  type TerrainPayload,
+} from '../app/src/scenario.ts';
+import { parseCustomSite } from '../app/src/sites.ts';
 import { buildSkyline, encodeSkyline, smoothSkyline, TIER_LIMITS_M } from '../engine/index.ts';
 import { syntheticDem } from '../pipeline/synthetic-terrain.ts';
 import { T2030, spinningTable } from './helpers.ts';
@@ -29,8 +36,63 @@ describe('scenario worker orchestration', () => {
     expect(result.verdict.presetLabel).toBe('illustrative, not agency requirements');
   });
 
-  it('does not silently turn an unsupported stay into a verdict', () => {
-    expect(() => calculateScenario(spinningTable(), site, T2030, 'year')).toThrow(/unsupported preview stay/);
+  it('gives annual metrics with verdict NONE for the one-year stay, and refuses unknown preset ids', () => {
+    const start = Date.UTC(2030, 0, 1);
+    const annual = calculateScenario(spinningTable(), site, start, 'year');
+    expect(annual.preset.id).toBe('year');
+    expect(annual.verdict.verdict).toBe('NONE');
+    expect(annual.verdict.grade).toBe('D');
+    expect(annual.metrics.hours).toBe(365 * 24);
+    expect(annual.slip.viableAtChosen).toBe(false);
+    expect(() => calculateScenario(spinningTable(), site, T2030, 'unknown-preset')).toThrow(/unsupported/);
+  });
+
+  it('applies custom threshold overrides and Earth margin consistently across cards and the Window Finder, keeping the illustrative label', () => {
+    const table = spinningTable();
+    const eqSite = { ...site, id: 'eq-test', lat: 0, eLon: 0 };
+    const cache = new SiteSeriesCache(table);
+    const strictCard = calculateScenarioWithCache(cache, eqSite, T2030 + 6 * 3_600_000, 'sortie');
+    const customCard = calculateScenarioWithCache(cache, eqSite, T2030 + 6 * 3_600_000, 'sortie', 2, null, {
+      rules: { sunlitMinPct: 50, darkGapMaxH: 200, earthVisibleMinPct: 40, linkGapMaxH: 200 },
+    });
+    expect(strictCard.verdict.verdict).toBe('MARGINAL');
+    expect(customCard.verdict.verdict).toBe('GO');
+    expect(customCard.verdict.presetLabel).toMatch(/illustrative, not agency requirements/);
+
+    const day0 = Date.UTC(2030, 4, 1);
+    const dailyRow = calculateWindowFinderRow(cache, eqSite, day0, 'daily', 'sortie', 2, null, {
+      rules: { sunlitMinPct: 95, darkGapMaxH: 6, earthVisibleMinPct: 50, linkGapMaxH: 120 },
+    });
+    expect(dailyRow.cells).toHaveLength(120);
+    expect(dailyRow.grade).toBe('D');
+    // Every cell in the Window Finder row must match calculateScenarioWithCache at that day's 00:00 UTC start.
+    for (const sampleIdx of [0, 1, 5, 14, 29]) {
+      const cell = dailyRow.cells[sampleIdx];
+      const single = calculateScenarioWithCache(cache, eqSite, cell.startMs, 'sortie', 2, null, {
+        rules: { sunlitMinPct: 95, darkGapMaxH: 6, earthVisibleMinPct: 50, linkGapMaxH: 120 },
+      });
+      expect(cell.verdict).toBe(single.verdict.verdict);
+    }
+
+    const weeklyRow = calculateWindowFinderRow(cache, eqSite, Date.UTC(2030, 0, 1), 'weekly', 'lander');
+    expect(weeklyRow.cells.length).toBeGreaterThanOrEqual(50);
+  });
+
+  it('forces custom coordinate sites onto the smooth sphere at grade D even if a terrain payload is passed', () => {
+    const parsed = parseCustomSite('-89.45', '222.69');
+    if (!parsed.ok) throw new Error('expected valid custom site');
+    const wall = syntheticDem('synthetic test terrain', 20, 7_000, -89.45, 222.69, () => 400);
+    const built = buildSkyline([{ dem: wall, maxDistM: TIER_LIMITS_M[0] }], -89.45, 222.69, 2);
+    const bogusTerrain: TerrainPayload = {
+      buffer: encodeSkyline(built.H, built.D),
+      grade: 'B',
+      terrain: 'synthetic test terrain',
+      siteElevationM: built.siteElevationM,
+      heightM: 2,
+    };
+    const res = calculateScenario(spinningTable(), parsed.site, T2030, 'sortie', 2, bogusTerrain);
+    expect(res.verdict.grade).toBe('D');
+    expect(res.verdict.terrain).toBe('none (smooth sphere)');
   });
 });
 

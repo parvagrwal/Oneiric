@@ -1,0 +1,161 @@
+=== npm run typecheck ===
+
+> oneiric@0.0.0 typecheck
+> tsc --noEmit
+
+
+=== npm test ===
+
+> oneiric@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/user/Oneiric
+
+ ✓ tests/verdict.test.ts (20 tests) 825ms
+     ✓ rolling prefix-sum summaries match direct window metrics exactly across boundary, interior and grazing windows  610ms
+ ✓ tests/skyline-check.test.ts (10 tests) 8531ms
+     ✓ a raster mirrored east to west moves the east hill to the west, and the check fails  1351ms
+     ✓ a raster with its axes swapped fails  1019ms
+     ✓ heights at half scale fail the ridge case  516ms
+     ✓ a raster shifted by one pixel does not hide: flat ground still passes, so the check is not failing for everything  891ms
+     ✓ moves the stay metrics by less than 1 point on rough synthetic terrain (near field only in this test)  2154ms
+     ✓ sabotage: a build that starts from a seven-pixel step moves the metrics or the horizon far more  2399ms
+ ✓ tests/terrain.test.ts (17 tests) 4200ms
+     ✓ adds the terrain height at the site to the observer radius  574ms
+     ✓ gives the same elevation for a ridge crest as the site-frame geometry used for the Sun and Earth  517ms
+     ✓ a step of seven pixels, as in a 1 percent of distance rule at 15 km, steps over part of a ridge; half a pixel does not  601ms
+     ✓ falls through to a coarser raster outside the fine one, and says the near field is incomplete  462ms
+     ✓ beyond its 15 km limit the fine raster gives way to the coarser one, even where the fine raster still has data  1507ms
+stderr | tests/terrain-pipeline.test.ts > retrying a failed raster read > retries a failing read and returns the value when a later attempt succeeds
+test: attempt 1 of 3 failed (fetch failed); retrying in 1 ms
+
+stderr | tests/terrain-pipeline.test.ts > retrying a failed raster read > retries a failing read and returns the value when a later attempt succeeds
+test: attempt 2 of 3 failed (fetch failed); retrying in 2 ms
+
+stderr | tests/terrain-pipeline.test.ts > retrying a failed raster read > throws the last error after the attempts run out, instead of returning nothing
+test: attempt 1 of 3 failed (still failing); retrying in 1 ms
+
+stderr | tests/terrain-pipeline.test.ts > retrying a failed raster read > throws the last error after the attempts run out, instead of returning nothing
+test: attempt 2 of 3 failed (still failing); retrying in 2 ms
+
+ ✓ tests/terrain-pipeline.test.ts (16 tests) 3005ms
+     ✓ takes origin, pixel size and the no-data value from the file, and a hill east of the site ends up at azimuth 90  674ms
+     ✓ is grade B when the 20 m raster covers the near field, with every raster used named as the terrain source  1016ms
+     ✓ drops to grade C on the 240 m raster alone when the 20 m near field is incomplete, never B  677ms
+     ✓ sabotage: changing one horizon height in one shipped file fails the check and names the file and the azimuth block  601ms
+ ✓ tests/scenario.test.ts (8 tests) 3044ms
+     ✓ returns one grade-D scenario from the same engine used by the pipeline  423ms
+     ✓ gives annual metrics with verdict NONE for the one-year stay, and refuses unknown preset ids  649ms
+     ✓ applies custom threshold overrides and Earth margin consistently across cards and the Window Finder, keeping the illustrative label  398ms
+     ✓ forces custom coordinate sites onto the smooth sphere at grade D even if a terrain payload is passed  715ms
+     ✓ the wall hides a Sun that the smooth sphere would show  462ms
+ ✓ tests/engine-runtime.test.ts (4 tests) 3081ms
+     ✓ series and metrics match exactly between Node and a bare JavaScript context (the Worker stand-in)  374ms
+     ✓ a terrain skyline built in the bare context is byte-for-byte the one built in Node  2317ms
+     ✓ rolling prefix-sum window verdicts match exactly between Node and the bare Worker stand-in  381ms
+ ✓ tests/adversarial.test.ts (6 tests) 630ms
+     ✓ a site on the far side never sees Earth, over a full year  334ms
+ ✓ tests/sunlight.test.ts (8 tests) 497ms
+     ✓ the fast path gives exactly the same answer as sampling the disc, over 3000 random cases  485ms
+ ✓ tests/direction-check.test.ts (5 tests) 222ms
+ ✓ tests/ephemeris.test.ts (6 tests) 72ms
+ ✓ tests/metrics.test.ts (11 tests) 29ms
+ ✓ tests/url-state.test.ts (6 tests) 13ms
+ ✓ tests/skyline.test.ts (6 tests) 9ms
+ ✓ tests/keyboard.test.ts (4 tests) 7ms
+ ✓ tests/frame.test.ts (6 tests) 8ms
+ ✓ tests/vec.test.ts (1 test) 6ms
+
+ Test Files  16 passed (16)
+      Tests  134 passed (134)
+   Start at  01:28:42
+   Duration  37.81s (transform 485ms, setup 0ms, import 10.96s, tests 24.18s, environment 2ms)
+
+
+=== npm run validate ===
+
+> oneiric@0.0.0 validate
+> tsx pipeline/validate.ts
+
+PASS  Sun and Earth direction check against JPL Horizons
+  n = 8000, max = 0.00606 deg, rms = 0.00284 deg, threshold = 0.02 deg
+PASS  Skyline maths check on synthetic terrain
+  n = 10084, max = 0.00293 deg, rms = 0.00055 deg, threshold = 0.01 deg
+PASS  Shipped skylines match their build records
+  n = 24
+PENDING  Elevation raster orientation check on two named craters
+  no LOLA raster in data/ or data-raw/; this check has not been run
+wrote app/public/data/validation.json
+
+=== npm run mutation-check ===
+
+> oneiric@0.0.0 mutation-check
+> bash scripts/mutation-check.sh
+
+KILLED    east vector sign flipped (Tests  1 failed | 31 passed (38))
+KILLED    azimuth atan2 arguments swapped (Tests  1 failed | 103 passed (111))
+KILLED    direction from Moon centre instead of site (Tests  1 failed | 29 passed (38))
+KILLED    no interpolation between hourly rows (Tests  1 failed | 89 passed (94))
+KILLED    silent extrapolation outside table (Tests  1 failed | 95 passed (100))
+KILLED    dark threshold 0.01 -> 0.02 (dark counts 1 sample) (Tests  1 failed | 108 passed (111))
+KILLED    Earth disc radius ignored (point Earth) (Tests  1 failed | 95 passed (100))
+KILLED    sky elevation test uses > H + 1 degree (Tests  1 failed | 1 passed (8))
+KILLED    skyline lookup does not wrap at 360 (Tests  1 failed | 122 passed (123))
+KILLED    MARGINAL limit 3 -> 2 days (Tests  1 failed | 65 passed (81))
+KILLED    failed rule no longer beats MARGINAL (slip checked first) (Tests  1 failed | 3 passed (20))
+KILLED    slip run crosses a gap (Tests  1 failed | 11 passed (20))
+KILLED    smooth data allowed to carry terrain grade (Tests  1 failed | 74 passed (75))
+KILLED    verdict without grade allowed (Tests  1 failed | 64 passed (75))
+KILLED    gap not clipped to window (Tests  1 failed | 18 passed (20))
+KILLED    solar disc radius 10x (Tests  1 failed | 82 passed (89))
+KILLED    fixed array stuck on north (no best-of-8) (Tests  1 failed | 103 passed (111))
+KILLED    verdict uses early slip instead of late (Tests  1 failed | 70 passed (86))
+KILLED    Earth visibility ignores its margin (Tests  1 failed | 87 passed (89))
+KILLED    ray samples mirrored east to west (Tests  1 failed | 14 passed (25))
+KILLED    ray samples with map axes swapped (Tests  1 failed | 6 passed (17))
+KILLED    site projected with x and y swapped (Tests  1 failed (17))
+KILLED    curvature left out of terrain elevation (Tests  1 failed | 6 passed (17))
+KILLED    ray step 0.5 -> 7 pixels (crest stepped over) (Tests  1 failed | 8 passed (17))
+KILLED    one ray per bin instead of four (Tests  1 failed | 13 passed (17))
+KILLED    terrain height at the site left out of the observer radius (Tests  1 failed | 7 passed (17))
+KILLED    array height left out of the observer radius (Tests  1 failed | 6 passed (17))
+KILLED    ray stopped before the highest shell's tangent point (Tests  1 failed | 13 passed (17))
+KILLED    blocking distance never recorded (Tests  1 failed | 6 passed (17))
+KILLED    raster lookup shifted half a pixel (Tests  1 failed | 3 passed (17))
+KILLED    raster rows read bottom-up (Tests  1 failed | 3 passed (17))
+KILLED    fine raster used beyond its distance limit (Tests  1 failed | 11 passed (17))
+KILLED    incomplete 20 m near field still graded B (Tests  1 failed | 10 passed (17))
+KILLED    stored skyline decoded big-endian (Tests  1 failed | 15 passed (17))
+KILLED    heights that cannot be metres accepted (Tests  1 failed | 5 passed (17))
+KILLED    rolling prefix sum ignores window start (Tests  1 failed | 79 passed (81))
+KILLED    rolling gap not clipped to window start (Tests  1 failed | 18 passed (20))
+all mutants killed
+
+=== cd app && npm run lint ===
+
+> app@0.0.0 lint
+> oxlint
+
+Found 0 warnings and 0 errors.
+Finished in 234ms on 11 files with 116 rules using 2 threads.
+
+=== cd app && npm run build ===
+
+> app@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.66 kB │ gzip:  0.38 kB
+dist/assets/engine.worker-B4naKGla.js   19.01 kB
+dist/assets/index-DQvwEhJL.css          19.96 kB │ gzip:  4.69 kB
+dist/assets/index-TrG4f6uS.js          272.51 kB │ gzip: 85.09 kB
+
+✓ built in 381ms
+
+=== git diff --check ===
+git diff --check: clean

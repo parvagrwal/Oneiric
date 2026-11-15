@@ -1,0 +1,6 @@
+Leak check over public files (README.md, app/src/, engine/, pipeline/, scripts/, docs/, evidence/, tests/).
+
+1 hit, false positive, reviewed by hand:
+- pipeline/find-artemis-points.ts:5 contains the published USGS ScienceBase DOI suffix for the Artemis III region navigational grids. It is part of the cited source identifier and stays.
+
+Zero hits across README.md, app/src/, engine/, scripts/, docs/, tests/, and evidence/. No internal term leaks into any public file.

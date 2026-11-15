@@ -14,7 +14,7 @@ f,old,new=sys.argv[1:4]; p='engine/'+f; s=open(p).read()
 assert old in s, ('pattern missing', old)
 open(p,'w').write(s.replace(old,new,1))
 PY
-  out=$(npx vitest run 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
+  out=$(npx vitest run --bail 1 2>&1 | sed 's/\x1b\[[0-9;]*m//g')
   fails=$(echo "$out" | grep -E "^\s+Tests" | sed 's/^ *//')
   if echo "$fails" | grep -q failed; then echo "KILLED    $1 ($fails)"; else echo "SURVIVED  $1 ($fails)"; SURVIVORS=1; fi
   cp $ORIG/engine/$2 engine/$2
@@ -54,4 +54,6 @@ mut "fine raster used beyond its distance limit" terrain.ts "if (s >= tiers[t].m
 mut "incomplete 20 m near field still graded B" terrain.ts "if (tiers[0].dem.pixelM <= 20 && built.nearFieldComplete) return 'B';" "if (tiers[0].dem.pixelM <= 20) return 'B';"
 mut "stored skyline decoded big-endian" terrain.ts "H[i] = view.getFloat32(i * 4, true);" "H[i] = view.getFloat32(i * 4, false);"
 mut "heights that cannot be metres accepted" terrain.ts "if (zMaxM > 12_000 || zMinM < -12_000) throw" "if (false) throw"
+mut "rolling prefix sum ignores window start" metrics.ts "const sumF = prefixSunF[i1] - prefixSunF[i0];" "const sumF = prefixSunF[i1];"
+mut "rolling gap not clipped to window start" metrics.ts "if (i > winStart) {" "if (r.rStart > 0) {"
 [ -z "$SURVIVORS" ] && echo "all mutants killed" || { echo "some mutants survived"; exit 1; }

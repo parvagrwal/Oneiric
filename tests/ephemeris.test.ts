@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { angleDeg, ephemAt, ROW } from '../engine/index.ts';
+import { angleDeg, ephemAt, ephemSpan, ROW } from '../engine/index.ts';
 import { loadTable } from '../pipeline/direction-check.ts';
 import { syntheticTable } from './helpers.ts';
 
@@ -42,5 +42,18 @@ describe('ephemeris interpolation', () => {
     const sun = ephemAt(table, Date.UTC(2026, 0, 26, 4, 47)).sun;
     const lon = ((Math.atan2(sun[1], sun[0]) * 180) / Math.PI + 360) % 360;
     expect(Math.abs(lon - 90)).toBeLessThan(5);
+  });
+  it('reports the contiguous loaded time span around an epoch and refuses epochs outside loaded years', () => {
+    const full = loadTable();
+    expect(ephemSpan(full, Date.UTC(2027, 5, 1))).toEqual({
+      minMs: Date.UTC(2023, 0, 1),
+      maxMs: Date.UTC(2041, 0, 1),
+    });
+    const oneYear = syntheticTable(() => ({ sun: [1e8, 0, 0], earth: [3.8e5, 0, 0] }), 2030);
+    expect(ephemSpan(oneYear, Date.UTC(2030, 6, 1))).toEqual({
+      minMs: Date.UTC(2030, 0, 1),
+      maxMs: Date.UTC(2031, 0, 1),
+    });
+    expect(() => ephemSpan(oneYear, Date.UTC(2028, 0, 1))).toThrow(RangeError);
   });
 });

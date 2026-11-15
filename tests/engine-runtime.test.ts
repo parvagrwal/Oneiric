@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { buildSync } from 'esbuild';
 import { describe, expect, it } from 'vitest';
-import { buildSkyline, encodeSkyline, HOUR_MS, metrics, series, smoothSiteFrame, smoothSkyline } from '../engine/index.ts';
+import { buildSkyline, encodeSkyline, HOUR_MS, metrics, prepareRolling, PRESETS, series, smoothSiteFrame, smoothSkyline, verdictSeries } from '../engine/index.ts';
 import { syntheticDem } from '../pipeline/synthetic-terrain.ts';
 import { loadTable } from '../pipeline/direction-check.ts';
 
@@ -45,5 +45,27 @@ describe('the same engine code gives identical numbers in a sandbox with no Node
        Array.from(new Uint8Array(Engine.encodeSkyline(b.H, b.D))).join(',');`, ctx);
     expect(inside).toBe(Array.from(new Uint8Array(encodeSkyline(direct.H, direct.D))).join(','));
     expect(Math.max(...direct.H) - Math.min(...direct.H)).toBeGreaterThan(1); // real relief, not a flat line
+  }, 15000); // the esbuild bundle + skyline build exceeds the 5 s default under full-suite load
+  it('rolling prefix-sum window verdicts match exactly between Node and the bare Worker stand-in', () => {
+    const bundle = buildSync({ entryPoints: ['engine/index.ts'], bundle: true, write: false, format: 'iife', globalName: 'Engine', platform: 'neutral', target: 'es2022' });
+    const table = loadTable();
+    const t0 = Date.UTC(2027, 2, 1);
+    const t1 = t0 + 30 * 24 * HOUR_MS;
+    const cols = Array.from({ length: 14 }, (_, d) => t0 + d * 24 * HOUR_MS);
+    const direct = verdictSeries(
+      prepareRolling(series(table, { frame: smoothSiteFrame(-89.45, 222.69, 2), sky: smoothSkyline(2) }, t0, t1, 10)),
+      PRESETS.sortie,
+      t0,
+      cols,
+    );
+    const ctx = vm.createContext({ table, t0, t1, cols });
+    vm.runInContext(bundle.outputFiles[0].text, ctx);
+    const inside = vm.runInContext(
+      `const E = Engine;
+       const ser = E.series(table, { frame: E.smoothSiteFrame(-89.45, 222.69, 2), sky: E.smoothSkyline(2) }, t0, t1, 10);
+       JSON.stringify(E.verdictSeries(E.prepareRolling(ser), E.PRESETS.sortie, t0, cols));`,
+      ctx,
+    );
+    expect(inside).toBe(JSON.stringify(direct));
   });
 });
