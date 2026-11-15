@@ -28,7 +28,7 @@ const enu = (azDeg: number, elDeg: number): Vec3 => [
   Math.sin(elDeg * DEG),
 ];
 
-export function directionResiduals(table: EphemTable, sites: SiteDef[], tweak?: (s: SiteDef) => SiteDef, observerAtMoonCentre = false): Residual[] {
+export function directionResiduals(table: EphemTable, sites: SiteDef[], tweak?: (s: SiteDef) => SiteDef, observerAtMoonCentre = false, fileFor: (id: string, body: 'sun' | 'earth') => string = siteFile): Residual[] {
   const out: Residual[] = [];
   for (const site of sites) {
     // `tweak` exists only so the sabotage test can move one element of the real state.
@@ -37,7 +37,7 @@ export function directionResiduals(table: EphemTable, sites: SiteDef[], tweak?: 
     // `observerAtMoonCentre` exists only so a test can show that the check notices the wrong observer position.
     const frame = observerAtMoonCentre ? { ...site0, r0: [0, 0, 0] as Vec3 } : site0;
     for (const body of ['sun', 'earth'] as const) {
-      const t = parseTable(readFileSync(siteFile(site.id, body), 'utf8'));
+      const t = parseTable(readFileSync(fileFor(site.id, body), 'utf8'));
       const cT = 0, cAz = column(t, 'Azimuth_(a-app)'), cEl = column(t, 'Elevation_(a-app)');
       for (const row of t.rows) {
         const tMs = parseHorizonsTime(row[cT]);

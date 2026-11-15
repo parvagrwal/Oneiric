@@ -1,0 +1,1 @@
+npx tsx pipeline/hook-sun-elevation.ts

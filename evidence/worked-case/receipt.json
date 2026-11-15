@@ -1,0 +1,39 @@
+{
+  "status": "pass",
+  "summary": "Search over 24 polar sites (grade B or C, shipped 2 m skylines) and every 6.5-day sortie start in 2027-2029 for a 21-day shift that flips exactly one verdict in a pair. 97,542 (pair, start date) candidates qualified; the top fifteen tied at score 29. The walked-through candidate is the first of them, 2028-09-05, written up in docs/worked-case.md from this raw output.",
+  "command": "npx tsx pipeline/find-worked-case.ts",
+  "scannedSites": 24,
+  "startRange": [
+    "2027-01-01",
+    "2029-12-31"
+  ],
+  "qualifyingCandidates": 97542,
+  "topScore": 29,
+  "selectedCandidate": {
+    "startUtc": "2028-09-05",
+    "shiftedUtc": "2028-09-26",
+    "flips": {
+      "siteId": "artemis-de-gerlache-rim-2-centroid",
+      "before": "GO (sunlit 100.0%, slip late 3.0 d)",
+      "after": "NO-GO (sunlit 28.3%, dark gap 110.0 h)",
+      "ruleAfter": "Fails: sunlit at least 95% (got 28.3%)."
+    },
+    "holds": {
+      "siteId": "artemis-de-gerlache-rim-2-highest",
+      "before": "GO (slip late 4.25 d)",
+      "after": "GO (slip late 10.5 d)"
+    },
+    "blockingRidge": {
+      "darkStartUtc": "2028-09-26 00:00:00 UTC",
+      "darkEndUtc": "2028-09-30 13:58:07.500Z",
+      "darkGapH": 109.97,
+      "midUtc": "2028-09-28 06:59:03.750Z",
+      "azDeg": 128.85,
+      "horizonAtMidAzDeg": 7.17,
+      "blockingDistanceKm": 0.3,
+      "ridgeLatDeg": -88.2362,
+      "ridgeELonDeg": 295.6219
+    }
+  },
+  "selectionNote": "All top-scoring candidates tie at 29; the first listed was written up. Tied alternates are recorded in docs/worked-case.md."
+}

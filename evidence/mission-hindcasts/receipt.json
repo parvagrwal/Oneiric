@@ -1,0 +1,48 @@
+{
+  "status": "pass",
+  "summary": "Six recorded mission events replayed with the production engine and recorded in app/public/data/validation.json (row mission-hindcasts). Tolerances were fixed on 2026-11-15, before the first run; a missed tolerance would remain in the results with its explanation. All six sub-checks pass.",
+  "tolerancesFixedBeforeRun": true,
+  "subChecks": [
+    {
+      "id": "eclipse-centre",
+      "reference": "NASA catalogue greatest eclipse 2025-03-14T06:58:47Z, limit 5 min",
+      "measured": "2025-03-14 06:59:00 UTC, +0.2 min",
+      "status": "pass"
+    },
+    {
+      "id": "eclipse-site",
+      "reference": "Firefly imagery: Sun hidden about 07:30 UTC, Sun back about 08:30 UTC",
+      "measured": "fraction 0.0000 at 07:30 UTC; Sun back 2025-03-14 08:36:52.5 UTC (allowed 08:10-08:50 UTC)",
+      "status": "pass"
+    },
+    {
+      "id": "blue-ghost-sunset",
+      "reference": "Last contact 2025-03-16 23:25 UTC, about 5 h after sunset; tool sunset within 3 h of 18:25 UTC, grade D",
+      "measured": "sunset 2025-03-16 20:53:45 UTC, +2.48 h from 18:25 UTC",
+      "status": "pass"
+    },
+    {
+      "id": "chandrayaan-3-sunset",
+      "reference": "ISRO: Pragyan parked 2023-09-02, Vikram 2023-09-04; tool sunset must fall after the 2023-09-04 sleep reference; tolerance fixed before running",
+      "measured": "first sunset 2023-09-04 07:26:52.5 UTC, 0.31 days after the sleep reference (grade C, LOLA 240 m skyline)",
+      "status": "pass"
+    },
+    {
+      "id": "slim-azimuth",
+      "reference": "SLIM landed 2024-01-19 15:20 UTC with cells facing west; power returned 2024-01-28",
+      "measured": "Sun azimuth 81.7 deg at landing (east), 276.7 deg on 2024-01-28 (west)",
+      "status": "pass"
+    },
+    {
+      "id": "chang-e-6-earth",
+      "reference": "Chang'e-6 landed on the far side; Earth never above the horizon, hourly epochs 2023-2040",
+      "measured": "highest Earth elevation -32.790 deg at 2039-05-31 17:00 UTC across 157,777 epochs",
+      "status": "pass"
+    }
+  ],
+  "runVia": [
+    "pipeline/hindcast-checks.ts",
+    "pipeline/validate.ts (writes app/public/data/validation.json)"
+  ],
+  "gradeNote": "Eclipse and Blue Ghost sunset run grade D (smooth sphere); Chandrayaan-3 runs grade C (LOLA 240 m skyline); the others are direction-only."
+}

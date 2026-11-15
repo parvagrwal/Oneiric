@@ -1,0 +1,2 @@
+npx tsx pipeline/fetch-cached-checks.ts   # shape B at 24 epochs for the 30 library sites without a 500-epoch query
+npx tsx pipeline/cached-check.ts   # recompute residuals -> app/public/data/horizons-check.json

@@ -1,0 +1,278 @@
+scanning 24 polar sites, daily starts 2027-01-01 to 2029-12-31, 21-day shift,
+6.5-day sortie rules (illustrative, not agency requirements), 2 m, shipped 2 m skylines (grade B or C)
+  scanned artemis-de-gerlache-rim-2-centroid (B) in 1.3 s
+  scanned artemis-de-gerlache-rim-2-highest (B) in 1.2 s
+  scanned artemis-haworth-centroid (B) in 1.2 s
+  scanned artemis-haworth-highest (B) in 1.1 s
+  scanned artemis-malapert-massif-centroid (B) in 1.0 s
+  scanned artemis-malapert-massif-highest (B) in 1.0 s
+  scanned artemis-mons-mouton-centroid (B) in 1.1 s
+  scanned artemis-mons-mouton-highest (B) in 1.1 s
+  scanned artemis-mons-mouton-plateau-centroid (B) in 1.0 s
+  scanned artemis-mons-mouton-plateau-highest (B) in 1.1 s
+  scanned artemis-nobile-rim-1-centroid (B) in 0.8 s
+  scanned artemis-nobile-rim-1-highest (B) in 0.9 s
+  scanned artemis-nobile-rim-2-centroid (B) in 0.9 s
+  scanned artemis-nobile-rim-2-highest (B) in 0.9 s
+  scanned artemis-peak-near-cabeus-b-centroid (B) in 0.9 s
+  scanned artemis-peak-near-cabeus-b-highest (B) in 1.0 s
+  scanned artemis-slater-plain-centroid (B) in 0.9 s
+  scanned artemis-slater-plain-highest (B) in 1.1 s
+  scanned chandrayaan-3 (C) in 0.8 s
+  scanned connecting-ridge (B) in 1.2 s
+  scanned im-1-odysseus (C) in 0.9 s
+  scanned im-2-athena (B) in 0.8 s
+  scanned nobile-rim-2 (B) in 0.8 s
+  scanned shackleton-rim (B) in 0.9 s
+
+97542 (pair, date) candidates where exactly one site flips under a 21-day shift
+
+#1 score 29
+  t = 2028-09-05  (shift to 2028-09-26)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3 d
+    at t+21d: sunlit 28.3%  dark gap 110.0 h  Earth 83.4%  link gap 25.7 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 28.3%).
+  holds:  artemis-de-gerlache-rim-2-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 10.5 d
+
+#2 score 29
+  t = 2029-08-25  (shift to 2029-09-15)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3 d
+    at t+21d: sunlit 22.6%  dark gap 118.8 h  Earth 86.5%  link gap 20.9 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 22.6%).
+  holds:  artemis-de-gerlache-rim-2-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 10.5 d
+
+#3 score 29
+  t = 2027-09-14  (shift to 2027-10-05)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 5.5 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 31.3%  link gap 107.1 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 5.5 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 7.5 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 97.8%  link gap 3.3 h  slip late 16 d
+
+#4 score 29
+  t = 2027-09-15  (shift to 2027-10-06)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4.5 d
+    at t+21d: sunlit 2.8%  dark gap 149.7 h  Earth 46.7%  link gap 83.1 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 4.5 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 2.8%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 6.5 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 15 d
+
+#5 score 29
+  t = 2027-09-16  (shift to 2027-10-07)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3.5 d
+    at t+21d: sunlit 18.2%  dark gap 125.7 h  Earth 62.1%  link gap 59.1 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3.5 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 18.2%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 5.5 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 14 d
+
+#6 score 29
+  t = 2027-10-12  (shift to 2027-11-02)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 95.1%  dark gap 5.7 h  Earth 100.0%  link gap 0.0 h  slip late 5.25 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 44.6%  link gap 86.4 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 5.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 9 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 15 d
+
+#7 score 29
+  t = 2027-10-13  (shift to 2027-11-03)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4.25 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 59.9%  link gap 62.4 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 4.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 8 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 14 d
+
+#8 score 29
+  t = 2027-10-14  (shift to 2027-11-04)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3.25 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 75.3%  link gap 38.4 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 7 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 13 d
+
+#9 score 29
+  t = 2028-08-06  (shift to 2028-08-27)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3.25 d
+    at t+21d: sunlit 18.9%  dark gap 124.6 h  Earth 37.0%  link gap 98.3 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 18.9%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 14.25 d
+
+#10 score 29
+  t = 2028-09-02  (shift to 2028-09-23)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 6 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 37.3%  link gap 97.7 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 6 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 8.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 16.25 d
+
+#11 score 29
+  t = 2028-09-03  (shift to 2028-09-24)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 5 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 52.7%  link gap 73.7 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 5 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 7.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 15.25 d
+
+#12 score 29
+  t = 2028-09-04  (shift to 2028-09-25)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4 d
+    at t+21d: sunlit 12.9%  dark gap 134.0 h  Earth 68.1%  link gap 49.7 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 4 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 12.9%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 6.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 14.25 d
+
+#13 score 29
+  t = 2028-09-05  (shift to 2028-09-26)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3 d
+    at t+21d: sunlit 28.3%  dark gap 110.0 h  Earth 83.4%  link gap 25.7 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 28.3%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 5.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 13.25 d
+
+#14 score 29
+  t = 2028-10-01  (shift to 2028-10-22)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 4.25 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 66.9%  link gap 51.6 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 4.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 8.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 14.5 d
+
+#15 score 29
+  t = 2028-10-02  (shift to 2028-10-23)
+  flips:  artemis-de-gerlache-rim-2-centroid (B)  GO -> NO-GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 3.25 d
+    at t+21d: sunlit 0.0%  dark gap 156.0 h  Earth 82.3%  link gap 27.6 h  slip late n/a d
+    rule at t:     Every rule is met, and the start can slip 3.25 days later.
+    rule at t+21: Fails: sunlit at least 95% (got 0%).
+  holds:  artemis-malapert-massif-highest (B)  GO -> GO
+    at t:      sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 7.25 d
+    at t+21d: sunlit 100.0%  dark gap 0.0 h  Earth 100.0%  link gap 0.0 h  slip late 13.5 d
+
+BEST-CANDIDATE-JSON
+{
+  "shiftDays": 21,
+  "startUtc": "2028-09-05",
+  "flippingSite": {
+    "id": "artemis-de-gerlache-rim-2-centroid",
+    "name": "de Gerlache Rim 2 centroid",
+    "grade": "B",
+    "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+    "siteElevationM": -88.41293238085407,
+    "lat": -88.22998,
+    "eLon": 295.37156,
+    "before": {
+      "tMs": 1851724800000,
+      "verdict": "GO",
+      "rule": "Every rule is met, and the start can slip 3 days later.",
+      "sunlitPct": 100,
+      "earthVisiblePct": 100,
+      "longestDarkGapH": 0,
+      "longestLinkGapH": 0,
+      "slipLateDays": 3,
+      "slipEarlyDays": 4
+    },
+    "after": {
+      "tMs": 1853539200000,
+      "verdict": "NO-GO",
+      "rule": "Fails: sunlit at least 95% (got 28.3%).",
+      "sunlitPct": 28.27690972222222,
+      "earthVisiblePct": 83.44017094017094,
+      "longestDarkGapH": 109.96875,
+      "longestLinkGapH": 25.71875,
+      "slipLateDays": null,
+      "slipEarlyDays": null
+    }
+  },
+  "holdingSite": {
+    "id": "artemis-de-gerlache-rim-2-highest",
+    "name": "de Gerlache Rim 2 highest point",
+    "grade": "B",
+    "terrain": "LOLA 20 m + LOLA 80 m + LOLA 240 m",
+    "siteElevationM": 1765.1918508719357,
+    "lat": -88.58747,
+    "eLon": 292.09202,
+    "before": {
+      "tMs": 1851724800000,
+      "verdict": "GO",
+      "rule": "Every rule is met, and the start can slip 4.25 days later.",
+      "sunlitPct": 100,
+      "earthVisiblePct": 100,
+      "longestDarkGapH": 0,
+      "longestLinkGapH": 0,
+      "slipLateDays": 4.25,
+      "slipEarlyDays": 6.25
+    },
+    "after": {
+      "tMs": 1853539200000,
+      "verdict": "GO",
+      "rule": "Every rule is met, and the start can slip 10.5 days later.",
+      "sunlitPct": 100,
+      "earthVisiblePct": 100,
+      "longestDarkGapH": 0,
+      "longestLinkGapH": 0,
+      "slipLateDays": 10.5,
+      "slipEarlyDays": 0.25
+    }
+  },
+  "worseWindow": {
+    "label": "t+21d",
+    "startUtc": "2028-09-26T00:00:00.000Z"
+  },
+  "blockingRidge": {
+    "darkStartUtc": "2028-09-26 00:00:00 UTC",
+    "darkEndUtc": "2028-09-30 13:58:07.500Z",
+    "darkGapH": 109.96875,
+    "midUtc": "2028-09-28 06:59:03.750Z",
+    "azDeg": 128.84683150148567,
+    "horizonDegAtMidAz": 7.17056819910261,
+    "blockingDistanceKm": 0.3,
+    "ridgeLatDeg": -88.23616869616404,
+    "ridgeELonDeg": 295.6218939892402,
+    "sunlitPct": 28.27690972222222
+  }
+}
+exit 0

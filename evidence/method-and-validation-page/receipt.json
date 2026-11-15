@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "summary": "The app renders app/public/data/validation.json in the Method and checks drawer: per-check rows with counts, limits and recorded results (the page never computes a pass), mission hindcast sub-checks with references and measured values, pending rows with reasons and no invented numbers, per-quantity sources, the limits section, and reproduce commands. Real direction, skyline and hindcast results are shown.",
+  "validationRowsRendered": [
+    {
+      "id": "sun-earth-direction",
+      "n": 8000,
+      "maxDeg": 0.00606,
+      "status": "pass"
+    },
+    {
+      "id": "skyline-synthetic",
+      "n": 10084,
+      "maxDeg": 0.00293,
+      "status": "pass"
+    },
+    {
+      "id": "skyline-files",
+      "n": 24,
+      "status": "pass"
+    },
+    {
+      "id": "mission-hindcasts",
+      "n": 6,
+      "status": "pass"
+    }
+  ],
+  "pendingRendered": [
+    {
+      "id": "raster-orientation",
+      "reason": "no LOLA raster in data/ or data-raw/; shown as pending, not passed"
+    }
+  ],
+  "recordedVsCurrentRun": "The committed validation.json at the base commit records raster-orientation as pass (n=4, run 2026-11-15T00:17:21Z, generated when the gitignored rasters were still present). The regeneration on 2026-11-15T06 replaces it with a pending row, because the rasters are not in this working tree. Both states stay visible: git history keeps the recorded pass; the page shows what this tree can rerun.",
+  "appLintWarnings": 0,
+  "appBuildModules": 336
+}

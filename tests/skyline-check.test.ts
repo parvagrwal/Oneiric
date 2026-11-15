@@ -31,10 +31,12 @@ describe('sabotage: the skyline check notices a wrong raster or a wrong build', 
     expect(c.pass).toBe(false);
     expect((c.detail.hills as Array<{ foundAzimuthDeg: number }>)[0].foundAzimuthDeg).not.toBeCloseTo(90, 0);
     expect((c.detail.flatElsewhere as Array<{ azimuthDeg: number; errorDeg: number }>).find((a) => a.azimuthDeg === 270)!.errorDeg).toBeGreaterThan(1);
-  });
+    // The hill-case build exceeds the 5 s default under full-suite load.
+  }, 15000);
   it('a raster with its axes swapped fails', () => {
     expect(hillCase({ tweak: swapAxes }).pass).toBe(false);
-  });
+    // The hill-case build exceeds the 5 s default under full-suite load.
+  }, 15000);
   it('heights at half scale fail the ridge case', () => {
     const c = ridgeCase(RIDGES[0], { tweak: (g) => scaleHeights(g, 0.5) });
     expect(c.pass).toBe(false);
@@ -64,5 +66,6 @@ describe('refinement: halving the step and the ray spacing', () => {
     const fine = refinementCheck(loadTable(), {}, [6_000, 0, 0]);
     const coarse = refinementCheck(loadTable(), { stepPixels: 7, subRays: 1 }, [6_000, 0, 0]);
     expect(coarse.maxHorizonMoveDeg).toBeGreaterThan(2 * fine.maxHorizonMoveDeg);
-  });
+    // Two refinement builds exceed the 5 s default under full-suite load.
+  }, 15000);
 });

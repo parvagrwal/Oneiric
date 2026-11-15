@@ -1,0 +1,800 @@
+{
+  "generatedBy": "pipeline/cached-check.ts",
+  "runAtUtc": "2026-11-15T07:31:57.188Z",
+  "note": "Cached JPL Horizons site queries compared with the hourly table. Three sites use a 500-epoch query (the direction-check fixtures); the rest use a 24-epoch query spread across 2023-2040 (pipeline/fetch-cached-checks.ts). Sites without a cached query are listed in notChecked; no number is shown for them. Each card shows the maximum residual for its own site only.",
+  "sites": [
+    {
+      "id": "connecting-ridge",
+      "name": "Connecting Ridge",
+      "n": 1000,
+      "maxDeg": 0.0060331103022018455,
+      "rmsDeg": 0.00284316628169209,
+      "perBody": {
+        "sun": {
+          "n": 500,
+          "maxDeg": 0.0001930018259511046,
+          "rmsDeg": 0.00018061827494162417
+        },
+        "earth": {
+          "n": 500,
+          "maxDeg": 0.0060331103022018455,
+          "rmsDeg": 0.004016785536901212
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/sites/connecting-ridge-sun.txt",
+        "fixtures/horizons/sites/connecting-ridge-earth.txt"
+      ]
+    },
+    {
+      "id": "im-2-athena",
+      "name": "IM-2 Athena",
+      "n": 1000,
+      "maxDeg": 0.006035152159411005,
+      "rmsDeg": 0.0028442704858675596,
+      "perBody": {
+        "sun": {
+          "n": 500,
+          "maxDeg": 0.00019309693568461708,
+          "rmsDeg": 0.00018061810844951278
+        },
+        "earth": {
+          "n": 500,
+          "maxDeg": 0.006035152159411005,
+          "rmsDeg": 0.004018348702197793
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/sites/im-2-athena-sun.txt",
+        "fixtures/horizons/sites/im-2-athena-earth.txt"
+      ]
+    },
+    {
+      "id": "chang-e-6",
+      "name": "Chang'e-6",
+      "n": 1000,
+      "maxDeg": 0.006016233498214607,
+      "rmsDeg": 0.002834694588638495,
+      "perBody": {
+        "sun": {
+          "n": 500,
+          "maxDeg": 0.0001924960842245696,
+          "rmsDeg": 0.00018062060085356006
+        },
+        "earth": {
+          "n": 500,
+          "maxDeg": 0.006016233498214607,
+          "rmsDeg": 0.004004792506517665
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/sites/chang-e-6-sun.txt",
+        "fixtures/horizons/sites/chang-e-6-earth.txt"
+      ]
+    },
+    {
+      "id": "shackleton-rim",
+      "name": "Shackleton rim",
+      "n": 48,
+      "maxDeg": 0.00600482916246162,
+      "rmsDeg": 0.002773840970630011,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019150765593344647,
+          "rmsDeg": 0.00018010441560231842
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.00600482916246162,
+          "rmsDeg": 0.003918666847305577
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/shackleton-rim-sun.txt",
+        "fixtures/horizons/cached-checks/shackleton-rim-earth.txt"
+      ]
+    },
+    {
+      "id": "nobile-rim-2",
+      "name": "Nobile Rim 2",
+      "n": 48,
+      "maxDeg": 0.006005896010936335,
+      "rmsDeg": 0.0027743306337497217,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019160306286867217,
+          "rmsDeg": 0.0001801038209729112
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006005896010936335,
+          "rmsDeg": 0.003919360093739184
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/nobile-rim-2-sun.txt",
+        "fixtures/horizons/cached-checks/nobile-rim-2-earth.txt"
+      ]
+    },
+    {
+      "id": "im-1-odysseus",
+      "name": "IM-1 Odysseus",
+      "n": 48,
+      "maxDeg": 0.006009223050787147,
+      "rmsDeg": 0.0027759781172829487,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019156368789184113,
+          "rmsDeg": 0.00018010964006188467
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006009223050787147,
+          "rmsDeg": 0.003921692177214365
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/im-1-odysseus-sun.txt",
+        "fixtures/horizons/cached-checks/im-1-odysseus-earth.txt"
+      ]
+    },
+    {
+      "id": "chandrayaan-3",
+      "name": "Chandrayaan-3",
+      "n": 48,
+      "maxDeg": 0.006011892015035323,
+      "rmsDeg": 0.0027772016732262503,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.0001917665115352228,
+          "rmsDeg": 0.00018010916286724434
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006011892015035323,
+          "rmsDeg": 0.003923424391649804
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/chandrayaan-3-sun.txt",
+        "fixtures/horizons/cached-checks/chandrayaan-3-earth.txt"
+      ]
+    },
+    {
+      "id": "slim",
+      "name": "SLIM",
+      "n": 48,
+      "maxDeg": 0.006026489368943923,
+      "rmsDeg": 0.0027839820660664487,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019214027421503923,
+          "rmsDeg": 0.0001801228482969854
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006026489368943923,
+          "rmsDeg": 0.0039330227621869425
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/slim-sun.txt",
+        "fixtures/horizons/cached-checks/slim-earth.txt"
+      ]
+    },
+    {
+      "id": "blue-ghost-m1",
+      "name": "Blue Ghost M1",
+      "n": 48,
+      "maxDeg": 0.006014627002801715,
+      "rmsDeg": 0.0027778777892078985,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.0001923897528424189,
+          "rmsDeg": 0.000180099086983167
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006014627002801715,
+          "rmsDeg": 0.0039243820331890415
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/blue-ghost-m1-sun.txt",
+        "fixtures/horizons/cached-checks/blue-ghost-m1-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-nobile-rim-2-centroid",
+      "name": "Nobile Rim 2 centroid",
+      "n": 48,
+      "maxDeg": 0.006006018145638047,
+      "rmsDeg": 0.0027743894899489065,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019160671158579277,
+          "rmsDeg": 0.00018010393489551312
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006018145638047,
+          "rmsDeg": 0.003919443411571732
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-2-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-2-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-nobile-rim-2-highest",
+      "name": "Nobile Rim 2 highest point",
+      "n": 48,
+      "maxDeg": 0.006006158397684609,
+      "rmsDeg": 0.0027744596583881786,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.000191602948256116,
+          "rmsDeg": 0.00018010427523241482
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006158397684609,
+          "rmsDeg": 0.003919542733800706
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-2-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-2-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-mons-mouton-centroid",
+      "name": "Mons Mouton centroid",
+      "n": 48,
+      "maxDeg": 0.006006494672621398,
+      "rmsDeg": 0.0027746386441285845,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019156780151776266,
+          "rmsDeg": 0.00018010563042681946
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006494672621398,
+          "rmsDeg": 0.003919796062663462
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-mons-mouton-highest",
+      "name": "Mons Mouton highest point",
+      "n": 48,
+      "maxDeg": 0.006006503323245453,
+      "rmsDeg": 0.0027746427464075646,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019156730098660512,
+          "rmsDeg": 0.00018010545661133545
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006503323245453,
+          "rmsDeg": 0.003919801878269239
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-malapert-massif-centroid",
+      "name": "Malapert Massif centroid",
+      "n": 48,
+      "maxDeg": 0.006006671914408326,
+      "rmsDeg": 0.0027747391320405972,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019153004413168328,
+          "rmsDeg": 0.00018010657894981514
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006671914408326,
+          "rmsDeg": 0.003919938280378125
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-malapert-massif-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-malapert-massif-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-malapert-massif-highest",
+      "name": "Malapert Massif highest point",
+      "n": 48,
+      "maxDeg": 0.006006665793184516,
+      "rmsDeg": 0.002774735000207485,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019153289611860202,
+          "rmsDeg": 0.00018010648348751568
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006665793184516,
+          "rmsDeg": 0.003919932435305312
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-malapert-massif-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-malapert-massif-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-centroid",
+      "name": "de Gerlache Rim 2 centroid",
+      "n": 48,
+      "maxDeg": 0.006005328292677526,
+      "rmsDeg": 0.0027740932562584602,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019148885465348502,
+          "rmsDeg": 0.00018010549521071988
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006005328292677526,
+          "rmsDeg": 0.0039190239600482455
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-highest",
+      "name": "de Gerlache Rim 2 highest point",
+      "n": 48,
+      "maxDeg": 0.006005214460622909,
+      "rmsDeg": 0.002774035735454436,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019149159399003117,
+          "rmsDeg": 0.0001801051477398474
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006005214460622909,
+          "rmsDeg": 0.003918942543456598
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-centroid",
+      "name": "Mons Mouton Plateau centroid",
+      "n": 48,
+      "maxDeg": 0.006006903644794841,
+      "rmsDeg": 0.0027748346363090388,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019158029077909327,
+          "rmsDeg": 0.0001801058763012109
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006903644794841,
+          "rmsDeg": 0.0039200735185762016
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-highest",
+      "name": "Mons Mouton Plateau highest point",
+      "n": 48,
+      "maxDeg": 0.006006545168482381,
+      "rmsDeg": 0.0027746570210899907,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019158405208355997,
+          "rmsDeg": 0.00018010532452593532
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006545168482381,
+          "rmsDeg": 0.003919822093086033
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-slater-plain-centroid",
+      "name": "Slater Plain centroid",
+      "n": 48,
+      "maxDeg": 0.006004070226593636,
+      "rmsDeg": 0.0027734563325568975,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.0001915369734706079,
+          "rmsDeg": 0.00018010257310510855
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006004070226593636,
+          "rmsDeg": 0.0039181223973174745
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-slater-plain-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-slater-plain-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-slater-plain-highest",
+      "name": "Slater Plain highest point",
+      "n": 48,
+      "maxDeg": 0.006004066019480273,
+      "rmsDeg": 0.00277345508746579,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019153523731113545,
+          "rmsDeg": 0.00018010256352641457
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006004066019480273,
+          "rmsDeg": 0.00391812063507378
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-slater-plain-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-slater-plain-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-centroid",
+      "name": "Peak Near Cabeus B centroid",
+      "n": 48,
+      "maxDeg": 0.0060062349196565255,
+      "rmsDeg": 0.0027745581693808994,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019142883593362744,
+          "rmsDeg": 0.00018010811514461314
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.0060062349196565255,
+          "rmsDeg": 0.003919682019936774
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-highest",
+      "name": "Peak Near Cabeus B highest point",
+      "n": 48,
+      "maxDeg": 0.006006258335678871,
+      "rmsDeg": 0.0027745700312869362,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019142831245792403,
+          "rmsDeg": 0.0001801082382537265
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006258335678871,
+          "rmsDeg": 0.003919698807248373
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-nobile-rim-1-centroid",
+      "name": "Nobile Rim 1 centroid",
+      "n": 48,
+      "maxDeg": 0.00600636156043949,
+      "rmsDeg": 0.002774571390872209,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.0001915715482752213,
+          "rmsDeg": 0.00018010514608073362
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.00600636156043949,
+          "rmsDeg": 0.003919700874103575
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-1-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-1-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-nobile-rim-1-highest",
+      "name": "Nobile Rim 1 highest point",
+      "n": 48,
+      "maxDeg": 0.006006445896865509,
+      "rmsDeg": 0.002774611794364813,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019157410612036574,
+          "rmsDeg": 0.00018010531881378883
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006445896865509,
+          "rmsDeg": 0.00391975806561982
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-1-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-nobile-rim-1-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-haworth-centroid",
+      "name": "Haworth centroid",
+      "n": 48,
+      "maxDeg": 0.006006287635325953,
+      "rmsDeg": 0.002774558979422705,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019150502354774225,
+          "rmsDeg": 0.0001801065810716314
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006287635325953,
+          "rmsDeg": 0.003919683237207442
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-haworth-centroid-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-haworth-centroid-earth.txt"
+      ]
+    },
+    {
+      "id": "artemis-haworth-highest",
+      "name": "Haworth highest point",
+      "n": 48,
+      "maxDeg": 0.006006454743016463,
+      "rmsDeg": 0.0027746413217998363,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019150424192059144,
+          "rmsDeg": 0.00018010675233315652
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006006454743016463,
+          "rmsDeg": 0.003919799801908547
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/artemis-haworth-highest-sun.txt",
+        "fixtures/horizons/cached-checks/artemis-haworth-highest-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-11",
+      "name": "Apollo 11",
+      "n": 48,
+      "maxDeg": 0.006027649981699732,
+      "rmsDeg": 0.002784464967443584,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019213575140172813,
+          "rmsDeg": 0.00018012456969825739
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006027649981699732,
+          "rmsDeg": 0.00393370632473145
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-11-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-11-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-12",
+      "name": "Apollo 12",
+      "n": 48,
+      "maxDeg": 0.006029984466263397,
+      "rmsDeg": 0.002785886980717831,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019142115034129973,
+          "rmsDeg": 0.0001801437896106282
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006029984466263397,
+          "rmsDeg": 0.003935718581622795
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-12-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-12-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-14",
+      "name": "Apollo 14",
+      "n": 48,
+      "maxDeg": 0.006030593271345578,
+      "rmsDeg": 0.002786154000449421,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019151886259870964,
+          "rmsDeg": 0.00018014246189886936
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006030593271345578,
+          "rmsDeg": 0.003936096660634955
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-14-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-14-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-15",
+      "name": "Apollo 15",
+      "n": 48,
+      "maxDeg": 0.006028466771612494,
+      "rmsDeg": 0.0027848231056707843,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.0001918214288851656,
+          "rmsDeg": 0.00018013184822622818
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006028466771612494,
+          "rmsDeg": 0.003934213006054749
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-15-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-15-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-16",
+      "name": "Apollo 16",
+      "n": 48,
+      "maxDeg": 0.006028818412830313,
+      "rmsDeg": 0.00278513710256477,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019202543600182047,
+          "rmsDeg": 0.0001801287402879653
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006028818412830313,
+          "rmsDeg": 0.003934657672160062
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-16-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-16-earth.txt"
+      ]
+    },
+    {
+      "id": "apollo-17",
+      "name": "Apollo 17",
+      "n": 48,
+      "maxDeg": 0.006024827830083339,
+      "rmsDeg": 0.0027829480885947977,
+      "perBody": {
+        "sun": {
+          "n": 24,
+          "maxDeg": 0.00019217607177220028,
+          "rmsDeg": 0.00018011884233141493
+        },
+        "earth": {
+          "n": 24,
+          "maxDeg": 0.006024827830083339,
+          "rmsDeg": 0.003931559147496584
+        }
+      },
+      "cachedDate": "2026-11-14",
+      "fixtureFiles": [
+        "fixtures/horizons/cached-checks/apollo-17-sun.txt",
+        "fixtures/horizons/cached-checks/apollo-17-earth.txt"
+      ]
+    }
+  ],
+  "notChecked": []
+}

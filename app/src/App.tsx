@@ -11,6 +11,9 @@ import {
 import './App.css';
 import { SkylineCanvas } from './SkylineCanvas.tsx';
 import { WindowFinder } from './WindowFinder.tsx';
+import { MethodDrawer, type ValidationRowData, type PendingRow } from './MethodDrawer.tsx';
+import { MapView } from './MapView.tsx';
+import { shapeBUrl } from './horizons-url.ts';
 import { timeControlForKey } from './keyboard.ts';
 import {
   DAILY_WINDOW_COLUMNS,
@@ -43,14 +46,6 @@ type SitesFile = {
   sites: SiteDefinition[];
 };
 
-type ValidationRow = {
-  id: string;
-  name: string;
-  n: number;
-  maxDeg: number | null;
-  thresholdDeg: number | null;
-};
-
 type SkylineEntry = {
   siteId: string;
   heightM: number;
@@ -58,6 +53,15 @@ type SkylineEntry = {
   terrain: string;
   siteElevationM: number;
   file: string;
+};
+
+type HorizonsCheckEntry = {
+  id: string;
+  name: string;
+  n: number;
+  maxDeg: number;
+  rmsDeg: number;
+  cachedDate: string | null;
 };
 
 type DataState =
@@ -111,6 +115,25 @@ function formatSlipDays(days: number): string {
 
 function formatPercent(value: number): string {
   return `${value.toFixed(1)}%`;
+}
+
+function sanitizeFilenamePart(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'site';
+}
+
+function compactUtcStamp(tMs: number): string {
+  return new Date(tMs).toISOString().slice(0, 16).replace(/[-:T]/g, '');
+}
+
+function downloadBlob(filename: string, blob: Blob): void {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
 function formatEnergy(value: number): string {
@@ -201,7 +224,11 @@ function App() {
   const [librarySites, setLibrarySites] = useState<SiteDefinition[]>([]);
   const [sitesState, setSitesState] = useState<DataState>({ kind: 'loading' });
   const [ephemState, setEphemState] = useState<DataState>({ kind: 'idle' });
-  const [validation, setValidation] = useState<ValidationRow | null>(null);
+  const [validationRows, setValidationRows] = useState<ValidationRowData[]>([]);
+  const [validationPending, setValidationPending] = useState<PendingRow[]>([]);
+  const [horizonsCheck, setHorizonsCheck] = useState<Map<string, HorizonsCheckEntry> | null>(null);
+  const [methodOpen, setMethodOpen] = useState(false);
+  const [exportNote, setExportNote] = useState<string | null>(null);
   const [skylineIndex, setSkylineIndex] = useState<Map<string, SkylineEntry> | null>(null);
   const [skylinesReady, setSkylinesReady] = useState(false);
 
@@ -218,6 +245,8 @@ function App() {
   const [scrubMinutes, setScrubMinutes] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
+  const exportReqRef = useRef(0);
+  const pendingExportsRef = useRef(new Map<number, string>());
   const [shareNote, setShareNote] = useState<string | null>(null);
   const [siteFilter, setSiteFilter] = useState('');
 
@@ -284,15 +313,38 @@ function App() {
     };
   }, []);
 
-  // Load validation summary
+  // Load recorded validation results (the page only renders them; it never computes a pass)
   useEffect(() => {
     fetch(dataUrl('data/validation.json'))
       .then((response) => {
         if (!response.ok) throw new Error(`validation data returned ${response.status}`);
-        return response.json() as Promise<{ rows: ValidationRow[] }>;
+        return response.json() as Promise<{ rows: ValidationRowData[]; pending?: PendingRow[] }>;
       })
-      .then((payload) => setValidation(payload.rows.find((row) => row.id === 'sun-earth-direction') ?? null))
-      .catch(() => setValidation(null));
+      .then((payload) => {
+        setValidationRows(Array.isArray(payload.rows) ? payload.rows : []);
+        setValidationPending(Array.isArray(payload.pending) ? payload.pending : []);
+      })
+      .catch(() => {
+        setValidationRows([]);
+        setValidationPending([]);
+      });
+  }, []);
+
+  // Load the cached per-site Horizons check (sites without a cached query are never given a number)
+  useEffect(() => {
+    let active = true;
+    fetch(dataUrl('data/horizons-check.json'))
+      .then((response) => (response.ok ? response.json() : { sites: [] as HorizonsCheckEntry[] }))
+      .then((payload: { sites?: HorizonsCheckEntry[] }) => {
+        if (!active) return;
+        setHorizonsCheck(new Map((payload.sites ?? []).map((entry) => [entry.id, entry])));
+      })
+      .catch(() => {
+        if (active) setHorizonsCheck(new Map());
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Start Web Worker
@@ -328,6 +380,17 @@ function App() {
       } else if (message.type === 'matrix-error') {
         if (message.requestId !== matrixReqRef.current) return;
         setMatrixProgress((prev) => ({ ...prev, computing: false, error: message.message }));
+      } else if (message.type === 'export-series-result') {
+        const filename = pendingExportsRef.current.get(message.requestId);
+        if (!filename) return;
+        pendingExportsRef.current.delete(message.requestId);
+        downloadBlob(filename, new Blob([message.csv], { type: 'text/csv;charset=utf-8' }));
+        setExportNote('CSV download started');
+        window.setTimeout(() => setExportNote(null), 2600);
+      } else if (message.type === 'export-series-error') {
+        pendingExportsRef.current.delete(message.requestId);
+        setExportNote(`CSV export failed: ${message.message}`);
+        window.setTimeout(() => setExportNote(null), 5000);
       }
     };
     return () => {
@@ -382,6 +445,24 @@ function App() {
       active = false;
     };
   }, []);
+
+  const validation = useMemo(
+    () => validationRows.find((row) => row.id === 'sun-earth-direction') ?? null,
+    [validationRows],
+  );
+  const engineCommit = useMemo(
+    () => validationRows.find((row) => row.engineCommit)?.engineCommit ?? 'unknown',
+    [validationRows],
+  );
+
+  const horizonsChipText = useCallback((site: SiteDefinition): string => {
+    if (site.isCustom) return 'Horizons check: not cached for custom coordinates';
+    if (horizonsCheck === null) return 'Horizons check: loading…';
+    const entry = horizonsCheck.get(site.id);
+    if (!entry) return 'Horizons check: not cached for this site';
+    const date = entry.cachedDate ?? 'date unknown';
+    return `Horizons check: max ${entry.maxDeg.toFixed(4)}° · cached ${date} · ${entry.n.toLocaleString()} epochs · this site only`;
+  }, [horizonsCheck]);
 
   const allSites = useMemo(() => {
     const map = new Map<string, SiteDefinition>();
@@ -773,6 +854,101 @@ function App() {
     window.setTimeout(() => setShareNote(null), 2600);
   };
 
+  const handleExportCsv = (slot: (typeof resolvedSlots)[number], result: ScenarioResult) => {
+    const worker = workerRef.current;
+    if (!worker) return;
+    const requestId = exportReqRef.current + 1;
+    exportReqRef.current = requestId;
+    const stem = `oneiric-${sanitizeFilenamePart(slot.site.id)}-${compactUtcStamp(result.startMs)}`;
+    pendingExportsRef.current.set(requestId, `${stem}.csv`);
+    worker.postMessage({
+      type: 'export-series',
+      requestId,
+      site: slot.site,
+      startMs: slot.startMs,
+      presetId: urlState.presetId,
+      heightM: urlState.heightM,
+      options: scenarioOptions,
+    });
+  };
+
+  const handleExportJson = (slot: (typeof resolvedSlots)[number], result: ScenarioResult) => {
+    const site = slot.site;
+    const stem = `oneiric-${sanitizeFilenamePart(site.id)}-${compactUtcStamp(result.startMs)}`;
+    const cached = horizonsCheck?.get(site.id) ?? null;
+    const payload = {
+      tool: 'Oneiric',
+      exportedAtUtc: new Date().toISOString(),
+      site: {
+        id: site.id,
+        name: site.name,
+        label: site.label,
+        lat: site.lat,
+        eLon: site.eLon,
+        source: site.source,
+        sourceUrl: site.sourceUrl,
+        custom: Boolean(site.isCustom),
+      },
+      scenario: {
+        startUtc: new Date(result.startMs).toISOString(),
+        stayDays: urlState.stayDays,
+        heightM: urlState.heightM,
+        marginDeg: result.marginDeg,
+        preset: {
+          id: result.preset.id,
+          name: result.preset.name,
+          stayDays: result.preset.stayDays,
+          rules: result.preset.rules,
+          label: result.preset.label,
+        },
+      },
+      result: {
+        verdict: result.verdict.verdict,
+        decidingRule: result.verdict.rule,
+        grade: result.verdict.grade,
+        terrain: result.verdict.terrain,
+        metrics: {
+          sunlitPct: result.metrics.sunlitPct,
+          longestDarkGapH: result.metrics.longestDarkGapH,
+          earthVisiblePct: result.metrics.earthVisiblePct,
+          longestLinkGapH: result.metrics.longestLinkGapH,
+          overlapPct: result.metrics.overlapPct,
+          eclipses: result.metrics.eclipses.map((eclipse) => ({
+            startUtc: new Date(eclipse.startMs).toISOString(),
+            endUtc: new Date(eclipse.endMs).toISOString(),
+            maxObscuration: eclipse.maxObscuration,
+          })),
+          energyKWhM2: result.metrics.energyKWhM2,
+          fixedVerticalBestFacingDeg: result.metrics.fixedVerticalBestFacingDeg,
+        },
+        slip: result.slip,
+      },
+      datasets: {
+        ephemeris: 'JPL Horizons, hourly 2023-2040, MOON_ME frame (mean Earth and pole), east-positive longitude, 1,737.4 km sphere, linear interpolation',
+        terrain: result.verdict.terrain,
+        grade: result.verdict.grade,
+        engineCommit,
+      },
+      reproduce: {
+        sun: shapeBUrl(site, 'sun', result.startMs, urlState.stayDays),
+        earth: shapeBUrl(site, 'earth', result.startMs, urlState.stayDays),
+        note: 'These Horizons queries return the directions the direction check compares against the cached table. The figures on screen are computed from the cached hourly table, never from a live call.',
+      },
+      horizonsCheck: cached
+        ? {
+            maxDeg: cached.maxDeg,
+            rmsDeg: cached.rmsDeg,
+            n: cached.n,
+            cachedDate: cached.cachedDate,
+            note: 'Recomputed from the cached Horizons site query; present only because a cached query exists for this site.',
+          }
+        : null,
+    };
+    downloadBlob(`${stem}.json`, new Blob([`${JSON.stringify(payload, null, 2)}\n`], { type: 'application/json;charset=utf-8' }));
+    setExportNote('JSON download started');
+    window.setTimeout(() => setExportNote(null), 2600);
+  };
+
   const applyTimeControl = (key: string): boolean => {
     const action = timeControlForKey(key, scrubMinutes, stayMinutes);
     if (!action) return false;
@@ -838,6 +1014,9 @@ function App() {
           ONEIRIC<span> / lunar landing site × date navigator</span>
         </a>
         <span className="topbar-note">UTC · cached JPL Horizons &amp; LOLA skylines · no login</span>
+        <button type="button" className="topbar-link" onClick={() => setMethodOpen(true)}>
+          Method and checks
+        </button>
       </header>
 
       <main>
@@ -858,7 +1037,9 @@ function App() {
             ) : (
               <strong>Loading the recorded check</strong>
             )}
-            <span>JPL Horizons · limit {validation?.thresholdDeg ?? 0.02}° · see the validation record</span>
+            <button type="button" className="proof-link" onClick={() => setMethodOpen(true)}>
+              JPL Horizons · limit {validation?.thresholdDeg ?? 0.02}° · Method and checks
+            </button>
           </div>
         </section>
 
@@ -1458,6 +1639,16 @@ function App() {
                           <p className="provenance">
                             {provenanceFooter(result.verdict.grade, result.verdict.terrain)}
                           </p>
+                          <p className="horizons-chip">{horizonsChipText(slot.site)}</p>
+                          <div className="export-row" aria-label="Export this scenario">
+                            <button type="button" className="export-btn" onClick={() => handleExportCsv(slot, result)}>
+                              CSV · 10-minute series
+                            </button>
+                            <button type="button" className="export-btn" onClick={() => handleExportJson(slot, result)}>
+                              JSON · scenario and sources
+                            </button>
+                            {exportNote && <small className="export-note" role="status">{exportNote}</small>}
+                          </div>
                         </>
                       )}
                     </article>
@@ -1499,6 +1690,12 @@ function App() {
                 }))
               }
             />
+
+            <MapView
+              sites={allSites}
+              skylineGrades={skylineGrades}
+              onPickSite={selectSiteIntoActiveCard}
+            />
           </div>
         </div>
       </main>
@@ -1506,7 +1703,14 @@ function App() {
       <footer className="site-footer">
         <span>Oneiric · lunar landing site × date comparison</span>
         <span>JPL Horizons ephemeris (MOON_ME) · LOLA polar skylines (Grades B, C) · Smooth sphere (Grade D, no terrain)</span>
+        <button type="button" className="footer-link" onClick={() => setMethodOpen(true)}>
+          Method and checks
+        </button>
       </footer>
+
+      {methodOpen && (
+        <MethodDrawer rows={validationRows} pending={validationPending} onClose={() => setMethodOpen(false)} />
+      )}
     </div>
   );
 }

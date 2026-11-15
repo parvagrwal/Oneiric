@@ -421,6 +421,43 @@ export function calculateScenario(
 }
 
 /**
+ * CSV of the full 10-minute series over the stay window, for the export button.
+ * Reuses the shared cache, so exporting right after a calculation costs nothing extra.
+ */
+export function exportSeriesCsv(
+  cache: SiteSeriesCache,
+  site: SiteDefinition,
+  requestedStartMs: number,
+  presetId: string,
+  heightM = 2,
+  terrain: TerrainPayload | null = null,
+  options?: ScenarioOptions,
+): string {
+  const preset = resolvePreset(presetId, options);
+  const marginDeg = options?.marginDeg ?? 0;
+  const startMs = floorToTenMinutes(requestedStartMs);
+  const stayMs = snapStayMs(preset.stayDays);
+  const windowEndMs = startMs + stayMs;
+  const cached = cache.ensure(site, heightM, marginDeg, terrain, startMs, windowEndMs);
+  const s = cached.series;
+  const i0 = Math.max(0, Math.round((startMs - s.t0Ms) / s.stepMs));
+  const i1 = Math.min(s.n, Math.round((windowEndMs - s.t0Ms) / s.stepMs));
+  const lines = ['t_utc,sun_az_deg,sun_el_deg,sun_fraction,earth_az_deg,earth_el_deg,earth_visible'];
+  for (let i = i0; i < i1; i++) {
+    lines.push([
+      new Date(s.t0Ms + i * s.stepMs).toISOString(),
+      s.sunAz[i].toFixed(4),
+      s.sunEl[i].toFixed(4),
+      s.sunF[i].toFixed(4),
+      s.earthAz[i].toFixed(4),
+      s.earthEl[i].toFixed(4),
+      s.earthVis[i],
+    ].join(','));
+  }
+  return lines.join('\n') + '\n';
+}
+
+/**
  * Compute one site row of the Window Finder (daily 120 columns or weekly 52 columns, each starting at 00:00 UTC).
  */
 export function calculateWindowFinderRow(

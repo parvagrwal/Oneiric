@@ -1,0 +1,1 @@
+npm run validate   # the mission hindcasts run as part of validation.json

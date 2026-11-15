@@ -1,0 +1,5 @@
+Instant: 2025-03-06T17:28:00Z
+Site: IM-2 Athena, lat -84.7906, eLon 29.1957, 2 m above site datum (grade B, shipped skyline)
+Sun az/el (2 m above terrain): az 65.6875 deg, el 2.4641 deg
+Sun disc fraction lit above the shipped skyline: 1.0000 (Earth cover 0.0000)
+Sun az/el (smooth sphere reference): az 65.6875 deg, el 2.4641 deg

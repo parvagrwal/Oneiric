@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "summary": "Sun position at the recorded IM-2 Athena landing instant, from the same cached table and shipped 2 m skyline the app renders.",
+  "instant": "2025-03-06T17:28:00Z",
+  "site": "IM-2 Athena (lat -84.7906, eLon 29.1957), 2 m above site datum, grade B (LOLA 20 m + 80 m + 240 m)",
+  "result": {
+    "sunAzimuthDeg": 65.6875,
+    "sunElevationDeg": 2.4641,
+    "sunDiscFractionLit": 1.0,
+    "earthCover": 0.0
+  },
+  "smoothSphereCrossCheck": {
+    "sunAzimuthDeg": 65.6875,
+    "sunElevationDeg": 2.4641
+  },
+  "note": "A replay of a recorded instant, not a prediction. The hook phrase 'a few degrees' (the figure available before) is now a measured figure."
+}

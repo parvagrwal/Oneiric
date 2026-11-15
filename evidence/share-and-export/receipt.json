@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "summary": "Share link (all scenario state in the URL) is unchanged and covered by url-state tests. New this round: CSV export of the 10-minute stay series (through the Web Worker, reusing the site series cache) and JSON export of scenario, metrics, dataset names, grade, engine commit and the two shape-B Horizons queries that reproduce the Sun and Earth directions for the stay window.",
+  "unitTests": {
+    "file": "tests/export-series.test.ts",
+    "tests": 2,
+    "status": "pass"
+  },
+  "csvRowsForSortieStay": 936,
+  "jsonPayloadFields": [
+    "site",
+    "scenario",
+    "result (verdict, decidingRule, grade, terrain, metrics, slip)",
+    "datasets (ephemeris, terrain, grade, engineCommit)",
+    "reproduce (sunShapeBUrl, earthShapeBUrl, note)",
+    "horizonsCheck (only when a cached query exists for the site)"
+  ],
+  "csvPath": "SiteSeriesCache -> exportSeriesCsv (app/src/scenario.ts) -> engine.worker export-series request/response -> browser download",
+  "note": "Interactive click-through was not performed in this headless environment; the code path is type-checked, unit-tested for the CSV builder, and mirrors the existing matrix request/response pattern. The browser download uses Blob URLs."
+}

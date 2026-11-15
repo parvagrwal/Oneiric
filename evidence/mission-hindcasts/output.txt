@@ -1,0 +1,21 @@
+
+> oneiric@0.0.0 validate
+> tsx pipeline/validate.ts
+
+PASS  Sun and Earth direction check against JPL Horizons
+  n = 8000, max = 0.00606 deg, rms = 0.00284 deg, threshold = 0.02 deg
+PASS  Skyline maths check on synthetic terrain
+  n = 10084, max = 0.00293 deg, rms = 0.00055 deg, threshold = 0.01 deg
+PASS  Elevation raster orientation check on two named craters
+  n = 4
+PASS  Shipped skylines match their build records
+  n = 24
+PASS  Mission hindcasts against recorded mission events
+  n = 6
+  pass  eclipse-centre: greatest eclipse 2025-03-14 06:59:00 UTC (Sun–Earth separation 0.316°), +0.2 min from the catalogue
+  pass  eclipse-site: sunlit fraction at 07:30Z = 0.0000 (hidden); Sun reappears 2025-03-14 08:36:52.500Z
+  pass  blue-ghost-sunset: sunset 2025-03-16 20:53:45 UTC, +2.48 h from 18:25Z
+  pass  chandrayaan-3-sunset: first sunset after landing 2023-09-04 07:26:52.500Z, 0.31 days after the sleep reference (grade C, LOLA 240 m)
+  pass  slim-azimuth: azimuth 81.7° at landing, 276.7° on 2024-01-28T15:20Z
+  pass  chang-e-6-earth: highest Earth elevation -32.790° at 2039-05-31 17:00:00 UTC across 157,777 hourly epochs
+wrote app/public/data/validation.json

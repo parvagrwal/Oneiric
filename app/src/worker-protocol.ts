@@ -46,6 +46,15 @@ export type WorkerRequest =
     options?: ScenarioOptions;
   }
   | {
+    type: 'export-series';
+    requestId: number;
+    site: SiteDefinition;
+    startMs: number;
+    presetId: string;
+    heightM: number;
+    options?: ScenarioOptions;
+  }
+  | {
     type: 'calculate';
     requestId: number;
     tables: Array<{ year: number; buffer: ArrayBuffer }>;
@@ -81,6 +90,16 @@ export type WorkerResponse =
   }
   | {
     type: 'matrix-error';
+    requestId: number;
+    message: string;
+  }
+  | {
+    type: 'export-series-result';
+    requestId: number;
+    csv: string;
+  }
+  | {
+    type: 'export-series-error';
     requestId: number;
     message: string;
   }

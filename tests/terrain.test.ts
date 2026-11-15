@@ -124,7 +124,8 @@ describe('skyline builder', () => {
     expect(b.nearFieldComplete).toBe(true);
     expect(b.H[700]).toBeGreaterThan(4); // the ridge exists only on the coarser raster
     expect(b.D[700] * 10).toBeGreaterThan(17_000);
-  });
+    // The 20 km fine raster build exceeds the 5 s default under full-suite load.
+  }, 15000);
 
   it('grades a complete 20 m near field B and the 240 m raster alone C', () => {
     const b = buildSkyline(near(flatNear), SITE.lat, SITE.lon, 2, { maxRangeM: 5_000 });

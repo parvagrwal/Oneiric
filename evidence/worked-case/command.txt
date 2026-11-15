@@ -1,0 +1,1 @@
+npx tsx pipeline/find-worked-case.ts

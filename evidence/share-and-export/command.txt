@@ -1,0 +1,2 @@
+npx vitest run tests/export-series.test.ts
+npm run build   # in app/

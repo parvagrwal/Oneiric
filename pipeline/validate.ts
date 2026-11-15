@@ -4,6 +4,7 @@ import { demHeight, southPolarXY, type DemGrid } from '../engine/terrain.ts';
 import { haveLocalRaster, localRaster, openRaster, pixelWindow, PRODUCTS, readWindow } from './dem.ts';
 import { directionResiduals, loadTable, summarize } from './direction-check.ts';
 import { engineVersion } from './engine-version.ts';
+import { runHindcastChecks } from './hindcast-checks.ts';
 import { loadSites, siteFile } from './fetch-fixtures.ts';
 import { CRATERS, orientationCheck, RING_POINTS, type HeightAt } from './raster-orientation.ts';
 import { REFINEMENT_LIMIT_GAP_PCT, REFINEMENT_LIMIT_POINTS, refinementCheck, SKYLINE_THRESHOLD_DEG, syntheticCases, type CheckOptions } from './skyline-check.ts';
@@ -157,14 +158,16 @@ async function main() {
   const files = runSkylineFileCheck();
   if (files) rows.push(files);
   else pending.push({ id: 'skyline-files', name: 'Shipped skylines match their build records', reason: `no skyline in ${SKYLINE_DIR}/; none has been built yet` });
+  rows.push(runHindcastChecks());
   mkdirSync('app/public/data', { recursive: true });
   writeFileSync(VALIDATION_FILE, JSON.stringify({ generatedBy: 'pipeline/validate.ts', rows, pending }, null, 2) + '\n');
   for (const r of rows) {
     console.log(`${r.pass ? 'PASS' : 'FAIL'}  ${r.name}`);
     if (r.maxDeg !== null) console.log(`  n = ${r.n}, max = ${r.maxDeg.toFixed(5)} deg, rms = ${r.rmsDeg!.toFixed(5)} deg, threshold = ${r.thresholdDeg} deg`);
     else console.log(`  n = ${r.n}`);
-    const d = r.detail as { failed?: string[]; problems?: string[] };
+    const d = r.detail as { failed?: string[]; problems?: string[]; subChecks?: Array<{ pass: boolean; id: string; measured: string }> };
     for (const line of [...(d.failed ?? []), ...(d.problems ?? [])]) console.log(`  failed: ${line}`);
+    for (const c of d.subChecks ?? []) console.log(`  ${c.pass ? 'pass' : 'FAIL'}  ${c.id}: ${c.measured}`);
   }
   for (const p of pending) console.log(`PENDING  ${p.name}\n  ${p.reason}`);
   console.log(`wrote ${VALIDATION_FILE}`);

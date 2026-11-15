@@ -1,0 +1,35 @@
+$ python3 - extract the rows the app renders from app/public/data/validation.json
+generatedBy: pipeline/validate.ts
+sun-earth-direction: n=8000, pass=True, max=0.00606 deg, rms=0.00284 deg, limit=0.02 deg
+skyline-synthetic: n=10084, pass=True, max=0.00293 deg, rms=0.00055 deg, limit=0.01 deg
+skyline-files: n=24, pass=True
+mission-hindcasts: n=6, pass=True
+    sub-check eclipse-centre: pass=True, greatest eclipse 2025-03-14 06:59:00 UTC (Sun–Earth separation 0.316°), +0.2 min from the catalogue
+    sub-check eclipse-site: pass=True, sunlit fraction at 07:30Z = 0.0000 (hidden); Sun reappears 2025-03-14 08:36:52.500Z
+    sub-check blue-ghost-sunset: pass=True, sunset 2025-03-16 20:53:45 UTC, +2.48 h from 18:25Z
+    sub-check chandrayaan-3-sunset: pass=True, first sunset after landing 2023-09-04 07:26:52.500Z, 0.31 days after the sleep reference (grade C, LOLA 240 m)
+    sub-check slim-azimuth: pass=True, azimuth 81.7° at landing, 276.7° on 2024-01-28T15:20Z
+    sub-check chang-e-6-earth: pass=True, highest Earth elevation -32.790° at 2039-05-31 17:00:00 UTC across 157,777 hourly epochs
+pending raster-orientation: no LOLA raster in data/ or data-raw/; this check has not been run
+
+$ app build (the drawer ships in the bundle)
+
+> app@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 336 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.66 kB │ gzip:   0.38 kB
+dist/assets/engine.worker-YZfdl-ob.js   19.87 kB
+dist/assets/index-BU9hB2wS.css          30.18 kB │ gzip:   6.71 kB
+dist/assets/index-ClSpoAXE.js          765.50 kB │ gzip: 236.71 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.50s

@@ -1,0 +1,240 @@
+{
+  "status": "pass",
+  "summary": "Per-site cached Horizons site queries recomputed against the hourly table and written to app/public/data/horizons-check.json. All 33 library sites have a cached query: three (connecting-ridge, im-2-athena, chang-e-6) use the 500-epoch direction-check fixtures, the other thirty use a 24-epoch query fetched by pipeline/fetch-cached-checks.ts, spread evenly across 2023-2040 with an odd step so the epochs fall between the hourly table nodes. Each card in the app shows that site's own maximum residual with the cache date. No site is listed as not checked.",
+  "sitesChecked": [
+    {
+      "id": "connecting-ridge",
+      "n": 1000,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00284,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "im-2-athena",
+      "n": 1000,
+      "maxDeg": 0.00604,
+      "rmsDeg": 0.00284,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "chang-e-6",
+      "n": 1000,
+      "maxDeg": 0.00602,
+      "rmsDeg": 0.00283,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "shackleton-rim",
+      "n": 48,
+      "maxDeg": 0.006,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "nobile-rim-2",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "im-1-odysseus",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "chandrayaan-3",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "slim",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "blue-ghost-m1",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-nobile-rim-2-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-nobile-rim-2-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-mons-mouton-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-mons-mouton-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-malapert-massif-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-malapert-massif-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-de-gerlache-rim-2-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-mons-mouton-plateau-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-slater-plain-centroid",
+      "n": 48,
+      "maxDeg": 0.006,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-slater-plain-highest",
+      "n": 48,
+      "maxDeg": 0.006,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-peak-near-cabeus-b-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-nobile-rim-1-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-nobile-rim-1-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-haworth-centroid",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "artemis-haworth-highest",
+      "n": 48,
+      "maxDeg": 0.00601,
+      "rmsDeg": 0.00277,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-11",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-12",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00279,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-14",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00279,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-15",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-16",
+      "n": 48,
+      "maxDeg": 0.00603,
+      "rmsDeg": 0.00279,
+      "cachedDate": "2026-11-14"
+    },
+    {
+      "id": "apollo-17",
+      "n": 48,
+      "maxDeg": 0.00602,
+      "rmsDeg": 0.00278,
+      "cachedDate": "2026-11-14"
+    }
+  ],
+  "sitesNotChecked": 0,
+  "fetchNote": "The 24-epoch queries were fetched live from JPL Horizons on 2026-11-15 (60 requests, one at a time, raw responses in fixtures/horizons/cached-checks/); each response was checked to hold exactly 24 epochs before use. The 500-epoch queries are the direction-check fixtures, fetched 2026-11-14.",
+  "honestyGuard": "No number is shown for a site without a cached query; custom coordinates always say not cached."
+}

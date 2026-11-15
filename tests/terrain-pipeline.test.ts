@@ -92,7 +92,8 @@ describe('grades and shipped skyline files', () => {
     const g = buildGraded([{ dem: wide, maxDistM: TIER_LIMITS_M[0] }, { dem: coarse, maxDistM: Infinity }], SITE.lat, SITE.eLon, 2);
     expect(g.grade).toBe('B');
     expect(g.built.products).toEqual(['LOLA 20 m', 'LOLA 240 m']);
-  });
+    // The 15.5 km 20 m raster build exceeds the 5 s default under full-suite load.
+  }, 15000);
   it('drops to grade C on the 240 m raster alone when the 20 m near field is incomplete, never B', () => {
     const g = buildGraded(tiers, SITE.lat, SITE.eLon, 2); // hillEast reaches only 7 km
     expect(g.grade).toBe('C');

@@ -1,0 +1,99 @@
+$ npx tsx pipeline/fetch-cached-checks.ts
+33 library sites, 3 already have a 500-epoch query, fetching 30 sites x 2 bodies at 24 epochs
+shackleton-rim sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/shackleton-rim-sun.txt
+shackleton-rim earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/shackleton-rim-earth.txt
+nobile-rim-2 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/nobile-rim-2-sun.txt
+nobile-rim-2 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/nobile-rim-2-earth.txt
+im-1-odysseus sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/im-1-odysseus-sun.txt
+im-1-odysseus earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/im-1-odysseus-earth.txt
+chandrayaan-3 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/chandrayaan-3-sun.txt
+chandrayaan-3 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/chandrayaan-3-earth.txt
+slim sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/slim-sun.txt
+slim earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/slim-earth.txt
+blue-ghost-m1 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/blue-ghost-m1-sun.txt
+blue-ghost-m1 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/blue-ghost-m1-earth.txt
+artemis-nobile-rim-2-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-2-centroid-sun.txt
+artemis-nobile-rim-2-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-2-centroid-earth.txt
+artemis-nobile-rim-2-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-2-highest-sun.txt
+artemis-nobile-rim-2-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-2-highest-earth.txt
+artemis-mons-mouton-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-centroid-sun.txt
+artemis-mons-mouton-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-centroid-earth.txt
+artemis-mons-mouton-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-highest-sun.txt
+artemis-mons-mouton-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-highest-earth.txt
+artemis-malapert-massif-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-malapert-massif-centroid-sun.txt
+artemis-malapert-massif-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-malapert-massif-centroid-earth.txt
+artemis-malapert-massif-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-malapert-massif-highest-sun.txt
+artemis-malapert-massif-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-malapert-massif-highest-earth.txt
+artemis-de-gerlache-rim-2-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-centroid-sun.txt
+artemis-de-gerlache-rim-2-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-centroid-earth.txt
+artemis-de-gerlache-rim-2-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-highest-sun.txt
+artemis-de-gerlache-rim-2-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-de-gerlache-rim-2-highest-earth.txt
+artemis-mons-mouton-plateau-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-centroid-sun.txt
+artemis-mons-mouton-plateau-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-centroid-earth.txt
+artemis-mons-mouton-plateau-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-highest-sun.txt
+artemis-mons-mouton-plateau-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-mons-mouton-plateau-highest-earth.txt
+artemis-slater-plain-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-slater-plain-centroid-sun.txt
+artemis-slater-plain-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-slater-plain-centroid-earth.txt
+artemis-slater-plain-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-slater-plain-highest-sun.txt
+artemis-slater-plain-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-slater-plain-highest-earth.txt
+artemis-peak-near-cabeus-b-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-centroid-sun.txt
+artemis-peak-near-cabeus-b-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-centroid-earth.txt
+artemis-peak-near-cabeus-b-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-highest-sun.txt
+artemis-peak-near-cabeus-b-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-peak-near-cabeus-b-highest-earth.txt
+artemis-nobile-rim-1-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-1-centroid-sun.txt
+artemis-nobile-rim-1-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-1-centroid-earth.txt
+artemis-nobile-rim-1-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-1-highest-sun.txt
+artemis-nobile-rim-1-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-nobile-rim-1-highest-earth.txt
+artemis-haworth-centroid sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-haworth-centroid-sun.txt
+artemis-haworth-centroid earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-haworth-centroid-earth.txt
+artemis-haworth-highest sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-haworth-highest-sun.txt
+artemis-haworth-highest earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/artemis-haworth-highest-earth.txt
+apollo-11 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-11-sun.txt
+apollo-11 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-11-earth.txt
+apollo-12 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-12-sun.txt
+apollo-12 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-12-earth.txt
+apollo-14 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-14-sun.txt
+apollo-14 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-14-earth.txt
+apollo-15 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-15-sun.txt
+apollo-15 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-15-earth.txt
+apollo-16 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-16-sun.txt
+apollo-16 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-16-earth.txt
+apollo-17 sun: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-17-sun.txt
+apollo-17 earth: fetched (24 epochs) -> fixtures/horizons/cached-checks/apollo-17-earth.txt
+
+$ npx tsx pipeline/cached-check.ts
+connecting-ridge: n = 1000, max = 0.00603 deg, rms = 0.00284 deg, cached 2026-11-14
+im-2-athena: n = 1000, max = 0.00604 deg, rms = 0.00284 deg, cached 2026-11-14
+chang-e-6: n = 1000, max = 0.00602 deg, rms = 0.00283 deg, cached 2026-11-14
+shackleton-rim: n = 48, max = 0.00600 deg, rms = 0.00277 deg, cached 2026-11-14
+nobile-rim-2: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+im-1-odysseus: n = 48, max = 0.00601 deg, rms = 0.00278 deg, cached 2026-11-14
+chandrayaan-3: n = 48, max = 0.00601 deg, rms = 0.00278 deg, cached 2026-11-14
+slim: n = 48, max = 0.00603 deg, rms = 0.00278 deg, cached 2026-11-14
+blue-ghost-m1: n = 48, max = 0.00601 deg, rms = 0.00278 deg, cached 2026-11-14
+artemis-nobile-rim-2-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-nobile-rim-2-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-mons-mouton-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-mons-mouton-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-malapert-massif-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-malapert-massif-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-de-gerlache-rim-2-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-de-gerlache-rim-2-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-mons-mouton-plateau-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-mons-mouton-plateau-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-slater-plain-centroid: n = 48, max = 0.00600 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-slater-plain-highest: n = 48, max = 0.00600 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-peak-near-cabeus-b-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-peak-near-cabeus-b-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-nobile-rim-1-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-nobile-rim-1-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-haworth-centroid: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+artemis-haworth-highest: n = 48, max = 0.00601 deg, rms = 0.00277 deg, cached 2026-11-14
+apollo-11: n = 48, max = 0.00603 deg, rms = 0.00278 deg, cached 2026-11-14
+apollo-12: n = 48, max = 0.00603 deg, rms = 0.00279 deg, cached 2026-11-14
+apollo-14: n = 48, max = 0.00603 deg, rms = 0.00279 deg, cached 2026-11-14
+apollo-15: n = 48, max = 0.00603 deg, rms = 0.00278 deg, cached 2026-11-14
+apollo-16: n = 48, max = 0.00603 deg, rms = 0.00279 deg, cached 2026-11-14
+apollo-17: n = 48, max = 0.00602 deg, rms = 0.00278 deg, cached 2026-11-14
+not checked (0):
+wrote app/public/data/horizons-check.json

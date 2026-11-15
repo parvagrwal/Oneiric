@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "summary": "OpenLayers map of the south pole in +proj=stere +lat_0=-90 +lon_0=0 +R=1737400: 33 library site markers coloured by terrain grade, the nine USGS Artemis III candidate region outlines (simplified, tracked at data/A3_9regions-lonlat-simplified.geojson), a south-pole marker, and the NASA Moon Trek LRO_LOLA_Shade_SPole75_30mp_v04 WMTS layer as basemap. Basemap tiles were confirmed cross-origin on 2026-11-14 (tile-headers.txt: Access-Control-Allow-Origin: *; tile-0-0-0.png decodes to the pole cap, 108 px of 256, matching 75 deg S to the pole). The static hillshade could not be produced in this environment: the LOLA rasters are gitignored and absent; the Trek basemap (the same LOLA source data, shaded relief) is used instead and needs network access. No number on the page depends on the basemap.",
+  "projection": "+proj=stere +lat_0=-90 +lon_0=0 +R=1737400 +units=m, verified numerically (pole maps to 0,0; site radii match arc distance)",
+  "tileMatrix": {
+    "topLeftCorner": [
+      -1095930,
+      1095930
+    ],
+    "tileSize": 256,
+    "resolutionsMPerPx": [
+      8562,
+      4281,
+      2140,
+      1070,
+      535.1,
+      267.6,
+      133.8
+    ],
+    "levels": 7
+  },
+  "basemapCrossOrigin": "confirmed 2026-11-14 (evidence/confirm/tile-headers.txt); basemap is online-only and optional",
+  "hillshadeStatus": "not produced in this environment (raw LOLA rasters gitignored and absent); stated in README known limits",
+  "regionOutlines": "data/A3_9regions-lonlat-simplified.geojson copied to app/public/data/artemis-regions.geojson; USGS ScienceBase, public domain"
+}

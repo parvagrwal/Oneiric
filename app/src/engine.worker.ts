@@ -4,6 +4,7 @@ import {
   calculateScenario,
   calculateScenarioWithCache,
   calculateWindowFinderRow,
+  exportSeriesCsv,
   type TerrainPayload,
 } from './scenario.ts';
 import type { WorkerRequest, WorkerResponse } from './worker-protocol.ts';
@@ -118,6 +119,26 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
 
   if (request.type === 'matrix') {
     runMatrixInChunks(request);
+    return;
+  }
+
+  if (request.type === 'export-series') {
+    try {
+      const terrain = terrainBySiteHeight.get(terrainKey(request.site.id, request.heightM)) ?? null;
+      const csv = exportSeriesCsv(
+        seriesCache,
+        request.site,
+        request.startMs,
+        request.presetId,
+        request.heightM,
+        terrain,
+        request.options,
+      );
+      post({ type: 'export-series-result', requestId: request.requestId, csv });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      post({ type: 'export-series-error', requestId: request.requestId, message });
+    }
     return;
   }
 
